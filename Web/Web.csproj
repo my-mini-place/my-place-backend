@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\api\Api.csproj" />
-    <ProjectReference Include="..\infrastructure\infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
