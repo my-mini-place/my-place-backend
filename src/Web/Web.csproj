@@ -7,7 +7,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <RootNamespace>My_Place_Backend</RootNamespace>
     <UserSecretsId>7d5ed2f7-9dcd-466e-ac24-378de0569f85</UserSecretsId>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\api\Api.csproj" />
+    <ProjectReference Include="..\Api\Api.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
