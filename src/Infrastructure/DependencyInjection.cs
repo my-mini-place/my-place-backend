@@ -4,9 +4,9 @@ using System.Data;
 using System;
 using Microsoft.EntityFrameworkCore;
 
-using Microsoft.AspNetCore.Identity;
-
 using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Domain;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,7 +14,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DockerConnection");
+            // var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
@@ -23,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddScoped<IRepository<WeatherForecast>, Repository<WeatherForecast>>();
             //#if (UseApiOnly)
             //        services.AddAuthentication()
             //            .AddBearerToken(IdentityConstants.BearerScheme);

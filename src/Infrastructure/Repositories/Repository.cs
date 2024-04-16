@@ -1,6 +1,4 @@
-﻿using Api.Abstractions;
-
-using Infrastructure.Data;
+﻿using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,6 +24,7 @@ namespace Infrastructure.Repositories
         public void Add(T entity)
         {
             dbSet.Add(entity);
+            _db.SaveChanges();
         }
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)

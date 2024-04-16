@@ -5,11 +5,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.Abstractions
+namespace Infrastructure.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        //T - Category
         IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
 
         T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
