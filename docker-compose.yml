@@ -1,0 +1,38 @@
+version: '3.4'
+
+
+networks:
+  demoapp:
+
+
+services:
+
+ 
+
+  sql-myplace-db:
+    container_name: app-db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+    environment:
+     - ACCEPT_EULA=Y
+     - MSSQL_SA_PASSWORD=Password123#@
+
+    ports: 
+     - 8002:1433
+   
+    networks:
+    - demoapp
+  web:
+    depends_on:
+     - sql-myplace-db
+    image: ${DOCKER_REGISTRY-}web
+    container_name: my-place-backend
+    build:
+      context: .
+      dockerfile: src/Web/Dockerfile
+
+    ports:
+      - 8001:80
+    
+    networks:
+     - demoapp
