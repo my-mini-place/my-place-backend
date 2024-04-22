@@ -10,13 +10,16 @@ namespace My_Place_Backend.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-      //  private readonly ICalendarService _calendarService;
+        //  private readonly ICalendarService _calendarService;
 
         //public CalendarController(ICalendarService calendarService)
         //{
         //    _calendarService = calendarService;
         //}
-
+        List<string> months = new List<string> {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+             };
         [HttpPost("user/calendar/event")]
         public IActionResult AddUserEvent([FromBody] CalendarEventDto eventDto)
         {
@@ -29,6 +32,9 @@ namespace My_Place_Backend.Controllers
         [HttpPost("admin/calendar/event")]
         public IActionResult AddAdminEvent([FromBody] CalendarEventDto eventDto)
         {
+
+
+
             // Analogicznie jak powyżej, tutaj dodajesz wydarzenie jako administrator
             return Ok(new { eventId = Guid.NewGuid().ToString() });
         }
@@ -54,10 +60,36 @@ namespace My_Place_Backend.Controllers
         [HttpGet("calendar/events")]
         public ActionResult<CalendarMonthEventsDto> GetEventsByMonth([FromQuery] string month)
         {
-            // Tutaj możesz pobrać wydarzenia w danym miesiącu
-            // Użyj month do określenia, którego miesiąca chcesz pobrać
-            var events = new CalendarMonthEventsDto(); // Zastąp tę linię kodem, który pobiera wydarzenia
-            return Ok(events);
+
+            if (months.Contains(month))
+            {
+                CalendarMonthEventsDto MonthEvents = new CalendarMonthEventsDto();
+                MonthEvents.Month = month;
+                MonthEvents.Days = new List<CalendarDayEventsDto>();
+                CalendarDayEventsDto sampleDay = new CalendarDayEventsDto();
+                sampleDay.Day = "1";
+                CalendarEventDto sampleEvent = new CalendarEventDto();
+
+                sampleEvent.EventId = "1";
+                sampleEvent.Type = "custom";
+                sampleEvent.Description = "description";
+                sampleEvent.State = "created";
+                sampleEvent.Invited = new List<string>();
+                sampleEvent.From = new DateTime();
+                sampleEvent.To = new DateTime();
+
+                sampleDay.Events = new List<CalendarEventDto>();
+                sampleDay.Events.Add(sampleEvent);
+                MonthEvents.Days.Add(sampleDay);
+
+
+                return Ok(MonthEvents);
+            }
+            else
+            {
+                return BadRequest("There is no such month");
+            }
+
         }
         // Analogicznie obsłuż pozostałe endpointy zgodnie z ich specyfikacją
 

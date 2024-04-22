@@ -11,7 +11,7 @@ namespace Domain
         public class CalendarMonthEventsDto
         {
             public string Month { get; set; }
-            public List<CalendarDayEventsDto> Events { get; set; }
+            public List<CalendarDayEventsDto> Days { get; set; }
         }
 
         public class CalendarDayEventsDto

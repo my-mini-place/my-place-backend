@@ -20,7 +20,7 @@ namespace Domain.Models.Identity
         public int Floor { get; set; }
         public string Nickname { get; set; }
         public string PhoneNumber { get; set; }
-        public AccountStatus Status { get; set; }
+        //public AccountStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
