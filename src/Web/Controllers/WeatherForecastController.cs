@@ -41,6 +41,7 @@ using System.Threading.Tasks;
 using Infrastructure.Repositories; // Importing Repository
 using Microsoft.Extensions.Logging;
 using Domain;
+using Domain.Repositories;
 
 namespace My_Place_Backend.Controllers
 {
