@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
+using Web.Extensions;
 
 namespace My_Place_Backend.Controllers
 {
@@ -19,17 +20,25 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDTO userDTO)
+        public async Task<object> Register(RegisterDTO userDTO)
         {
-            await _SecurityService.CreateAccount(userDTO);
-            return Ok();
+            Result<Guid> response = await _SecurityService.CreateAccount(userDTO);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok(response.Value);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
-            //var response = await _SecurityService.LoginAccount(loginDTO);
-            return Ok();
+            Result<LoginResponseDTO> response = await _SecurityService.LoginAccount(loginDTO);
+            if (response.IsFailure)
+            {
+                return BadRequest(response.Error);
+            }
+            return Ok(response.Value);
         }
     }
 }

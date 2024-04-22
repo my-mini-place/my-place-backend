@@ -10,7 +10,7 @@ builder.Services.AddAppServices();
 
 var app = builder.Build();
 
-app.EnsureMigrationOfContext();
+await app.EnsureMigrationOfContext();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

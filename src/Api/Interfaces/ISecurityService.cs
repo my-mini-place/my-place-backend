@@ -1,4 +1,5 @@
-﻿using Domain.Models.Identity;
+﻿using Domain;
+using Domain.Models.Identity;
 using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 using System;
@@ -11,18 +12,8 @@ namespace Api.Interfaces
 {
     public interface ISecurityService
     {
-        Task CreateAccount(RegisterDTO userDto);
+        Task<Result<Guid>> CreateAccount(RegisterDTO userDto);
 
-        Task LoginAccount(LoginDTO loginDTO);
-
-        //Task<string?> GetUserNameAsync(string userId);
-
-        //Task<bool> IsInRoleAsync(string userId, string role);
-
-        //Task<bool> AuthorizeAsync(string userId, string policyName);
-
-        //Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
-
-        //Task<Result> DeleteUserAsync(string userId);
+        Task<Result<LoginResponseDTO>> LoginAccount(LoginDTO loginDTO);
     }
 }

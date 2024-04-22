@@ -1,4 +1,5 @@
 ﻿using Api.Interfaces;
+using Domain;
 using Domain.Models.Auth;
 using Infrastructure.Data;
 
@@ -32,70 +33,34 @@ namespace Infrastructure.Identity
             _configuration = configuration;
         }
 
-        public async Task<GeneralResponse> CreateAccount(RegisterDTO userDTO)
+        public Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
         {
-            if (userDTO is null) return new GeneralResponse(false, "Model is empty");
-            var newUser = new ApplicationUser()
-            {
-                Name = userDTO.Name,
-                Email = userDTO.Email,
-                PasswordHash = userDTO.Password,
-                UserName = userDTO.Email
-            };
-            var user = await _userManager.FindByEmailAsync(newUser.Email);
-            if (user is not null) return new GeneralResponse(false, "User registered already");
-
-            var createUser = await _userManager.CreateAsync(newUser!, userDTO.Password);
-            if (!createUser.Succeeded) return new GeneralResponse(false, "Error occured.. please try again");
-
-            //Assign Default Role : Admin to first registrar; rest is user
-            //var checkAdmin = await _roleManager.FindByNameAsync("Admin");
-            //if (checkAdmin is null)
-            //{
-            //    await _roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-            //    await _userManager.AddToRoleAsync(newUser, "Admin");
-            //    return new GeneralResponse(true, "Account Created");
-            //}
-            //else
-            //{
-            //    var checkUser = await _roleManager.FindByNameAsync("User");
-            //    if (checkUser is null)
-            //        await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
-
-            //    await _userManager.AddToRoleAsync(newUser, "User");
-            //    await _userManager.AddToRoleAsync(newUser, "Admin");
-            //    return new GeneralResponse(true, "Account Created");
-            //}
-
-            var checkUser = await _roleManager.FindByNameAsync("User");
-            if (checkUser is null)
-                await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
-
-            await _userManager.AddToRoleAsync(newUser, "User");
-            // await _userManager.AddToRoleAsync(newUser, "Admin");
-            return new GeneralResponse(true, "Account Created");
+            throw new NotImplementedException();
         }
 
-        public async Task<LoginResponse> LoginAccount(LoginDTO loginDTO)
+        public Task<Result> DeleteUserAsync(string userId)
         {
-            if (loginDTO == null)
-                return new LoginResponse(false, null!, "Login container is empty");
-
-            var getUser = await _userManager.FindByEmailAsync(loginDTO.Email);
-            if (getUser is null)
-                return new LoginResponse(false, null!, "User not found");
-
-            bool checkUserPasswords = await _userManager.CheckPasswordAsync(getUser, loginDTO.Password);
-            if (!checkUserPasswords)
-                return new LoginResponse(false, null!, "Invalid email/password");
-
-            var getUserRole = await _userManager.GetRolesAsync(getUser);
-            var userSession = new UserSession(getUser.Id, getUser.Name, getUser.Email, getUserRole.First());
-            string token = GenerateToken(userSession);
-            return new LoginResponse(true, token!, "Login completed");
+            throw new NotImplementedException();
         }
 
-        private string GenerateToken(UserSession user)
+        public Task<string?> GetUserNameAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsInRoleAsync(string userId, string role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<string>> GetUserRolesAsync(ApplicationUser user)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return roles.ToList();
+        }
+
+        public string GenerateToken(UserSession user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -114,6 +79,46 @@ namespace Infrastructure.Identity
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+
+        public async Task<IdentityResult> EnsureRoleAsync(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role == null)
+            {
+                return await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+            return IdentityResult.Success;
+        }
+
+        public async Task<IdentityResult> FindOrCreateRole(string roleName)
+        {
+            var roleExist = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                return await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+            return IdentityResult.Success;
+        }
+
+        public async Task<ApplicationUser?> FindUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password)
+        {
+            return await _userManager.CreateAsync(user, password);
+        }
+
+        public async Task<IdentityResult> AddUserToRoleAsync(ApplicationUser user, string role)
+        {
+            return await _userManager.AddToRoleAsync(user, role);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using My_Place_Backend.DTO.AccountManagment;
+﻿using Domain;
+using Domain.Models.Auth;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 using System;
 using System.Collections.Generic;
@@ -11,8 +15,20 @@ namespace Api.Interfaces
 {
     public interface IIdentityRepository
     {
-        Task<LoginResponse> LoginAccount(LoginDTO loginDTO);
+        string GenerateToken(UserSession user);
 
-        Task<GeneralResponse> CreateAccount(RegisterDTO userDTO);
+        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
+
+        Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password);
+
+        Task<IdentityResult> AddUserToRoleAsync(ApplicationUser user, string role);
+
+        Task<IdentityResult> EnsureRoleAsync(string roleName);
+
+        Task<IdentityResult> FindOrCreateRole(string roleName);
+
+        Task<ApplicationUser> FindUserByEmailAsync(string email);
+
+        Task<List<string>> GetUserRolesAsync(ApplicationUser user);
     }
 }
