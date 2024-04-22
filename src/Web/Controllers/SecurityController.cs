@@ -1,4 +1,5 @@
 ﻿using Api.Interfaces;
+using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using My_Place_Backend.DTO.AccountManagment;
@@ -27,7 +28,7 @@ namespace My_Place_Backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
-            await _SecurityService.LoginAccount(loginDTO);
+            //var response = await _SecurityService.LoginAccount(loginDTO);
             return Ok();
         }
     }

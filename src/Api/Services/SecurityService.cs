@@ -18,9 +18,8 @@ namespace Api.Services
             _identityRepository = identityRepository;
         }
 
-        public Task CreateAccount(RegisterDTO userDTO)
+        public async Task CreateAccount(RegisterDTO userDTO)
         {
-            return _identityRepository.CreateAccount(userDTO);
         }
 
         public Task LoginAccount(LoginDTO loginDTO)
