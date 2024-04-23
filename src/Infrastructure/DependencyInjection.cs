@@ -33,12 +33,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IIdentityRepository, IdentityRepository>();
 
-            services.AddAuthentication()
-                .AddBearerToken(IdentityConstants.BearerScheme);
-
-            services.AddAuthorizationBuilder();
             services
-                        .AddIdentity<ApplicationUser, IdentityRole>()
+                      .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()
                         .AddEntityFrameworkStores<ApplicationDbContext>()
                         .AddApiEndpoints();

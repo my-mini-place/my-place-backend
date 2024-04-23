@@ -1,5 +1,6 @@
 ﻿using Api.Interfaces;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using My_Place_Backend.DTO.AccountManagment;
@@ -39,6 +40,29 @@ namespace My_Place_Backend.Controllers
                 return BadRequest(response.Error);
             }
             return Ok(response.Value);
+        }
+
+        [HttpPost("forgotPassword")]
+        [Authorize(Roles = "User")]
+        public async Task<object> forgotPassword(ForgotPasswordDTO ForgotPasswordDTO)
+        {
+            Result response = await _SecurityService.forgotPassword(ForgotPasswordDTO);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok();
+        }
+
+        [HttpPost("resetPassword")]
+        public async Task<object> resetPassword(ResetPasswordDTO ResetPasswordDTO)
+        {
+            Result response = await _SecurityService.resetPassword(ResetPasswordDTO);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok();
         }
     }
 }

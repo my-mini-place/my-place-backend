@@ -31,7 +31,7 @@ namespace Api.Services
             // czy istnieje
             var userExists = await _identityRepository.FindUserByEmailAsync(userDTO.Email);
             if (userExists != null) return Result.Failure<Guid>(Error.Failure("UserExists", "User already registered"));
-
+            // przerzuc to do mappera
             var newUser = new ApplicationUser
             {
                 Name = userDTO.Name,
@@ -58,6 +58,48 @@ namespace Api.Services
             }
 
             return Result.Success(new Guid(newUser.Id));
+        }
+
+        public async Task<Result> forgotPassword(ForgotPasswordDTO forgotPasswordDTO)
+        {
+            if (forgotPassword == null)
+            {
+                return Result.Failure(Error.Failure("forgotPasswordDTO is null", "Login DTO is null"));
+            }
+
+            var user = await _identityRepository.FindUserByEmailAsync(forgotPasswordDTO.Email);
+            if (user == null)
+                return Result.Failure(Error.Failure("NotFound", "User not found"));
+
+            var result = await _identityRepository.ForgotPasswordAsync(user);
+
+            if (result == null)
+            {
+                return Result.Failure(Error.Failure("500", "Code generation dont work"));
+            }
+            // wyslanie emaila
+
+            // gdy sie uda
+
+            return Result.Success();
+        }
+
+        public async Task<Result> resetPassword(ResetPasswordDTO resetPasswordDTO)
+        {
+            if (resetPasswordDTO == null)
+                return Result.Failure<LoginResponseDTO>(Error.Failure("loginDTO", "Login DTO is null"));
+
+            var user = await _identityRepository.FindUserByEmailAsync(resetPasswordDTO.Email);
+            if (user == null)
+                return Result.Failure<LoginResponseDTO>(Error.Failure("NotFound", "User not found"));
+
+            var result = await _identityRepository.ResetPasswordAsync(user, resetPasswordDTO.ResetCode, resetPasswordDTO.NewPassword);
+            if (!result.Succeeded)
+            {
+                return Result.Failure(Error.Failure("ResetPasswordFailed", $"{result.Errors}"));
+            }
+
+            return Result.Success();
         }
 
         public async Task<Result<LoginResponseDTO>> LoginAccount(LoginDTO loginDTO)

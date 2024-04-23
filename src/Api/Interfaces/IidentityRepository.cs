@@ -30,5 +30,9 @@ namespace Api.Interfaces
         Task<ApplicationUser> FindUserByEmailAsync(string email);
 
         Task<List<string>> GetUserRolesAsync(ApplicationUser user);
+
+        Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword);
+
+        Task<string> ForgotPasswordAsync(ApplicationUser user);
     }
 }
