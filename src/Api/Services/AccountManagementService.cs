@@ -8,6 +8,7 @@ namespace Api.Services
 {
     using Domain;
     using Domain.Errors;
+    using Domain.IRepositories;
     using Domain.Repositories;
     using global::Api.DTO.AccountManagment;
     using global::Api.Interfaces;
@@ -19,16 +20,16 @@ namespace Api.Services
     {
         public class AccountManagementService : IAccountManagementService
         {
-            private readonly IRepository<ApplicationUser> _userRepository;
+            private readonly IUserRepository _userRepository;
 
-            public AccountManagementService(IRepository<ApplicationUser> userRepository)
+            public AccountManagementService(IUserRepository userRepository)
             {
                 _userRepository = userRepository;
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
             {
-                var user = _userRepository.Get(u => u.Id == userId);
+                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
@@ -42,7 +43,7 @@ namespace Api.Services
 
             public async Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO)
             {
-                var user = _userRepository.Get(u => u.Id == userId);
+                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
@@ -66,7 +67,7 @@ namespace Api.Services
 
             public async Task<Result> DeleteUser(string userId)
             {
-                var user = _userRepository.Get(u => u.Id == userId);
+                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));

@@ -14,6 +14,9 @@ using Domain.Repositories;
 using Infrastructure.Identity;
 using Api.Interfaces;
 using Api.Services;
+using Infrastructure.EmailServices;
+using Domain.ExternalInterfaces;
+using Domain.IRepositories;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -31,7 +34,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()

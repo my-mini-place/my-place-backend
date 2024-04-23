@@ -11,17 +11,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using static Domain.Models.Auth.ServiceResponses;
+using Domain.ExternalInterfaces;
+using Domain.IRepositories;
+using AutoMapper;
+using Domain.Models.Identity;
 
 namespace Api.Services
 {
     public class SecurityService : ISecurityService
     {
         private readonly IIdentityRepository _identityRepository;
+        private readonly IEmailSender _emailService;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public SecurityService(IIdentityRepository identityRepository)
+        public SecurityService(IIdentityRepository identityRepository, IEmailSender emailService, IUserRepository userRepository, IMapper maper)
         {
             _identityRepository = identityRepository;
+            _emailService = emailService;
+            _userRepository = userRepository;
+            _mapper = maper;
         }
 
         public async Task<Result<Guid>> CreateAccount(RegisterDTO userDTO)
@@ -32,18 +43,29 @@ namespace Api.Services
             var userExists = await _identityRepository.FindUserByEmailAsync(userDTO.Email);
             if (userExists != null) return Result.Failure<Guid>(Error.Failure("UserExists", "User already registered"));
             // przerzuc to do mappera
+
+            Guid newUserId = Guid.NewGuid();
+
             var newUser = new ApplicationUser
             {
+                UserId = newUserId,
                 Name = userDTO.Name,
                 Email = userDTO.Email,
                 UserName = userDTO.Email
             };
+
+            var UserInfo = _mapper.Map<User>(userDTO);
+
+            UserInfo.UserId = newUserId;
 
             var createUserResult = await _identityRepository.CreateUserAsync(newUser, userDTO.Password);
             if (!createUserResult.Succeeded)
             {
                 return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()?.Description));
             }
+
+            // dodanie informacji o userze do innej tabeli (pontejcalnie mozna to polaczyc)
+            _userRepository.Add(UserInfo);
 
             var roleResult = await _identityRepository.EnsureRoleAsync("User");
             if (!roleResult.Succeeded)
@@ -77,11 +99,19 @@ namespace Api.Services
             {
                 return Result.Failure(Error.Failure("500", "Code generation dont work"));
             }
-            // wyslanie emaila
 
-            // gdy sie uda
+            var subject = "Resetowanie hasła";
+            var message = $"Twój kod do resetowania hasła to: {result}";
+            var sendEmailResult = await _emailService.SendEmailAsync(user.Email, subject, message);
 
-            return Result.Success();
+            if (sendEmailResult.IsSuccess)
+            {
+                return Result.Success();
+            }
+            else
+            {
+                return Result.Failure(Error.Failure("Email", "Email Error"));
+            }
         }
 
         public async Task<Result> resetPassword(ResetPasswordDTO resetPasswordDTO)

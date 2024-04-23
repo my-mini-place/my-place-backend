@@ -43,7 +43,6 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("forgotPassword")]
-        [Authorize(Roles = "User")]
         public async Task<object> forgotPassword(ForgotPasswordDTO ForgotPasswordDTO)
         {
             Result response = await _SecurityService.forgotPassword(ForgotPasswordDTO);
