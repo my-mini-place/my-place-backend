@@ -3,10 +3,20 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using System;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Domain;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Domain.Repositories;
+
+using Infrastructure.Identity;
+using Api.Interfaces;
+using Api.Services;
+using Infrastructure.EmailServices;
+using Domain.ExternalInterfaces;
+using Domain.IRepositories;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -24,24 +34,33 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddScoped<IRepository<WeatherForecast>, Repository<WeatherForecast>>();
-            //#if (UseApiOnly)
-            //        services.AddAuthentication()
-            //            .AddBearerToken(IdentityConstants.BearerScheme);
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IIdentityRepository, IdentityRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
-            // services.AddAuthorizationBuilder();
+            services
+                      .AddIdentity<ApplicationUser, IdentityRole>()
+                        .AddRoles<IdentityRole>()
+                        .AddEntityFrameworkStores<ApplicationDbContext>()
+                        .AddApiEndpoints();
 
-            //        services
-            //            .AddIdentityCore<ApplicationUser>()
-            //            .AddRoles<IdentityRole>()
-            //            .AddEntityFrameworkStores<ApplicationDbContext>()
-            //            .AddApiEndpoints();
-            //#else
-            //            services
-            //                .AddDefaultIdentity<ApplicationUser>()
-            //                .AddRoles<IdentityRole>()
-            //                .AddEntityFrameworkStores<ApplicationDbContext>();
-            //#endif
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+            });
 
             // services.AddSingleton(TimeProvider.System); services.AddTransient<IIdentityService, IdentityService>();
 

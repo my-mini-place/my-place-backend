@@ -1,4 +1,5 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Repositories;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -72,11 +73,13 @@ namespace Infrastructure.Repositories
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
+            _db.SaveChanges();
         }
 
         public void RemoveRange(IEnumerable<T> entity)
         {
             dbSet.RemoveRange(entity);
+            _db.SaveChanges();
         }
     }
 }
