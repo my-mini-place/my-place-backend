@@ -22,6 +22,7 @@ jobs:
       Solution_Name: My-Place-Backend.sln                    
       Unit_Tests: tests\IntegrationTests\IntegrationTests.csproj
       Integration_Tests: tests\UnitTests\UnitTests.csproj
+      Architecture_Tests: tests\ArchitectureTests\ArchitectureTests.csproj
       
      # Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
      # Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
@@ -44,7 +45,7 @@ jobs:
 
   
     - name: Execute unit tests
-      run: dotnet test
+      run: dotnet test $env:Unit_Tests
 
     # Przywrocenie pakietów za pomoca msbuild
     - name: Restore the application
