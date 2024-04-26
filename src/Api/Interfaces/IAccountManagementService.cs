@@ -16,8 +16,14 @@ namespace Api.Interfaces
 
         Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO);
 
-        IQueryable<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize);
+        List<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize);
 
         Task<Result> DeleteUser(string userId);
+
+        Task<Result> SetUserAvailability();
+
+        Task<Result> UpdateUserRole();
+
+        Task<Result> GetUserInfo(string UserId);
     }
 }

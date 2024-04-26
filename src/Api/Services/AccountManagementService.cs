@@ -56,15 +56,6 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            //public IQueryable<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
-            //{
-            //    //return _userRepository.GetAll()
-            //    //    .Where(u => u.Name.Contains(searchTerm))
-            //    //    .OrderBy(sortColumn, sortOrder)
-            //    //    .Skip((page - 1) * pageSize)
-            //    //    .Take(pageSize);
-            //}
-
             public async Task<Result> DeleteUser(string userId)
             {
                 var user = _userRepository.Get(u => u.UserId.ToString() == userId);
@@ -77,7 +68,22 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            public IQueryable<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            List<ApplicationUser> IAccountManagementService.ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<Result> SetUserAvailability()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<Result> UpdateUserRole()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<Result> GetUserInfo(string UserId)
             {
                 throw new NotImplementedException();
             }
