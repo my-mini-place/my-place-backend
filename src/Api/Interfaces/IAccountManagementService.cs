@@ -1,5 +1,6 @@
 ﻿using Api.DTO.AccountManagment;
 using Domain;
+using Domain.Models.Identity;
 using Infrastructure.Data;
 using My_Place_Backend.DTO.AccountManagment;
 using System;
@@ -16,7 +17,7 @@ namespace Api.Interfaces
 
         Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO);
 
-        List<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize);
+        Task<Result<List<User>>> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize);
 
         Task<Result> DeleteUser(string userId);
 
@@ -24,6 +25,6 @@ namespace Api.Interfaces
 
         Task<Result> UpdateUserRole();
 
-        Task<Result> GetUserInfo(string UserId);
+        Task<Result<UserDTO>> GetUserInfo(string UserId);
     }
 }

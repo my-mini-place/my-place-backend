@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+ <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -24,9 +24,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\My-Place-Backend\src\Api\Api.csproj" />
-    <ProjectReference Include="..\My-Place-Backend\src\Domain\Domain.csproj" />
-  </ItemGroup>
+ 
 
 </Project>

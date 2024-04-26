@@ -2,6 +2,7 @@
 using Domain.Models.Identity;
 using Domain.ValueObjects;
 using Infrastructure.Data;
+using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 using System;
 using System.Collections.Generic;
@@ -31,11 +32,10 @@ namespace Api.Mappers
                   .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
                   .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
 
-            // Mapping from RegisterDTO to ApplicationUser
             CreateMap<RegisterDTO, ApplicationUser>()
 
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)) // UserName set to Email
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
         }
     }

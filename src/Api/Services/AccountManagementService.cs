@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Api.Services
 {
+    using AutoMapper;
     using Domain;
     using Domain.Errors;
     using Domain.IRepositories;
+    using Domain.Models.Identity;
     using Domain.Repositories;
     using global::Api.DTO.AccountManagment;
     using global::Api.Interfaces;
@@ -21,6 +23,7 @@ namespace Api.Services
         public class AccountManagementService : IAccountManagementService
         {
             private readonly IUserRepository _userRepository;
+            private readonly IMapper _mapper;
 
             public AccountManagementService(IUserRepository userRepository)
             {
@@ -29,11 +32,13 @@ namespace Api.Services
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
+
+                // sprawdzenie czy ma role admina nie zarządcy
 
                 //user.AccountStatus = statusUpdateDTO.AccountStatus;
                 //_userRepository.Update(user);
@@ -43,22 +48,24 @@ namespace Api.Services
 
             public async Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                user.Name = updateAccountDTO.Name;
-                user.Email = updateAccountDTO.Email;
-                //_userRepository.Update(user);
+                // przypisanie danychz updateAccountDTO
+
+                // jeszcze to zmien w identity ten email ok dasz rade
+
+                _userRepository.Update(user);
 
                 return Result.Success();
             }
 
             public async Task<Result> DeleteUser(string userId)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
@@ -66,11 +73,6 @@ namespace Api.Services
 
                 _userRepository.Remove(user);
                 return Result.Success();
-            }
-
-            List<ApplicationUser> IAccountManagementService.ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
-            {
-                throw new NotImplementedException();
             }
 
             public Task<Result> SetUserAvailability()
@@ -83,9 +85,22 @@ namespace Api.Services
                 throw new NotImplementedException();
             }
 
-            public Task<Result> GetUserInfo(string UserId)
+            public async Task<Result<UserDTO>> GetUserInfo(string UserId)
             {
-                throw new NotImplementedException();
+                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
+                if (user == null)
+                {
+                    return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));
+                }
+
+                return Result.Success(_mapper.Map<UserDTO>(user));
+            }
+
+            public async Task<Result<List<User>>> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            {
+                var user = await _userRepository.GetAll();
+
+                return Result.Success(_mapper.Map<List<User>>(user));
             }
         }
     }
