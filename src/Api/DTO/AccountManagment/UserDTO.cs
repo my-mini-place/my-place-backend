@@ -9,7 +9,6 @@ namespace My_Place_Backend.DTO.AccountManagment
         public string Name { get; set; }
         public string Surname { get; set; }
 
-        public string Password { get; set; }
         public string PostalCode { get; set; }
         public string Street { get; set; }
         public string BuildingNumber { get; set; }

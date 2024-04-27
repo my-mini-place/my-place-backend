@@ -66,7 +66,7 @@ namespace Api.Services
 
             // dodanie informacji o userze do innej tabeli (pontejcalnie mozna to polaczyc)
             _userRepository.Add(UserInfo);
-
+            // zmien to pozniej
             var roleResult = await _identityRepository.EnsureRoleAsync("User");
             if (!roleResult.Succeeded)
             {
@@ -79,7 +79,7 @@ namespace Api.Services
                 // return Result.Failure<Guid>(addToRoleResult.Errors.FirstOrDefault()?.Description);
             }
 
-            return Result.Success(new Guid(newUser.Id));
+            return Result.Success(newUserId);
         }
 
         public async Task<Result> forgotPassword(ForgotPasswordDTO forgotPasswordDTO)

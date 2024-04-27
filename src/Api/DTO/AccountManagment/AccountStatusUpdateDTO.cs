@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Api.DTO.AccountManagment
 {
     public class AccountStatusUpdateDTO
     {
-        public string AccountStatus { get; set; }
+        public AccountStatus AccountStatus { get; set; }
     }
 }

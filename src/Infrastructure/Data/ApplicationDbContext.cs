@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Course.Repository.Utilities;
+using Domain;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ConfigurationUserAndRole();
             base.OnModelCreating(builder);
         }
 

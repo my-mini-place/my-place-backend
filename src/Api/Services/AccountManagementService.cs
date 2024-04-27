@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Api.Services
 {
+    using AutoMapper;
     using Domain;
     using Domain.Errors;
     using Domain.IRepositories;
+    using Domain.Models.Identity;
     using Domain.Repositories;
     using global::Api.DTO.AccountManagment;
     using global::Api.Interfaces;
@@ -21,53 +23,54 @@ namespace Api.Services
         public class AccountManagementService : IAccountManagementService
         {
             private readonly IUserRepository _userRepository;
+            private readonly IMapper _mapper;
+            private readonly IIdentityRepository _identityRepository;
 
-            public AccountManagementService(IUserRepository userRepository)
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository)
             {
                 _userRepository = userRepository;
+                _mapper = mapper;
+                _identityRepository = identityRepository;
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                //user.AccountStatus = statusUpdateDTO.AccountStatus;
-                //_userRepository.Update(user);
+                // sprawdzenie czy ma role admina nie zarządcy
+
+                user.Status = statusUpdateDTO.AccountStatus;
+
+                _userRepository.Update(user);
 
                 return Result.Success();
             }
 
             public async Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                user.Name = updateAccountDTO.Name;
-                user.Email = updateAccountDTO.Email;
-                //_userRepository.Update(user);
+                // przypisanie danychz updateAccountDTO
+
+                // jeszcze to zmien w identity ten email ok dasz rade
+
+                _userRepository.Update(user);
 
                 return Result.Success();
             }
 
-            //public IQueryable<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
-            //{
-            //    //return _userRepository.GetAll()
-            //    //    .Where(u => u.Name.Contains(searchTerm))
-            //    //    .OrderBy(sortColumn, sortOrder)
-            //    //    .Skip((page - 1) * pageSize)
-            //    //    .Take(pageSize);
-            //}
-
+            // dodaj usuwanie z identiyy repisotry
             public async Task<Result> DeleteUser(string userId)
             {
-                var user = _userRepository.Get(u => u.UserId.ToString() == userId);
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
@@ -77,9 +80,44 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            public IQueryable<ApplicationUser> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            public Task<Result> SetUserAvailability()
             {
                 throw new NotImplementedException();
+            }
+
+            // tutaj dodac usuwanie starej roli
+            public async Task<Result> UpdateUserRole(string UserId, string Role)
+            {
+                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
+                if (user == null) { return Result.Failure<UserDTO>(Error.NotFound("User", "User not found")); }
+
+                var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
+
+                var result = await _identityRepository.AddUserToRoleAsync(appuser, Role);
+                if (!result.Succeeded)
+                {
+                }
+
+                return Result.Success();
+            }
+
+            public async Task<Result<UserDTO>> GetUserInfo(string UserId)
+            {
+                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
+                if (user == null)
+                {
+                    return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));
+                }
+
+                var userDTO = _mapper.Map<UserDTO>(user);
+                return Result.Success(userDTO);
+            }
+
+            public async Task<Result<List<UserDTO>>> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
+            {
+                List<User> user = await _userRepository.GetAll();
+
+                return Result.Success(_mapper.Map<List<UserDTO>>(user));
             }
         }
     }
