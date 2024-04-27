@@ -25,9 +25,10 @@ namespace Api.Services
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper;
 
-            public AccountManagementService(IUserRepository userRepository)
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper)
             {
                 _userRepository = userRepository;
+                _mapper = mapper;
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
@@ -40,8 +41,9 @@ namespace Api.Services
 
                 // sprawdzenie czy ma role admina nie zarządcy
 
-                //user.AccountStatus = statusUpdateDTO.AccountStatus;
-                //_userRepository.Update(user);
+                user.Status = statusUpdateDTO.AccountStatus;
+
+                _userRepository.Update(user);
 
                 return Result.Success();
             }
@@ -93,14 +95,15 @@ namespace Api.Services
                     return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));
                 }
 
-                return Result.Success(_mapper.Map<UserDTO>(user));
+                var userDTO = _mapper.Map<UserDTO>(user);
+                return Result.Success(userDTO);
             }
 
-            public async Task<Result<List<User>>> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            public async Task<Result<List<UserDTO>>> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
             {
-                var user = await _userRepository.GetAll();
+                List<User> user = await _userRepository.GetAll();
 
-                return Result.Success(_mapper.Map<List<User>>(user));
+                return Result.Success(_mapper.Map<List<UserDTO>>(user));
             }
         }
     }

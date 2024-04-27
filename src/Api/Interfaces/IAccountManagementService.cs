@@ -17,7 +17,7 @@ namespace Api.Interfaces
 
         Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO);
 
-        Task<Result<List<User>>> ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize);
+        Task<Result<List<UserDTO>>> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize);
 
         Task<Result> DeleteUser(string userId);
 

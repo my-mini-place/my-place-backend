@@ -49,10 +49,10 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
-            public IActionResult ListUsers(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
+            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
             {
-                var users = _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
-                return Ok(users);
+                var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
+                return Ok(users.Value);
             }
 
             [HttpDelete("deleteUser/{userId}")]
@@ -74,7 +74,7 @@ namespace My_Place_Backend.Controllers
                 {
                     return BadRequest(result.Error);
                 }
-                return Ok();
+                return Ok(result.Value);
             }
 
             [HttpPatch("updateUserRole/{userId}")]

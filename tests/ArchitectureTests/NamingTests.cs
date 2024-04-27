@@ -1,5 +1,4 @@
-﻿using Domain.Models.Identity;
-using FluentAssertions;
+﻿using FluentAssertions;
 using My_Place_Backend.DTO.AccountManagment;
 using NetArchTest.Rules;
 using System;

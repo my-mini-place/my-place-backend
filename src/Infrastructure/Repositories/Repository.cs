@@ -88,6 +88,7 @@ namespace Infrastructure.Repositories
             try
             {
                 dbSet.Update(obj);
+                _db.SaveChanges();
             }
             catch
             {

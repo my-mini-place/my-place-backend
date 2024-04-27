@@ -79,7 +79,7 @@ namespace Api.Services
                 // return Result.Failure<Guid>(addToRoleResult.Errors.FirstOrDefault()?.Description);
             }
 
-            return Result.Success(new Guid(newUser.Id));
+            return Result.Success(newUserId);
         }
 
         public async Task<Result> forgotPassword(ForgotPasswordDTO forgotPasswordDTO)
