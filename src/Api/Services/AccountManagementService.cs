@@ -67,6 +67,7 @@ namespace Api.Services
                 return Result.Success();
             }
 
+            // dodaj usuwanie z identiyy repisotry
             public async Task<Result> DeleteUser(string userId)
             {
                 var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
@@ -84,6 +85,7 @@ namespace Api.Services
                 throw new NotImplementedException();
             }
 
+            // tutaj dodac usuwanie starej roli
             public async Task<Result> UpdateUserRole(string UserId, string Role)
             {
                 var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
