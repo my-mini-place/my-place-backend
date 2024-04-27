@@ -78,9 +78,9 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpPatch("updateUserRole/{userId}")]
-            public async Task<IActionResult> UpdateUserRole([FromBody] string a)
+            public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] string role)
             {
-                var result = await _accountManagementService.UpdateUserRole();
+                var result = await _accountManagementService.UpdateUserRole(userId, role);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);

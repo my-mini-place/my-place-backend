@@ -66,7 +66,7 @@ namespace Api.Services
 
             // dodanie informacji o userze do innej tabeli (pontejcalnie mozna to polaczyc)
             _userRepository.Add(UserInfo);
-
+            // zmien to pozniej
             var roleResult = await _identityRepository.EnsureRoleAsync("User");
             if (!roleResult.Succeeded)
             {

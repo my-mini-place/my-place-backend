@@ -24,11 +24,13 @@ namespace Api.Services
         {
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper;
+            private readonly IIdentityRepository _identityRepository;
 
-            public AccountManagementService(IUserRepository userRepository, IMapper mapper)
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository)
             {
                 _userRepository = userRepository;
                 _mapper = mapper;
+                _identityRepository = identityRepository;
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
@@ -82,9 +84,19 @@ namespace Api.Services
                 throw new NotImplementedException();
             }
 
-            public Task<Result> UpdateUserRole()
+            public async Task<Result> UpdateUserRole(string UserId, string Role)
             {
-                throw new NotImplementedException();
+                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
+                if (user == null) { return Result.Failure<UserDTO>(Error.NotFound("User", "User not found")); }
+
+                var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
+
+                var result = await _identityRepository.AddUserToRoleAsync(appuser, Role);
+                if (!result.Succeeded)
+                {
+                }
+
+                return Result.Success();
             }
 
             public async Task<Result<UserDTO>> GetUserInfo(string UserId)
