@@ -20,9 +20,8 @@ namespace ArchitectureTests
             // Arrange
             //Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            //Assembly[] domainAssemblies = Array.FindAll(allAssemblies, assembly =>
-            //    assembly.FullName.Contains("Domain"));
-            // Act
+            ////Assembly[] domainAssemblies = Array.FindAll(allAssemblies, assembly => //
+            // assembly.FullName.Contains("Domain")); // Act
 
             // Assert
             var Result = Types.InAssembly(DomainAssembly).Should().NotHaveDependencyOn("App").GetResult();

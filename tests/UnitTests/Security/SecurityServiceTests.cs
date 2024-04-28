@@ -33,15 +33,20 @@ namespace UnitTests.Security
             // Arrange
             var identityRepoMock = new Mock<IIdentityRepository>();
 
-            identityRepoMock.Setup(repo => repo.FindUserByEmailAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
-            var emailServiceMock = new Mock<IEmailSender>();
-            var userRepoMock = new Mock<IUserRepository>();
-            var mapperMock = new Mock<IMapper>();
+            identityRepoMock.Setup(repo =>
+            repo.FindUserByEmailAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null); var
+            emailServiceMock = new Mock<IEmailSender>(); var userRepoMock = new
+            Mock<IUserRepository>(); var mapperMock = new Mock<IMapper>();
 
-            var service = new SecurityService(identityRepoMock.Object, emailServiceMock.Object, userRepoMock.Object, mapperMock.Object);
+            var service = new SecurityService(identityRepoMock.Object, emailServiceMock.Object,
+            userRepoMock.Object, mapperMock.Object);
 
             // Act
-            var result = await service.forgotPassword(new ForgotPasswordDTO { Email = "test@example.com" });
+            var result = await service.forgotPassword(new ForgotPasswordDTO
+            {
+                Email =
+            "test@example.com"
+            });
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -53,10 +58,15 @@ namespace UnitTests.Security
             // Arrange
             var identityRepository = new Mock<IIdentityRepository>();
 
-            identityRepository.Setup(repo => repo.FindUserByEmailAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
-            var service = new SecurityService(identityRepository.Object, null, null, null);
-            //Act
-            var result = await service.LoginAccount(new LoginDTO { Email = "test@example.com", Password = "231" });
+            identityRepository.Setup(repo =>
+            repo.FindUserByEmailAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null); var
+            service = new SecurityService(identityRepository.Object, null, null, null); //Act
+            var result = await service.LoginAccount(new LoginDTO
+            {
+                Email = "test@example.com",
+                Password =
+          "231"
+            });
 
             // Assert
             result.IsFailure.Should().BeTrue();
