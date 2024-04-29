@@ -1,16 +1,15 @@
 using Infrastructure;
+using Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// przeniesienie definiowania scopow do poszczególnych projektów za pomoc¹ depedency injection extension
 builder.Services.AddWebServices();
-builder.Services.AddAppServices();
-
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddAppServices();
 
 var app = builder.Build();
 
-app.EnsureMigrationOfContext();
+await app.EnsureMigrationOfContext();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,8 +20,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{ }

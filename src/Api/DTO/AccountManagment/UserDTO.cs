@@ -1,4 +1,6 @@
-﻿namespace My_Place_Backend.DTO.AccountManagment
+﻿using Domain.ValueObjects;
+
+namespace My_Place_Backend.DTO.AccountManagment
 {
     public class UserDTO
     {
@@ -6,6 +8,7 @@
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+
         public string PostalCode { get; set; }
         public string Street { get; set; }
         public string BuildingNumber { get; set; }

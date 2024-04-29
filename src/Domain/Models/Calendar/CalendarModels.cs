@@ -63,11 +63,9 @@ namespace Domain.Models.Calendar
                     {
                         if (start < reservation.End && end > reservation.Start)
                         {
-                            // Terenin zajęty, nie jest dostępny
                             return false;
                         }
                     }
-                    // Terenin wolny, jest dostępny
                     return true;
                 }
 
