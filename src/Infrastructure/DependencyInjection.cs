@@ -25,8 +25,17 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DockerConnection");
+            //String hosts = configuration.
+            //String cstr = configuration.GetConnectionString("DockerConnection");
             //var connectionString = configuration.GetConnectionString("DefaultConnection");
+           // Console.WriteLine("Witam");
+           // Console.WriteLine(connectionString+"0");
+            //foreach (var item in configuration.AsEnumerable())
+            //{
+            //    Console.WriteLine($"{item.Key}: {item.Value}");
+            //}
 
+           // Console.WriteLine("Narazie");
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 //options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
@@ -41,8 +50,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()
-                        .AddEntityFrameworkStores<ApplicationDbContext>()
-                        .AddApiEndpoints();
+                        .AddEntityFrameworkStores<ApplicationDbContext>();
+                       // .AddApiEndpoints();
 
             services.AddAuthentication(options =>
             {

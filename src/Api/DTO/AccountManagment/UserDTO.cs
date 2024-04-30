@@ -16,6 +16,6 @@ namespace My_Place_Backend.DTO.AccountManagment
         public int Floor { get; set; }
         public string Nickname { get; set; }
         public string PhoneNumber { get; set; }
-        //public AccountStatus Status { get; set; }
+        public AccountStatus Status { get; set; }
     }
 }
