@@ -16,7 +16,7 @@ namespace Api.Interfaces
 
         Task<Result<LoginResponseDTO>> LoginAccount(LoginDTO loginDTO);
 
-        Task<Result> forgotPassword(ForgotPasswordDTO forgotPasswordDTO);
+        Task<Result<string>> forgotPassword(ForgotPasswordDTO forgotPasswordDTO);
 
         Task<Result> resetPassword(ResetPasswordDTO resetPasswordDTO);
     }
