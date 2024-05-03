@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Repositories;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.Extensions.Logging;
 //using Domain.Calendar;
 using static Domain.Calendar;
+using static Domain.Models.Calendar.CalendarModels;
 
 namespace My_Place_Backend.Controllers
 {
@@ -10,12 +14,14 @@ namespace My_Place_Backend.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        //  private readonly ICalendarService _calendarService;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IRepository<Event> _calendarRepository;
 
-        //public CalendarController(ICalendarService calendarService)
-        //{
-        //    _calendarService = calendarService;
-        //}
+        public CalendarController(ApplicationDbContext dbContext, IRepository<Event> calendarRepository)
+        {
+            _calendarRepository = calendarRepository;
+            _dbContext = dbContext;
+        }
         List<string> months = new List<string> {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
@@ -23,10 +29,16 @@ namespace My_Place_Backend.Controllers
         [HttpPost("user/calendar/event")]
         public IActionResult AddUserEvent([FromBody] CalendarEventDto eventDto)
         {
-            // Tutaj możesz wywołać odpowiednią metodę serwisu kalendarza, aby dodać wydarzenie
-            // Użyj eventDto, aby uzyskać dane o nowym wydarzeniu
-            // Zwróć odpowiedni wynik w zależności od rezultatu operacji
-            return Ok(new { eventId = Guid.NewGuid().ToString() });
+            string id  = Guid.NewGuid().ToString();
+            eventDto.EventId = id;
+            _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
+            var events = _dbContext.CalendarEvents;
+            foreach(Event e in events)
+            {
+                Console.WriteLine(e.Name);
+                Console.WriteLine(e.Month);
+            }
+            return Ok();
         }
 
         [HttpPost("admin/calendar/event")]
@@ -63,27 +75,10 @@ namespace My_Place_Backend.Controllers
 
             if (months.Contains(month))
             {
-                CalendarMonthEventsDto MonthEvents = new CalendarMonthEventsDto();
-                MonthEvents.Month = month;
-                MonthEvents.Days = new List<CalendarDayEventsDto>();
-                CalendarDayEventsDto sampleDay = new CalendarDayEventsDto();
-                sampleDay.Day = "1";
-                CalendarEventDto sampleEvent = new CalendarEventDto();
-
-                sampleEvent.EventId = "1";
-                sampleEvent.Type = "custom";
-                sampleEvent.Description = "description";
-                sampleEvent.State = "created";
-                sampleEvent.Invited = new List<string>();
-                sampleEvent.From = new DateTime();
-                sampleEvent.To = new DateTime();
-
-                sampleDay.Events = new List<CalendarEventDto>();
-                sampleDay.Events.Add(sampleEvent);
-                MonthEvents.Days.Add(sampleDay);
-
-
-                return Ok(MonthEvents);
+                int index = months.IndexOf(month) + 1;
+                var events = _dbContext.CalendarEvents.Where(e => e.Month == month).ToList();
+                CalendarMonthEventsDto monthEvents =  CalednarMapper.castEventsToClient(events, index,month);
+                return Ok(monthEvents);
             }
             else
             {
@@ -91,8 +86,6 @@ namespace My_Place_Backend.Controllers
             }
 
         }
-        // Analogicznie obsłuż pozostałe endpointy zgodnie z ich specyfikacją
-
 
         [HttpGet("availability")]
         [ProducesResponseType(typeof(List<AvailabilityResponseDto>), 200)]

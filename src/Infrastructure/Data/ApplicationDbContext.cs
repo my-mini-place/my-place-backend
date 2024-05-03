@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static Domain.Models.Calendar.CalendarModels;
 
 namespace Infrastructure.Data
 {
@@ -20,10 +21,12 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> UsersInfo { get; set; }
+        public DbSet<Event> CalendarEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ConfigurationUserAndRole();
+            builder.AddTestCalendarData();
             base.OnModelCreating(builder);
         }
 

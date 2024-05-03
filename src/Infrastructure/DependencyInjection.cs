@@ -17,6 +17,7 @@ using Api.Services;
 using Infrastructure.EmailServices;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
+using static Domain.Models.Calendar.CalendarModels;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -25,17 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DockerConnection");
-            //String hosts = configuration.
-            //String cstr = configuration.GetConnectionString("DockerConnection");
-            //var connectionString = configuration.GetConnectionString("DefaultConnection");
-           // Console.WriteLine("Witam");
-           // Console.WriteLine(connectionString+"0");
-            //foreach (var item in configuration.AsEnumerable())
-            //{
-            //    Console.WriteLine($"{item.Key}: {item.Value}");
-            //}
 
-           // Console.WriteLine("Narazie");
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
                 //options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
@@ -46,30 +37,30 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-
+            services.AddScoped<IRepository<Event>, CalendarRepository>();
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()
                         .AddEntityFrameworkStores<ApplicationDbContext>();
                        // .AddApiEndpoints();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidAudience = configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
-                };
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidateIssuerSigningKey = true,
+            //        ValidateLifetime = true,
+            //        ValidIssuer = configuration["Jwt:Issuer"],
+            //        ValidAudience = configuration["Jwt:Audience"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+            //    };
+            //});
 
             // services.AddSingleton(TimeProvider.System); services.AddTransient<IIdentityService, IdentityService>();
 

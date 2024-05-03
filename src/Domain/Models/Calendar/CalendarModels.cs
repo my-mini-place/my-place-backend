@@ -13,44 +13,50 @@ namespace Domain.Models.Calendar
 {
     public class CalendarModels
     {
-        public class Month
-        {
-            [Key]
-            public int MonthId { get; set; }
+        //public class Month
+        //{
+        //    [Key]
+        //    public int MonthId { get; set; }
 
-            public int MonthNumber { get; set; } // Numer miesiąca (np. styczeń - 1, luty - 2, etc.)
+        //    public int MonthNumber { get; set; } // Numer miesiąca (np. styczeń - 1, luty - 2, etc.)
 
-            public ICollection<Day> Days { get; set; }
-        }
+        //    public ICollection<Day> Days { get; set; }
+        //}
 
-        public class Day
-        {
-            [Key]
-            public int DayId { get; set; }
+        //public class Day
+        //{
+        //    [Key]
+        //    public int DayId { get; set; }
 
-            public DateTime Date { get; set; } // Data dnia
+        //    public DateTime Date { get; set; } // Data dnia
 
-            // Klucz obcy do miesiąca
-            public int MonthId { get; set; }
-            public Month Month { get; set; }
+        //    // Klucz obcy do miesiąca
+        //    public int MonthId { get; set; }
+        //    public Month Month { get; set; }
 
-            public ICollection<Event> Events { get; set; }
-        }
+        //    public ICollection<Event> Events { get; set; }
+        //}
 
         public class Event
         {
             [Key]
             public int EventId { get; set; }
-
+            public string EventPublicId { get; set; }
             public string Name { get; set; } // Nazwa wydarzenia
+            public string Month { get; set; } 
 
             public DateTime StartTime { get; set; } // Czas rozpoczęcia wydarzenia
 
             public DateTime EndTime { get; set; } // Czas zakończenia wydarzenia
 
-            // Klucz obcy do dnia
-            public int DayId { get; set; }
-            public Day Day { get; set; }
+            public string State { get; set; }
+
+            public string Type { get; set; }
+            public string Description { get; set; }
+
+            //public List<string>? Invited { get; set; }
+
+            public string? owner { get; set; }
         }
 
         public class ReservationManager
