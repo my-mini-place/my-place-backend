@@ -17,14 +17,14 @@ namespace Api.Services
 {
     public class CalendarService : ICalendarService
     {
-        private readonly ICalendarRepository _CalendarRepository;
+        private readonly ICalendarRepository _calendarRepository;
         private readonly List<string> months = new List<string> {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
              };
         public CalendarService(ICalendarRepository calendarRepository)
         {
-            _CalendarRepository = calendarRepository;
+            _calendarRepository = calendarRepository;
 
         }
 
@@ -34,7 +34,7 @@ namespace Api.Services
             {
                 int index = months.IndexOf(month) + 1;
                 //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
-                var events =  await _CalendarRepository.GetAll(x => x.Month == month);
+                var events =  await _calendarRepository.GetAll(x => x.Month == month);
 
                 CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month);
                 return Result.Success(monthEvents);
@@ -44,6 +44,15 @@ namespace Api.Services
                 return Result.Failure<CalendarMonthEventsDto>(Error.Failure("NoMonth","there is no such month"));
 
             }
+        }
+
+        public async Task<Result<string>> AddUserEvent(CalendarEventDto eventDto)
+        {
+            string id = Guid.NewGuid().ToString();
+            eventDto.EventId = id;
+            await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
+            return Result.Success(id);
+           // throw new NotImplementedException();
         }
     }
 }

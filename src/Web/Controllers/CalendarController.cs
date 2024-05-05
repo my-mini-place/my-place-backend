@@ -29,18 +29,15 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("user/calendar/event")]
-        public IActionResult AddUserEvent([FromBody] CalendarEventDto eventDto)
+        public async Task<object> AddUserEvent([FromBody] CalendarEventDto eventDto)
         {
-        //    string id  = Guid.NewGuid().ToString();
-        //    eventDto.EventId = id;
-        //    _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
-        //    var events = _dbContext.CalendarEvents;
-        //    foreach(Event e in events)
-        //    {
-        //        Console.WriteLine(e.Name);
-        //        Console.WriteLine(e.Month);
-        //    }
-            return Ok();
+            Result<string> response = await _calendarService.AddUserEvent(eventDto);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok(response.Value);
+           // return Ok();
         }
 
         [HttpPost("admin/calendar/event")]
