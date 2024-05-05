@@ -36,3 +36,12 @@ services:
     
     networks:
      - demoapp
+
+  runtrack-seg:
+   image: datalust/seq:latest
+   container_name: my-place.seq
+   environment: 
+   - ACCEPT_EULA=Y
+   ports:
+    - 5341:5341
+    - 8003:83

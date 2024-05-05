@@ -11,7 +11,10 @@ namespace IntegrationTests
     public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2019-latest").Build();
+            //.WithImage("mcr.microsoft.com/mssql/server:2019-latest")
+            //.WithEnvironment("MSSQL_SA_PASSWORD", "Password123#@")
+            //.WithEnvironment("ACCEPT_EULA", "Y")
+            .Build();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

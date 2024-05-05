@@ -14,9 +14,9 @@ namespace ArchitectureTest
     {
         public static readonly Assembly ApiAssembly = typeof(UserDTO).Assembly;
 
-        [Fact]
-        public void Naming_Rules_Test()
-        {
-        }
+        //[Fact]
+        //public void Naming_Rules_Test()
+        //{
+        //}
     }
 }
