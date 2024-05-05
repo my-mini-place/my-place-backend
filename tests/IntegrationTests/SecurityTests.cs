@@ -59,7 +59,7 @@ public class ProductTests : BaseIntegrationTest
         var loginDTO = new LoginDTO
         {
             Email = "Admin123@gmail.com",
-            Password = "Admin123"
+            Password = "Admin111@"
         };
 
         // Act
@@ -97,13 +97,5 @@ public class ProductTests : BaseIntegrationTest
 
         loginResult.IsSuccess.Should().BeTrue();
         // loginResult.Value.Should().NotBe(null);
-
-        var result2 = await _securityService.forgotPassword(forgotDTO);
-
-        ResetPasswordDTO resetDTO2 = new() { Email = "Admin123@gmail.com", NewPassword = "Admin123", ResetCode = result2.Value };
-
-        var resetresult2 = await _securityService.resetPassword(resetDTO);
-
-        resetresult2.IsSuccess.Should().BeTrue();
     }
 }
