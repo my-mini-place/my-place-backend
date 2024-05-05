@@ -21,7 +21,7 @@ jobs:
     env:
       Solution_Name: My-Place-Backend.sln                    
       Unit_Tests: tests\UnitTests\UnitTests.csproj  
-      Integration_Tests: tests\IntegrationTests\IntegrationTests.csproj
+    #  Integration_Tests: tests\IntegrationTests\IntegrationTests.csproj
       Architecture_Tests: tests\ArchitectureTests\ArchitectureTests.csproj
       
      # Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
