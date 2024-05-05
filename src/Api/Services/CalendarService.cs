@@ -41,7 +41,7 @@ namespace Api.Services
             }
             else
             {
-                return Result.Failure<CalendarMonthEventsDto>(Error.Failure("No month","there is no such month"));
+                return Result.Failure<CalendarMonthEventsDto>(Error.Failure("NoMonth","there is no such month"));
 
             }
         }
