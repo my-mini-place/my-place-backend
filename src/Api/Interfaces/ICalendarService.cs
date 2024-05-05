@@ -13,5 +13,6 @@ namespace Api.Interfaces
     {
         Task<Result<CalendarMonthEventsDto>> GetEventsByMonth(string month);
         Task<Result<string>> AddUserEvent(CalendarEventDto eventDto);
+        Task<Result<string>> AcceptOrRejectEvent(string eventId,string actionDto);
     }
 }

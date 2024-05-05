@@ -12,6 +12,7 @@ using My_Place_Backend.DTO.AccountManagment;
 using static Domain.Calendar;
 using static Domain.Models.Calendar.CalendarModels;
 using Web.Extensions;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace My_Place_Backend.Controllers
 {
@@ -19,13 +20,11 @@ namespace My_Place_Backend.Controllers
     [ApiController]
     public class CalendarController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly ICalendarService _calendarService;
 
-        public CalendarController(ApplicationDbContext dbContext, ICalendarService calendarService)
+        public CalendarController( ICalendarService calendarService)
         {
             _calendarService = calendarService;
-            _dbContext = dbContext;
         }
 
         [HttpPost("user/calendar/event")]
@@ -60,12 +59,14 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("calendar/events/{eventId}")]
-        public IActionResult AcceptOrRejectEvent(string eventId, [FromBody] string actionDto)
+        public async Task<object> AcceptOrRejectEvent( string eventId, [FromBody] ActionDto actionDto)
         {
-            // Tutaj możesz wywołać odpowiednią metodę serwisu kalendarza, aby zaakceptować lub odrzucić wydarzenie
-            // Użyj eventId do identyfikacji wydarzenia, a actionDto do uzyskania informacji o akcji (accept lub decline)
-            // Zwróć odpowiedni wynik w zależności od rezultatu operacji
-            return Ok(new { message = "Akcja została pomyślnie wykonana." });
+            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok(response.Value);
         }
 
         [HttpGet("calendar/events")]

@@ -22,7 +22,10 @@ namespace Api.Services
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
              };
-        public CalendarService(ICalendarRepository calendarRepository)
+
+        private enum  actions { Accept, TReject };
+
+    public CalendarService(ICalendarRepository calendarRepository)
         {
             _calendarRepository = calendarRepository;
 
@@ -53,6 +56,33 @@ namespace Api.Services
             await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
             return Result.Success(id);
            // throw new NotImplementedException();
+        }
+
+        public async Task<Result<string>> AcceptOrRejectEvent(string eventId, string actionDto)
+        {
+            var e = await _calendarRepository.Get(x => x.EventPublicId == eventId);
+
+        try
+        {
+                actions userAction = (actions)Enum.Parse(typeof(actions), actionDto);
+                if (userAction == actions.Accept)
+                {
+                    e.State = "Accepted";
+                    _calendarRepository.Update(e);
+                    return Result.Success("Event Accepted!!");
+                }
+                else
+                {
+                    e.State = "Rejected";
+                    _calendarRepository.Update(e);
+                    return Result.Success("Event Rejected!!");
+                }
+        }
+        catch
+        {
+                return Result.Failure<String>(Error.Failure("NoSuchAction", "there is no such action"));
+            }
+
         }
     }
 }

@@ -9,6 +9,10 @@ namespace Domain
 {
     public class Calendar
     {
+        public class ActionDto
+        {
+            public string actionDto { get; set; }
+        }
         public class CalendarMonthEventsDto
         {
             public string Month { get; set; }
