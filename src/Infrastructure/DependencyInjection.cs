@@ -37,7 +37,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRepository<Event>, CalendarRepository>();
+            services.AddScoped<ICalendarRepository, CalendarRepository>();
+
+
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()

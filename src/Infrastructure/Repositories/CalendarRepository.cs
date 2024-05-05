@@ -12,7 +12,7 @@ using Domain.Repositories;
 
 namespace Infrastructure.Repositories
 {
-    public class CalendarRepository : Repository<Event>, IRepository<Event>
+    public class CalendarRepository : Repository<Event>, ICalendarRepository
     {
         public CalendarRepository(ApplicationDbContext db) : base(db)
         {
