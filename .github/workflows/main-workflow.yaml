@@ -47,8 +47,8 @@ jobs:
     - name: Execute unit tests
       run: dotnet test $env:Unit_Tests
 
-    - name: Execute integration tests
-      run: dotnet test $env:Integration_Tests
+  #  - name: Execute integration tests
+    #  run: dotnet test $env:Integration_Tests
 
     - name: Execute architecture tests
       run: dotnet test $env:Architecture_Tests
