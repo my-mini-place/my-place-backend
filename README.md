@@ -1,19 +1,6 @@
-# My-Place
 
+Backend aplikacji do zarzadzania osiedlami mieszkaniowymi.
 
-W projekcie brakuje pliku : appsettings.json (.gitignore)
-ktory bazowo wyglada tak:
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*"
-  
-}
-jego aktualna wersja będzie pojawiać się na grupie 
 
 
 
