@@ -17,6 +17,8 @@ using Domain.ExternalInterfaces;
 using Domain.IRepositories;
 using AutoMapper;
 using Domain.Models.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Api.Services
 {
@@ -131,6 +133,18 @@ namespace Api.Services
 
             return Result.Success();
         }
+
+        //public async Task<Result<List<string>>> GetUserRoles(string UserId)
+        //{
+        //    //var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //    //if (identity != null)
+        //    //{
+        //    //    IEnumerable<Claim> claims = identity.Claims;
+        //    //    // or
+        //    //    identity.FindFirst("ClaimName").Value;
+
+        //    //}
+        //}
 
         public async Task<Result<LoginResponseDTO>> LoginAccount(LoginDTO loginDTO)
         {

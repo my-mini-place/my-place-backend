@@ -13,6 +13,9 @@ namespace My_Place_Backend.Controllers
     using Domain.Models.Identity;
     using Microsoft.AspNetCore.Identity;
 
+    using Web.Authorization;
+    using global::My_Place_Backend.Authorization;
+
     namespace My_Place_Backend.Controllers
     {
         [Route("api/[controller]")]
@@ -49,13 +52,19 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
+            [Authorize("IsUserOrAdmin")]
             public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
             {
+                // Guid userId = User.GetUserId();
+                //string userRole = User.GetUserRole();
+
+                //Console.WriteLine($"{userId}");
                 var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
                 return Ok(users.Value);
             }
 
             [HttpDelete("deleteUser/{userId}")]
+            [Authorize("IsAdmin")]
             public async Task<IActionResult> DeleteUser(string userId)
             {
                 var result = await _accountManagementService.DeleteUser(userId);
@@ -67,6 +76,7 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("getUserInfo/{userId}")]
+            [Authorize("IsAdmin")]
             public async Task<IActionResult> GetUserInfo(string userId)
             {
                 var result = await _accountManagementService.GetUserInfo(userId);
@@ -78,6 +88,7 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpPatch("updateUserRole/{userId}")]
+            [Authorize("")]
             public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] string role)
             {
                 var result = await _accountManagementService.UpdateUserRole(userId, role);

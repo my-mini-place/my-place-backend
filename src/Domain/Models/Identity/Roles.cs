@@ -12,5 +12,6 @@ namespace Domain.Models.Identity
         public const string Manager = "Manager";
         public const string Resident = "Resident";
         public const string Repairman = "Repairman";
+        public const string User = "User";
     }
 }
