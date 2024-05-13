@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+src/Api/Api.csproj
+src/Domain/Domain.csproj
+src/Infrastructure/Infrastructure.csproj
+src/Web/Web.csproj
+
 # User-specific files
 *.rsuser
 *.suo
