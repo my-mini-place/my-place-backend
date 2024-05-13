@@ -17,6 +17,8 @@ using Api.Services;
 using Infrastructure.EmailServices;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
+using static Domain.Models.Calendar.CalendarModels;
+using Domain.Models.Identity;
 using Domain.ValueObjects;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -26,7 +28,6 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DockerConnection");
-            //var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
@@ -38,13 +39,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICalendarRepository, CalendarRepository>();
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()
-                        // .AddRoleManager<RoleManager<IdentityRole>>()
-                        .AddEntityFrameworkStores<ApplicationDbContext>()
-                        .AddApiEndpoints();
+                        .AddEntityFrameworkStores<ApplicationDbContext>();
+            // .AddApiEndpoints();
 
             services.AddAuthentication(options =>
             {
@@ -58,7 +59,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
-
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))

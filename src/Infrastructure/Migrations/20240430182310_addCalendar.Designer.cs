@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430182310_addCalendar")]
+    partial class addCalendar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,27 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Day", b =>
+                {
+                    b.Property<int>("DayId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DayId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MonthId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DayId");
+
+                    b.HasIndex("MonthId");
+
+                    b.ToTable("Day");
+                });
 
             modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Event", b =>
                 {
@@ -30,20 +54,11 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DayId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("EventPublicId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Month")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -52,35 +67,27 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("owner")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("EventId");
 
-                    b.ToTable("CalendarEvents");
+                    b.HasIndex("DayId");
 
-                    b.HasData(
-                        new
-                        {
-                            EventId = 1,
-                            Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 2, 19, 6, 50, 464, DateTimeKind.Local).AddTicks(4731),
-                            EventPublicId = "02fca8fa-b3f4-425b-a08a-669f9b94713f",
-                            Month = "May",
-                            Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 2, 17, 6, 50, 464, DateTimeKind.Local).AddTicks(4683),
-                            State = "Created",
-                            Type = "Custom",
-                            owner = "John Doe"
-                        });
+                    b.ToTable("Event");
+                });
+
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Month", b =>
+                {
+                    b.Property<int>("MonthId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MonthId"));
+
+                    b.Property<int>("MonthNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("MonthId");
+
+                    b.ToTable("CalendarByMonth");
                 });
 
             modelBuilder.Entity("Domain.Models.Identity.User", b =>
@@ -222,15 +229,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "561657d3-13fc-4d4b-9154-60fe92b2e2d4",
+                            ConcurrencyStamp = "afaf3640-91c5-4c8c-84a0-a8958be624fc",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG685WZ1bpRQQCHjsSweXPJCh++p2FcUCS/tslrb3SwUNda0A5eBiO4YSwtt+y1RAw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPsuLV4CL3zJcsnf0gY+NJ5Uwwqz2qGY5iEtwo0P+lC/a3UeqxiYH9wMIpuktRMblQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "8a0e0a54-6b7f-4b37-a9b1-27d883d01f01",
+                            SecurityStamp = "b07ed5d8-3fbe-4fce-8b18-b63ff4fa5f57",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Admin123@gmail.com"
@@ -272,19 +279,19 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "40820103-c6af-4be7-aee9-8af11f557b14",
+                            Id = "74854f50-47b2-46b9-880f-65425d62075d",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "7d85f1a5-5c6f-4b4f-a61e-813668090b8c",
+                            Id = "7b8d3d91-7ef2-49b7-8f35-5c54f182d4a1",
                             Name = "Resident",
                             NormalizedName = "RESIDENT"
                         },
                         new
                         {
-                            Id = "73727b13-7c97-4b4d-9ea7-5dafb2138cab",
+                            Id = "78360bc9-93f5-46aa-9ba8-3eef2c602250",
                             Name = "Repairman",
                             NormalizedName = "REPAIRMAN"
                         });
@@ -403,6 +410,28 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Day", b =>
+                {
+                    b.HasOne("Domain.Models.Calendar.CalendarModels+Month", "Month")
+                        .WithMany("Days")
+                        .HasForeignKey("MonthId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Month");
+                });
+
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Event", b =>
+                {
+                    b.HasOne("Domain.Models.Calendar.CalendarModels+Day", "Day")
+                        .WithMany("Events")
+                        .HasForeignKey("DayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Day");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -452,6 +481,16 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Day", b =>
+                {
+                    b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Month", b =>
+                {
+                    b.Navigation("Days");
                 });
 #pragma warning restore 612, 618
         }
