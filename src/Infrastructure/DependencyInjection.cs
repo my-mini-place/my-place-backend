@@ -17,7 +17,7 @@ using Api.Services;
 using Infrastructure.EmailServices;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using Domain.Models.Identity;
+using Domain.ValueObjects;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

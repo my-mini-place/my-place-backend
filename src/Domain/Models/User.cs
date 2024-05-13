@@ -11,18 +11,16 @@ namespace Domain.Models.Identity
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
-        public string Email { get; set; }
+
         public string Name { get; set; }
         public string Surname { get; set; }
-        public string PostalCode { get; set; }
-        public string Street { get; set; }
-        public string BuildingNumber { get; set; }
-        public string ApartmentNumber { get; set; }
-        public int Floor { get; set; }
         public string Nickname { get; set; }
         public string PhoneNumber { get; set; }
+        public string Email { get; set; }
         public AccountStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Api.Interfaces;
 using Domain;
-using Domain.Models.Auth;
+using Domain.Entities;
 using Domain.Models.Identity;
 using Infrastructure.Data;
 
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using static Domain.Models.Auth.ServiceResponses;
+using static Domain.Entities.ServiceResponses;
 
 namespace Infrastructure.Identity
 {
@@ -67,10 +67,10 @@ namespace Infrastructure.Identity
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var userClaims = new[]
             {
-                new Claim("Id", user.Id),
-                new Claim("Name", user.Name),
-                new Claim("Email", user.Email),
-                new Claim("Role", user.Role)
+                new Claim("Id", user.Id!),
+                new Claim("Name", user.Name!),
+                new Claim("Email", user.Email!),
+                new Claim("Role", user.Role!)
             };
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

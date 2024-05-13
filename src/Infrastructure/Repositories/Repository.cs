@@ -50,7 +50,7 @@ namespace Infrastructure.Repositories
                     query = query.Include(includeProp);
                 }
             }
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstAsync();
         }
 
         public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)

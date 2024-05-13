@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Entities;
 using Domain.Models.Identity;
 using Infrastructure.Data.Configuration;
 using Microsoft.AspNetCore.Identity;
@@ -20,15 +21,19 @@ namespace Infrastructure.Data
         {
         }
 
-        public DbSet<User> UsersInfo { get; set; }
+        public DbSet<User> userinfo { get; set; }
+
+        public DbSet<Block> blocks { get; set; }
+
+        public DbSet<Residence> residences { get; set; }
+        public DbSet<Manager> managers { get; set; }
+        public DbSet<Administrator> administrators { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ConfigurationUserAndRole();
-            // It is possible to apply all configuration specified in types implementing
-            // IEntityTypeConfiguration in a given assembly.
-            //The order in which the configurations will be applied is undefined, therefore this method should only be used when the order doesn't matter.
-            builder.ApplyConfigurationsFromAssembly(typeof(UserTypeConfiguration).Assembly);
+
+            builder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
             base.OnModelCreating(builder);
         }
 
