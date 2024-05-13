@@ -25,7 +25,7 @@ namespace Api.Services
 
         private enum  actions { Accept, TReject };
 
-    public CalendarService(ICalendarRepository calendarRepository)
+        public CalendarService(ICalendarRepository calendarRepository)
         {
             _calendarRepository = calendarRepository;
 
