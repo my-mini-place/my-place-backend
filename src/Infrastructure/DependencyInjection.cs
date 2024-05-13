@@ -39,6 +39,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
+<<<<<<< HEAD
+=======
+            services.AddScoped<IDocumentRepository, DocumentRepository>();  
+>>>>>>> features/Documents
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()

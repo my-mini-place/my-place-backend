@@ -43,8 +43,6 @@ namespace My_Place_Backend.Controllers
         public IActionResult AddAdminEvent([FromBody] CalendarEventDto eventDto)
         {
 
-
-
             // Analogicznie jak powyżej, tutaj dodajesz wydarzenie jako administrator
             return Ok(new { eventId = Guid.NewGuid().ToString() });
         }
