@@ -1,11 +1,18 @@
+using Infrastructure;
+using Infrastructure.Identity;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddWebServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddAppServices();
-builder.Services.AddInfrastructureServices();
+
+builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
+
+await app.EnsureMigrationOfContext();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -15,9 +22,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{ }

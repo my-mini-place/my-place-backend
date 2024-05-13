@@ -1,17 +1,9 @@
-﻿
-
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 using Microsoft.Extensions.Configuration;
 
-
-
-
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
-
-
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -19,24 +11,18 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
-
-
-   // services.AddScoped<IUser, CurrentUser>();
+        // services.AddScoped<IUser, CurrentUser>();
 
         services.AddHttpContextAccessor();
 
-        // to sie moze przydac badanie 
+        // to sie moze przydac badanie
         //services.AddHealthChecks()
         //    .AddDbContextCheck<ApplicationDbContext>();
 
-
-        // przyda sie przy custom handlerach bledów 
-        // services.AddExceptionHandler<CustomExceptionHandler>();
+        // przyda sie przy custom handlerach bledów services.AddExceptionHandler<CustomExceptionHandler>();
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-
-
 
         services.AddSwaggerGen(options =>
         {
@@ -59,7 +45,7 @@ public static class DependencyInjection
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
-              
+
                 Name = "Bearer",
                 In = ParameterLocation.Header,
             },
@@ -68,16 +54,8 @@ public static class DependencyInjection
     });
         });
 
-
-
-
         // Add JWT
-
-
-
 
         return services;
     }
-
-   
 }
