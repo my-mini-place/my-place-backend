@@ -1,11 +1,14 @@
 using Infrastructure;
 using Infrastructure.Identity;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddWebServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddAppServices();
+
+builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -19,6 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 
 app.UseAuthentication();
 

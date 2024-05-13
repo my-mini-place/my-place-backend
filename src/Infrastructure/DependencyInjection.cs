@@ -18,6 +18,7 @@ using Infrastructure.EmailServices;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
 using static Domain.Models.Calendar.CalendarModels;
+using Domain.Models.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -63,6 +64,17 @@ namespace Microsoft.Extensions.DependencyInjection
             //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
             //    };
             //});
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", Roles.Administrator));
+                config.AddPolicy("IsMenagerOrAdmin", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator));
+                config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", "User", Roles.Administrator));
+                config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
+                config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));
+                config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", Roles.User));
+                // config.AddPolicy("IsUser", policy => policy.RequireClaim("roles", Roles.));
+            });
 
             // services.AddSingleton(TimeProvider.System); services.AddTransient<IIdentityService, IdentityService>();
 

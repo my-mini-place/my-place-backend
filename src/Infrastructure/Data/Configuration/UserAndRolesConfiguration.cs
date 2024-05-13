@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Domain.Models.Identity;
 
-namespace Course.Repository.Utilities
+namespace Infrastructure.Data.Configuration
 {
     public static class AddRoleToAdmin
     {
@@ -13,8 +13,8 @@ namespace Course.Repository.Utilities
                 new IdentityRole()
                 {
                     Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                    Name = Roles.Adminstrator,
-                    NormalizedName = Roles.Adminstrator.ToUpper()
+                    Name = Roles.Administrator,
+                    NormalizedName = Roles.Administrator.ToUpper()
                 }
                 );
 

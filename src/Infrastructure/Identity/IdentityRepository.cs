@@ -1,6 +1,7 @@
 ﻿using Api.Interfaces;
 using Domain;
 using Domain.Models.Auth;
+using Domain.Models.Identity;
 using Infrastructure.Data;
 
 using Microsoft.AspNetCore.Identity;
