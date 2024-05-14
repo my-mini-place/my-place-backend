@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models.AccountManagment
+namespace Domain.Entities
 {
     public class Block
     {
         public int Id;
-        public string blockId;
+        public string BlockId { get; set; } = null!;
 
-        public string name;
-        public string postalCode;
+        public string Name { get; set; } = null!;
+        public string PostalCode { get; set; } = null!;
         public int floors;
     }
 }

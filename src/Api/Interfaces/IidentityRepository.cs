@@ -1,5 +1,5 @@
 ﻿using Domain;
-using Domain.Models.Auth;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using My_Place_Backend.DTO.AccountManagment;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Domain.Models.Auth.ServiceResponses;
+using static Domain.Entities.ServiceResponses;
 
 namespace Api.Interfaces
 {
@@ -27,7 +27,7 @@ namespace Api.Interfaces
 
         Task<IdentityResult> FindOrCreateRole(string roleName);
 
-        Task<ApplicationUser> FindUserByEmailAsync(string email);
+        Task<ApplicationUser?> FindUserByEmailAsync(string email);
 
         Task<List<string>> GetUserRolesAsync(ApplicationUser user);
 

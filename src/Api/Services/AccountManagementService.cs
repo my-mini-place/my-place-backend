@@ -12,6 +12,7 @@ namespace Api.Services
     using Domain.IRepositories;
     using Domain.Models.Identity;
     using Domain.Repositories;
+    using Domain.ValueObjects;
     using global::Api.DTO.AccountManagment;
     using global::Api.Interfaces;
     using Infrastructure.Data;
@@ -41,7 +42,13 @@ namespace Api.Services
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                // sprawdzenie czy ma role admina nie zarządcy
+                if (statusUpdateDTO.AccountStatus == AccountStatus.Rejected && statusUpdateDTO.NewRole != null)
+                    return Result.Failure(Error.Conflict("AccountStatusUpdate", "Account cant be rejected and have new role"));
+
+                if (user.Status == statusUpdateDTO.AccountStatus)
+                {
+                    return Result.Failure(Error.Conflict("AccountStatus", "New status cant be the same as old one"));
+                }
 
                 user.Status = statusUpdateDTO.AccountStatus;
 
@@ -77,6 +84,7 @@ namespace Api.Services
                 }
 
                 _userRepository.Remove(user);
+
                 return Result.Success();
             }
 
@@ -93,7 +101,7 @@ namespace Api.Services
 
                 var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
 
-                var result = await _identityRepository.AddUserToRoleAsync(appuser, Role);
+                var result = await _identityRepository.AddUserToRoleAsync(appuser!, Role);
                 if (!result.Succeeded)
                 {
                 }

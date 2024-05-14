@@ -52,13 +52,8 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
-            [Authorize("IsUserOrAdmin")]
             public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
             {
-                // Guid userId = User.GetUserId();
-                //string userRole = User.GetUserRole();
-
-                //Console.WriteLine($"{userId}");
                 var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
                 return Ok(users.Value);
             }

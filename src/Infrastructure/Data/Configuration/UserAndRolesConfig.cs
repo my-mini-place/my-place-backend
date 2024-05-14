@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Domain.Models.Identity;
+using Domain.ValueObjects;
 
 namespace Infrastructure.Data.Configuration
 {
@@ -61,7 +61,7 @@ namespace Infrastructure.Data.Configuration
                    Email = "Admin123@gmail.com",
                    NormalizedUserName = "Admin123@gmail.com".ToUpper(),
                    NormalizedEmail = "Admin123@gmail.com".ToUpper(),
-                   PasswordHash = hasher.HashPassword(null, "Admin123"),
+                   PasswordHash = hasher.HashPassword(null!, "Admin123"),
                    EmailConfirmed = true,
                    LockoutEnabled = true,
                    PhoneNumberConfirmed = true,

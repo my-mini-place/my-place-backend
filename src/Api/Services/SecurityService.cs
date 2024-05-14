@@ -1,7 +1,6 @@
 ﻿using Api.Interfaces;
 using Domain;
 using Domain.Errors;
-using Domain.Models.Auth;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,14 +10,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
-using static Domain.Models.Auth.ServiceResponses;
+
+using static Domain.Entities.ServiceResponses;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
 using AutoMapper;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Domain.Entities;
+using Domain.ValueObjects;
 
 namespace Api.Services
 {
@@ -44,7 +45,6 @@ namespace Api.Services
             // czy istnieje
             var userExists = await _identityRepository.FindUserByEmailAsync(userDTO.Email);
             if (userExists != null) return Result.Failure<Guid>(Error.Failure("UserExists", "User already registered"));
-            // przerzuc to do mappera
 
             Guid newUserId = Guid.NewGuid();
 
@@ -63,22 +63,22 @@ namespace Api.Services
             var createUserResult = await _identityRepository.CreateUserAsync(newUser, userDTO.Password);
             if (!createUserResult.Succeeded)
             {
-                return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()?.Description));
+                return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()!.Description));
             }
 
-            // dodanie informacji o userze do innej tabeli (pontejcalnie mozna to polaczyc)
-            _userRepository.Add(UserInfo);
-            // zmien to pozniej
-            var roleResult = await _identityRepository.EnsureRoleAsync("User");
+            // dodanie informacji o userze do tabeli user
+            await _userRepository.Add(UserInfo);
+
+            var roleResult = await _identityRepository.EnsureRoleAsync(Roles.User);
             if (!roleResult.Succeeded)
             {
-                // return Result.Failure<Guid>(roleResult.Errors.FirstOrDefault()?.Description);
+                return Result.Failure<Guid>(Error.Failure("Role", "Error to ensure that role exist"));
             }
 
-            var addToRoleResult = await _identityRepository.AddUserToRoleAsync(newUser, "User");
+            var addToRoleResult = await _identityRepository.AddUserToRoleAsync(newUser, Roles.User);
             if (!addToRoleResult.Succeeded)
             {
-                // return Result.Failure<Guid>(addToRoleResult.Errors.FirstOrDefault()?.Description);
+                return Result.Failure<Guid>(Error.Failure("Role", "Error to add user Role "));
             }
 
             return Result.Success(newUserId);
@@ -104,7 +104,7 @@ namespace Api.Services
 
             var subject = "Resetowanie hasła";
             var message = $"Twój kod do resetowania hasła to: {result}";
-            var sendEmailResult = await _emailService.SendEmailAsync(user.Email, subject, message);
+            var sendEmailResult = await _emailService.SendEmailAsync(forgotPasswordDTO.Email, subject, message);
 
             //if (sendEmailResult.IsSuccess)
             //{

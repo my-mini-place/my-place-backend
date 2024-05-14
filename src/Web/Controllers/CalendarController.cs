@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using My_Place_Backend.DTO.AccountManagment;
 //using Domain.Calendar;
 using static Domain.Calendar;
-using static Domain.Models.Calendar.CalendarModels;
+using static Domain.Models.CalendarModels;
 using Web.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

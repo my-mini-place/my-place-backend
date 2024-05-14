@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240513232549_add users tables")]
+    partial class adduserstables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +35,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administrators");
+                    b.ToTable("administrators");
                 });
 
             modelBuilder.Entity("Domain.Entities.Block", b =>
@@ -43,20 +46,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BlockId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Blocks");
+                    b.ToTable("blocks");
                 });
 
             modelBuilder.Entity("Domain.Entities.Manager", b =>
@@ -75,7 +67,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Managers");
+                    b.ToTable("managers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Residence", b =>
@@ -112,7 +104,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("BlockId1");
 
-                    b.ToTable("Residences");
+                    b.ToTable("residences");
                 });
 
             modelBuilder.Entity("Domain.Entities.Resident", b =>
@@ -196,11 +188,11 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 14, 3, 48, 19, 713, DateTimeKind.Local).AddTicks(6963),
-                            EventPublicId = "53c338d1-5f3b-45fd-ac70-9362cdbb792c",
+                            EndTime = new DateTime(2024, 5, 14, 3, 25, 48, 689, DateTimeKind.Local).AddTicks(2867),
+                            EventPublicId = "f4e0ea05-f25c-4e85-b0df-fe93a3e74058",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 14, 1, 48, 19, 713, DateTimeKind.Local).AddTicks(6900),
+                            StartTime = new DateTime(2024, 5, 14, 1, 25, 48, 689, DateTimeKind.Local).AddTicks(2783),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -252,7 +244,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usersinfo");
+                    b.ToTable("userinfo");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.ApplicationUser", b =>
@@ -330,15 +322,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8b329075-7612-42e9-ab79-f9cee558ef8b",
+                            ConcurrencyStamp = "730a5be5-ba2d-4eb2-868f-816855a3ef4e",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENT9TOu6LX/COgGgEv+8Sg41SDn3emJrBjmamRqvIBDfsHXwQY2JHc3a+wIIDtoydg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBULHiGu04qe2ZgBNwB+jyfMVMnkPeEPodR7ccMwlu0aqO3BS4Xb9lE6raPmkhGHPg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "bcfe5a5f-230b-4d6d-8db0-c3f2dabe91cc",
+                            SecurityStamp = "c35cbeaa-9d38-44cc-969b-e56e1cb3a9ef",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Admin123@gmail.com"
@@ -380,19 +372,19 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "b1775dc0-0b27-4943-82f1-c0cadf2b8147",
+                            Id = "11f6f668-ee3c-41cd-99e2-b4c8be5d5020",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "e83e0a9a-28f4-4f8f-9b4b-12ee4f47a64c",
+                            Id = "b167f9b2-050f-40f2-8606-f9b62b5d8dd6",
                             Name = "Resident",
                             NormalizedName = "RESIDENT"
                         },
                         new
                         {
-                            Id = "9275e636-7dc0-4931-bcf3-f86b63cd7ed8",
+                            Id = "cb2ef90c-343d-412e-967a-2618e92cefc4",
                             Name = "Repairman",
                             NormalizedName = "REPAIRMAN"
                         });
