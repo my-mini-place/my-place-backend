@@ -9,7 +9,5 @@ namespace My_Place_Backend.DTO.AccountManagment
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? ResidenceID { get; set; }
-
-        public AccountStatus? AccountStatus { get; set; }
     }
 }

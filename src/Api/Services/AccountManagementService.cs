@@ -101,7 +101,7 @@ namespace Api.Services
 
                 var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
 
-                var result = await _identityRepository.AddUserToRoleAsync(appuser, Role);
+                var result = await _identityRepository.AddUserToRoleAsync(appuser!, Role);
                 if (!result.Succeeded)
                 {
                 }

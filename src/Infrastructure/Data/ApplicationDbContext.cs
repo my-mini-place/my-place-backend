@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using static Domain.Models.Calendar.CalendarModels;
+using static Domain.Models.CalendarModels;
 
 namespace Infrastructure.Data
 {
@@ -22,14 +22,14 @@ namespace Infrastructure.Data
         {
         }
 
-        public DbSet<User> userinfo { get; set; }
+        public DbSet<User> Usersinfo { get; set; }
 
-        public DbSet<Block> blocks { get; set; }
+        public DbSet<Block> Blocks { get; set; }
 
-        public DbSet<Residence> residences { get; set; }
-        public DbSet<Manager> managers { get; set; }
-        public DbSet<Administrator> administrators { get; set; }
-     
+        public DbSet<Residence> Residences { get; set; }
+        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Administrator> Administrators { get; set; }
+
         public DbSet<Event> CalendarEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -39,7 +39,7 @@ namespace Infrastructure.Data
             // It is possible to apply all configuration specified in types implementing
             // IEntityTypeConfiguration in a given assembly.
             //The order in which the configurations will be applied is undefined, therefore this method should only be used when the order doesn't matter.
-            builder.ApplyConfigurationsFromAssembly(typeof(UserTypeConfiguration).Assembly);
+            builder.ApplyConfigurationsFromAssembly(typeof(UserConfig).Assembly);
             base.OnModelCreating(builder);
         }
 

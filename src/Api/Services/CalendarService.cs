@@ -24,7 +24,7 @@ namespace Api.Services
             "July", "August", "September", "October", "November", "December"
              };
 
-        private enum actions
+        private enum Actions
         { Accept, TReject };
 
         public CalendarService(ICalendarRepository calendarRepository)
@@ -64,8 +64,8 @@ namespace Api.Services
 
             try
             {
-                actions userAction = (actions)Enum.Parse(typeof(actions), actionDto);
-                if (userAction == actions.Accept)
+                Actions userAction = (Actions)Enum.Parse(typeof(Actions), actionDto);
+                if (userAction == Actions.Accept)
                 {
                     e.State = "Accepted";
                     _calendarRepository.Update(e);

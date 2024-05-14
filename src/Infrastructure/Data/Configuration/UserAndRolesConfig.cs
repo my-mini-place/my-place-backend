@@ -61,7 +61,7 @@ namespace Infrastructure.Data.Configuration
                    Email = "Admin123@gmail.com",
                    NormalizedUserName = "Admin123@gmail.com".ToUpper(),
                    NormalizedEmail = "Admin123@gmail.com".ToUpper(),
-                   PasswordHash = hasher.HashPassword(null, "Admin123"),
+                   PasswordHash = hasher.HashPassword(null!, "Admin123"),
                    EmailConfirmed = true,
                    LockoutEnabled = true,
                    PhoneNumberConfirmed = true,

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configuration
 {
-    public class ResidentConfiguration : IEntityTypeConfiguration<Resident>
+    public class ManagerConfiguration : IEntityTypeConfiguration<Manager>
     {
-        public void Configure(EntityTypeBuilder<Resident> builder)
+        public void Configure(EntityTypeBuilder<Manager> builder)
         {
             builder.HasKey(x => x.Id);
         }

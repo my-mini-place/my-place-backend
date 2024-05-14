@@ -32,11 +32,11 @@ public class ProductTests : BaseIntegrationTest
             Password = "SecurePass!2024", // zmienione hasło
             Name = "Jane", // zmienione imię
             Surname = "Doe", // zmienione nazwisko
-            PostalCode = "00-001", // przykładowy kod pocztowy
-            Street = "Main Street", // przykładowa ulica
-            BuildingNumber = "24", // przykładowy numer budynku
-            ApartmentNumber = "5", // przykładowy numer mieszkania
-            Floor = 3, // przykładowe piętro
+            //PostalCode = "00-001", // przykładowy kod pocztowy
+            //Street = "Main Street", // przykładowa ulica
+            //BuildingNumber = "24", // przykładowy numer budynku
+            //ApartmentNumber = "5", // przykładowy numer mieszkania
+            //Floor = 3, // przykładowe piętro
             Nickname = "jdoe", // przykładowy pseudonim
             PhoneNumber = "123-456-789" // przykładowy numer telefonu
         };
@@ -46,7 +46,7 @@ public class ProductTests : BaseIntegrationTest
 
         // Assert Assert.True(result.IsSuccess); Assert.Equal(newUserId.Id, result.Value.ToString());
 
-        var data = DbContext.UsersInfo.Where(u => u.Email == "jane.doe@example.com").Should().HaveCount(1);
+        var data = DbContext.Usersinfo.Where(u => u.Email == "jane.doe@example.com").Should().HaveCount(1);
 
         result.IsFailure.Should().Be(false);
     }

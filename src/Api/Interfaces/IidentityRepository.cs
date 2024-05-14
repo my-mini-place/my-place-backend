@@ -27,7 +27,7 @@ namespace Api.Interfaces
 
         Task<IdentityResult> FindOrCreateRole(string roleName);
 
-        Task<ApplicationUser> FindUserByEmailAsync(string email);
+        Task<ApplicationUser?> FindUserByEmailAsync(string email);
 
         Task<List<string>> GetUserRolesAsync(ApplicationUser user);
 

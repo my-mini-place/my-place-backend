@@ -17,7 +17,7 @@ using Api.Services;
 using Infrastructure.EmailServices;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using static Domain.Models.Calendar.CalendarModels;
+using static Domain.Models.CalendarModels;
 using Domain.Models.Identity;
 using Domain.ValueObjects;
 

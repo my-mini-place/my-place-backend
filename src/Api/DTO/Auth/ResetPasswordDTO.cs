@@ -2,8 +2,8 @@
 {
     public class ResetPasswordDTO
     {
-        public string Email { get; set; }
-        public string ResetCode { get; set; }
-        public string NewPassword { get; set; }
+        public string Email { get; set; } = null!;
+        public string ResetCode { get; set; } = null!;
+        public string NewPassword { get; set; } = null!;
     }
 }

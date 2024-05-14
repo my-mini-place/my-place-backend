@@ -33,6 +33,7 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             Result<LoginResponseDTO> response = await _SecurityService.LoginAccount(loginDTO);
