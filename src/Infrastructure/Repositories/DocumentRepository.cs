@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Domain;
-using static Domain.Models.Calendar.CalendarModels;
 
 namespace Infrastructure.Repositories
 {
@@ -19,7 +18,7 @@ namespace Infrastructure.Repositories
 
         public List<Document> GetAll()
         {
-            return null;
+            return null!;
         }
     }
 }

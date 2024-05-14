@@ -11,51 +11,51 @@ namespace Domain
     {
         public class ActionDto
         {
-            public string actionDto { get; set; }
+            public string actionDto { get; set; } = null!;
         }
+
         public class CalendarMonthEventsDto
         {
-            public string Month { get; set; }
-            public List<CalendarDayEventsDto> Days { get; set; }
+            public string Month { get; set; } = null!;
+            public List<CalendarDayEventsDto> Days { get; set; } = null!;
         }
 
         public class CalendarDayEventsDto
         {
-            public string Day { get; set; }
+            public string Day { get; set; } = null!;
             public int DayNumber { get; set; }
-            public List<CalendarEventDto> Events { get; set; }
+            public List<CalendarEventDto> Events { get; set; } = null!;
         }
 
         public class CalendarEventDto
         {
-            public string EventId { get; set; }
-            public string Type { get; set; }
-            public string Description { get; set; }
+            public string EventId { get; set; } = null!;
+            public string Type { get; set; } = null!;
+            public string Description { get; set; } = null!;
             public DateTime From { get; set; }
             public DateTime To { get; set; }
-            public List<string> Invited { get; set; }
-            public string State { get; set; }
+            public List<string> Invited { get; set; } = null!;
+            public string State { get; set; } = null!;
         }
 
         public class UserDto
         {
-            public string name { get; set; }
-            public string role { get; set; }
-            public string email { get; set; }
+            public string name { get; set; } = null!;
+            public string role { get; set; } = null!;
+            public string email { get; set; } = null!;
         }
-
 
         public class AvailabilityResponseDto
         {
-            public string Day { get; set; }
-            public List<KonserwatorDto> Konserwatorzy { get; set; }
+            public string Day { get; set; } = null!;
+            public List<KonserwatorDto> Konserwatorzy { get; set; } = null!;
         }
 
         public class KonserwatorDto
         {
-            public string Imie { get; set; }
-            public string Nazwisko { get; set; }
-            public List<string> DostepneGodziny { get; set; }
+            public string Imie { get; set; } = null!;
+            public string Nazwisko { get; set; } = null!;
+            public List<string> DostepneGodziny { get; set; } = null!;
         }
 
         public static class CalednarMapper
@@ -64,9 +64,10 @@ namespace Domain
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
              };
+
             public static CalendarEventDto castEventToClient(Event e)
             {
-                CalendarEventDto eventDto = new CalendarEventDto();
+                CalendarEventDto eventDto = new();
                 eventDto.EventId = e.EventPublicId;
                 eventDto.Type = e.Type;
                 eventDto.State = e.State;
@@ -75,7 +76,8 @@ namespace Domain
                 eventDto.To = e.EndTime;
                 return eventDto;
             }
-            public static CalendarMonthEventsDto castEventsToClient(List<Event> events,int m,string month)
+
+            public static CalendarMonthEventsDto castEventsToClient(List<Event> events, int m, string month)
             {
                 int year = DateTime.Now.Year; // Rok
 
@@ -95,16 +97,16 @@ namespace Domain
                     monthObject.Days.Add(dayObject);
                 }
 
-                foreach(Event e in events)
+                foreach (Event e in events)
                 {
                     CalendarEventDto evenCasted = castEventToClient(e);
-                    int index = evenCasted.From.Day-1;
+                    int index = evenCasted.From.Day - 1;
                     monthObject.Days[index].Events.Add(evenCasted);
                 }
                 return monthObject;
             }
 
-            public static Event castEventDtoToServer(CalendarEventDto e )
+            public static Event castEventDtoToServer(CalendarEventDto e)
             {
                 Event serverEvent = new Event();
                 serverEvent.EventPublicId = e.EventId;
@@ -114,12 +116,10 @@ namespace Domain
                 serverEvent.StartTime = e.From;
                 serverEvent.EndTime = e.To;
                 serverEvent.State = "Created";
-                serverEvent.Month = months[e.From.Month-1];
+                serverEvent.Month = months[e.From.Month - 1];
 
                 return serverEvent;
             }
-
-            
         }
     }
 }

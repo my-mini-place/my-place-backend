@@ -11,10 +11,10 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        public string UserId { get; set; }
-        public User User { get; set; }
+        public string UserId { get; set; } = null!;
+        public User User { get; set; } = null!;
 
-        public Residence Residence { get; set; }
-        public string ResidenceId { get; set; }
+        public Residence Residence { get; set; } = null!;
+        public string ResidenceId { get; set; } = null!;
     }
 }
