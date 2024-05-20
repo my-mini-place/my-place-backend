@@ -16,6 +16,7 @@ namespace Infrastructure
         public static async Task EnsureMigrationOfContext(this IApplicationBuilder app)
         {
                 using var scope = app.ApplicationServices.CreateScope();
+
                 var services = scope.ServiceProvider;
 
                 var context = services.GetRequiredService<ApplicationDbContext>();

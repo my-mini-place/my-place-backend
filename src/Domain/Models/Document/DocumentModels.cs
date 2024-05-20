@@ -13,11 +13,12 @@ namespace Domain.Models.Document
 {
     public class DocumentModels
     {
-        public class Event
+        public class Document
         {
             [Key]
             public int DocumentId { get; set; }
-       
+            
+            public string pdfFile { get; set; }
         }
 
     }

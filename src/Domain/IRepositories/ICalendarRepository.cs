@@ -10,5 +10,7 @@ namespace Domain.IRepositories
 {
     public interface ICalendarRepository:IRepository<Event>
     {
+
+
     }
 }

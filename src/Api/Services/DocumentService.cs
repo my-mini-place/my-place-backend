@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Domain.Document;
 using Domain.Errors;
 using Domain.IRepositories;
 using Api.Interfaces;
@@ -11,30 +10,50 @@ using AutoMapper;
 using Domain;
 using Domain.ExternalInterfaces;
 using Domain.Repositories;
+using static Domain.Models.Document.DocumentModels;
+using static Domain.Calendar;
 
 namespace Api.Services
 {
     public class DocumentService : IDocumentService
     {
         private readonly IDocumentRepository _documentRepository;
-        public  IEnumerable<Document> GetDocuments()
+
+        public DocumentService(IDocumentRepository documentRepository)
         {
-            List<Document> documents = new List<Document>();
-            documents = _documentRepository.GetAll();
-            return documents;
+            _documentRepository = documentRepository;
+
         }
 
-        public Document GetDocumentById(int id)
+        public  IEnumerable<Document> GetDocuments()
         {
-            List<Document> documents = new List<Document>();
-            documents = _documentRepository.GetAll();
+            //List<Document> documents = new List<Document>();
+            //documents = _documentRepository.GetAll();
+            //return documents;
 
-            foreach(var document in documents)
+
+            return null;
+        }
+
+
+        public async Task<Result<Document>> GetDocumentById(int id)
+        {
+
+           var documents = await _documentRepository.GetAll(x => x.DocumentId == id);
+
+            if (documents.Count != 0)
             {
-                if (document.Id == id)
-                    return document;
+                return Result.Success(documents[0]);
             }
+            else
+            {
+                return Result.Failure<Document>(Error.Failure("Couldn't find such document!", "No such index of document exist!"));
+            }
+            
+        }
 
+        public async Task<Result<List<Document>>> GetDocumentList()
+        {
             return null;
         }
     }

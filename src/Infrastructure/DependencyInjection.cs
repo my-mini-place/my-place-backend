@@ -43,8 +43,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
-                        .AddRoles<IdentityRole>()
-                        .AddEntityFrameworkStores<ApplicationDbContext>();
+                      .AddRoles<IdentityRole>()
+                      .AddEntityFrameworkStores<ApplicationDbContext>();
                        // .AddApiEndpoints();
 
             //services.AddAuthentication(options =>
@@ -73,7 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
                 config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));
                 config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", Roles.User));
-                // config.AddPolicy("IsUser", policy => policy.RequireClaim("roles", Roles.));
+                //config.AddPolicy("IsUser", policy => policy.RequireClaim("roles", Roles.));
             });
 
             // services.AddSingleton(TimeProvider.System); services.AddTransient<IIdentityService, IdentityService>();

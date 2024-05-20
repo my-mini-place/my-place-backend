@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Extensions.Logging;
 using My_Place_Backend.DTO.AccountManagment;
 //using Domain.Calendar;
-using static Domain.Document;
 using static Domain.Models.Document.DocumentModels;
 using Web.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;

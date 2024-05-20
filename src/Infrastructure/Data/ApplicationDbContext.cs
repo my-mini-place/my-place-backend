@@ -12,6 +12,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.Calendar.CalendarModels;
+using static Domain.Models.Document.DocumentModels;
 
 namespace Infrastructure.Data
 {
@@ -23,11 +24,13 @@ namespace Infrastructure.Data
 
         public DbSet<User> UsersInfo { get; set; }
         public DbSet<Event> CalendarEvents { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ConfigurationUserAndRole();
             builder.AddTestCalendarData();
+            builder.addTestDocumentData();
             // It is possible to apply all configuration specified in types implementing
             // IEntityTypeConfiguration in a given assembly.
             //The order in which the configurations will be applied is undefined, therefore this method should only be used when the order doesn't matter.
