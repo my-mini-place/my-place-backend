@@ -15,5 +15,8 @@ namespace Api.Interfaces
         Task<Result<string>> AddUserEvent(CalendarEventDto eventDto);
         Task<Result<string>> AcceptOrRejectEvent(string eventId,string actionDto);
         Result<string> GetUsers();
+
+        Task<Result<CalendarMonthFreeTime>> GetAvailabilityByMonth(string month);
+        
     }
 }

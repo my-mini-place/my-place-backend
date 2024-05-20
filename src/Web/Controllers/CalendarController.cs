@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using My_Place_Backend.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Domain.IRepositories;
+using System.Security.Cryptography.Xml;
 
 
 namespace My_Place_Backend.Controllers
@@ -131,6 +132,20 @@ namespace My_Place_Backend.Controllers
             };
 
             return Ok(response);
+        }
+        [HttpGet("MonthTimeAvailability")]
+        public async Task<object>  GetMonthFreeTime([FromQuery] string month)
+        {
+            Result<CalendarMonthFreeTime> resp = await _calendarService.GetAvailabilityByMonth(month);
+            //Console.WriteLine("-----------------");
+            //foreach (var t in resp.Value.Days)
+            //{
+            //    Console.WriteLine("kolejna");
+            //    foreach (var d in resp.Value.Days)
+            //    foreach (var da in d.FreeTimeList)
+            //            Console.WriteLine(da.Start.ToString() + "||" + da.End.ToString());
+            //}
+            return Ok(resp.Value);
         }
     }
 }

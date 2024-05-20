@@ -13,6 +13,22 @@ namespace Domain
         {
             public string actionDto { get; set; }
         }
+        public class CalendarMonthFreeTime
+        {
+            public string Month { get; set; }
+            public List<CalendarDayFreeTime> Days { get; set; }
+        }
+        public class CalendarDayFreeTime
+        {
+            public string Day { get; set; }
+            public int DayNumber { get; set; }
+            public List<Slot> FreeTimeList { get; set; }
+        }
+        public class Slot
+        {
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+        }
         public class CalendarMonthEventsDto
         {
             public string Month { get; set; }
