@@ -73,6 +73,11 @@ namespace Domain
                 eventDto.Description = e.Description;
                 eventDto.From = e.StartTime;
                 eventDto.To = e.EndTime;
+                eventDto.Invited = new List<string>();
+                foreach (var item in e.Invited.Split([',']))
+                {
+                    eventDto.Invited.Add(item);
+                }
                 return eventDto;
             }
             public static CalendarMonthEventsDto castEventsToClient(List<Event> events,int m,string month)
@@ -115,7 +120,14 @@ namespace Domain
                 serverEvent.EndTime = e.To;
                 serverEvent.State = "Created";
                 serverEvent.Month = months[e.From.Month-1];
+                serverEvent.Invited = "";
+                StringBuilder sb = new StringBuilder();
+                foreach (string id in e.Invited)
+                {
 
+                    sb.Append(id + ",");
+                }
+                serverEvent.Invited = sb.ToString();
                 return serverEvent;
             }
 

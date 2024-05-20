@@ -13,6 +13,10 @@ using static Domain.Calendar;
 using static Domain.Models.Calendar.CalendarModels;
 using Web.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using My_Place_Backend.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Domain.IRepositories;
+
 
 namespace My_Place_Backend.Controllers
 {
@@ -22,9 +26,11 @@ namespace My_Place_Backend.Controllers
     {
         private readonly ICalendarService _calendarService;
 
+
         public CalendarController( ICalendarService calendarService)
         {
             _calendarService = calendarService;
+
         }
 
         [HttpPost("user/calendar/event")]
@@ -40,22 +46,24 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("admin/calendar/event")]
-        public IActionResult AddAdminEvent([FromBody] CalendarEventDto eventDto)
+        public async Task<object> AddAdminEvent([FromBody] CalendarEventDto eventDto)
         {
 
-
-
-            // Analogicznie jak powyżej, tutaj dodajesz wydarzenie jako administrator
-            return Ok(new { eventId = Guid.NewGuid().ToString() });
+            Result<string> response = await _calendarService.AddUserEvent(eventDto);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            return Ok(response.Value);
         }
 
         [HttpGet("users")]
         public IActionResult GetUsers([FromQuery] string name, [FromQuery] string role)
         {
-            // Tutaj pobierasz listę użytkowników w zależności od podanych parametrów
-            // Użyj serwisu lub repozytorium do pobrania danych użytkowników
-            var users = new List<UserDto>(); // Zastąp tę linię kodem, który pobiera użytkowników
-            return Ok(users);
+            Result<string> response = _calendarService.GetUsers();
+            Console.WriteLine("--------------");
+            Console.WriteLine(response.Value);
+            return Ok(response.Value);
         }
 
         [HttpPost("calendar/events/{eventId}")]
@@ -70,9 +78,17 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet("calendar/events")]
+        [Authorize()]
+
         public async Task<object> GetEventsByMonth([FromQuery] string month)
         {
-            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month);
+
+            Guid userId = User.GetUserId();
+            //string userRole = User.GetUserRole();
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine(userId.ToString());
+
+            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month,userId.ToString());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();

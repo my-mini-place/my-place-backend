@@ -53,8 +53,7 @@ namespace Domain.Models.Calendar
 
             public string Type { get; set; }
             public string Description { get; set; }
-
-            //public List<string>? Invited { get; set; }
+            public string? Invited { get; set; }
 
             public string? owner { get; set; }
         }

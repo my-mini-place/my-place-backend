@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240520154140_examplemigration")]
+    partial class examplemigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("EventPublicId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Invited")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Month")
@@ -75,12 +75,11 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 21, 1, 17, 57, 617, DateTimeKind.Local).AddTicks(8712),
-                            EventPublicId = "df7d46ff-a134-43ea-8955-5d70e8698250",
-                            Invited = "8e445865-a24d-4543-a6c6-9443d048cdb9,id2",
+                            EndTime = new DateTime(2024, 5, 20, 19, 41, 38, 628, DateTimeKind.Local).AddTicks(8398),
+                            EventPublicId = "3bc062b8-f276-473d-9e7f-a1c7480cf41e",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 20, 23, 17, 57, 617, DateTimeKind.Local).AddTicks(8572),
+                            StartTime = new DateTime(2024, 5, 20, 17, 41, 38, 628, DateTimeKind.Local).AddTicks(8350),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -226,15 +225,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "02237237-070d-45bc-9bd9-d915318730ea",
+                            ConcurrencyStamp = "9b5ce61d-5ae6-48a9-b98f-2ba7839747f9",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEImCWux23ADm2S4xD4qtfs/BFDiUQE15ygwRfyXlu/Aqh5z67OaVsDjOqtsMLTH4eQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEALFwS1WxR9heCAO5eT2yZqed9YEgGrbqSGyaKnYybvMHVN3VM8GJw3sZD00FJ3NNA==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "8e44f1f5-bb3a-46b1-a6ce-fe3b359bed6c",
+                            SecurityStamp = "d8d0231f-8be5-4500-97a4-44d35cb6fd44",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Admin123@gmail.com"
@@ -276,19 +275,19 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "559fe26a-6b81-462c-a7fd-7a8539975123",
+                            Id = "9306f3aa-9684-488a-a05d-f0840fe438cf",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3e822dd0-26ca-49e3-9ab6-e4ee24f41f73",
+                            Id = "b95d564d-83d7-478b-880b-868f2713e5a2",
                             Name = "Resident",
                             NormalizedName = "RESIDENT"
                         },
                         new
                         {
-                            Id = "53cc1f82-5fe4-4355-a41e-05b06c429ad6",
+                            Id = "161bcaa4-5edb-477f-a5d6-8179db2a60ee",
                             Name = "Repairman",
                             NormalizedName = "REPAIRMAN"
                         });
