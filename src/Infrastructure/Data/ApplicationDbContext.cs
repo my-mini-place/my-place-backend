@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.CalendarModels;
+using Domain.Models;
 
 namespace Infrastructure.Data
 {
@@ -31,6 +32,10 @@ namespace Infrastructure.Data
         public DbSet<Administrator> Administrators { get; set; }
 
         public DbSet<Event> CalendarEvents { get; set; }
+
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Option>  Options { get; set; }
+        public DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
