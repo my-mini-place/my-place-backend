@@ -164,9 +164,9 @@ namespace Api.Services
 
             return Result.Success(new LoginResponseDTO()
             {
-                TokenType = "JTW",
+                // TokenType = "JTW",
                 AccessToken = token,
-                ExpiresIn = 3600,
+                // ExpiresIn = 3600,
             }); ;
         }
     }
