@@ -101,7 +101,7 @@ namespace Api.Services
             {
                 int index = months.IndexOf(month) + 1;
                 //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
-                var events =  await _calendarRepository.GetAll(x => (x.Month == month)&&x.Invited.Contains(userid));
+                var events =  await _calendarRepository.GetAll(x => (x.Month == month)&&(x.Invited.Contains(userid)||x.owner==userid));
 
                 CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month);
                 return Result.Success(monthEvents);
@@ -126,21 +126,23 @@ namespace Api.Services
             }
             return Result.Success(sb.ToString());
         }
-        public async Task<Result<string>> AddUserEvent(CalendarEventDto eventDto)
+        public async Task<Result<string>> AddUserEvent(CalendarEventDto eventDto,string ownerId)
         {
             string id = Guid.NewGuid().ToString();
             eventDto.EventId = id;
-            await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
+            await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto,ownerId));
             return Result.Success(id);
            // throw new NotImplementedException();
         }
 
-        public async Task<Result<string>> AcceptOrRejectEvent(string eventId, string actionDto)
+        public async Task<Result<string>> AcceptOrRejectEvent(string eventId, string actionDto,string ownerid)
         {
-            var e = await _calendarRepository.Get(x => x.EventPublicId == eventId);
+            var e = await _calendarRepository.Get(x => (x.EventPublicId == eventId&&x.Invited.Contains(ownerid)));
+            if(e==null)
+                return Result.Failure<String>(Error.Failure("ThereIsNoEvent", "there is no such event"));
 
-        try
-        {
+            try
+            {
                 actions userAction = (actions)Enum.Parse(typeof(actions), actionDto);
                 if (userAction == actions.Accept)
                 {
@@ -158,7 +160,7 @@ namespace Api.Services
         catch
         {
                 return Result.Failure<String>(Error.Failure("NoSuchAction", "there is no such action"));
-            }
+        }
 
         }
 

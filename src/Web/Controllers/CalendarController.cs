@@ -17,10 +17,13 @@ using My_Place_Backend.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Domain.IRepositories;
 using System.Security.Cryptography.Xml;
+using Domain.Errors;
 
 
 namespace My_Place_Backend.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : ControllerBase
@@ -33,24 +36,55 @@ namespace My_Place_Backend.Controllers
             _calendarService = calendarService;
 
         }
-
+        [Authorize("IsResident")]
         [HttpPost("user/calendar/event")]
         public async Task<object> AddUserEvent([FromBody] CalendarEventDto eventDto)
         {
-            Result<string> response = await _calendarService.AddUserEvent(eventDto);
+
+            UserEventType eventType;
+            if (Enum.TryParse(eventDto.Type, out eventType))
+            {
+                Console.WriteLine($"Converted string to enum: {eventType}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to convert string to enum: {eventDto.Type}");
+                Result<String> r = Result.Failure<String>(Error.Failure("CantCreateThisType", "there is no such type for you"));
+                return NotFound(r.Value);
+
+            }
+
+            Guid userId = User.GetUserId();
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, userId.ToString());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
             }
+            if(response.IsSuccess)
             return Ok(response.Value);
-           // return Ok();
+            else
+             return BadRequest(response.Value);
+            // return Ok();
         }
 
+        [Authorize("IsAdmin")]
         [HttpPost("admin/calendar/event")]
         public async Task<object> AddAdminEvent([FromBody] CalendarEventDto eventDto)
         {
+            AdminEventType eventType;
+            if (Enum.TryParse(eventDto.Type, out eventType))
+            {
+                Console.WriteLine($"Converted string to enum: {eventType}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to convert string to enum: {eventDto.Type}");
+                Result<String> r = Result.Failure<String>(Error.Failure("CantCreateThisType", "there is no such type for you"));
+                return NotFound(r.Value);
 
-            Result<string> response = await _calendarService.AddUserEvent(eventDto);
+            }
+            Guid userId = User.GetUserId();
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, userId.ToString());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
@@ -66,11 +100,12 @@ namespace My_Place_Backend.Controllers
             Console.WriteLine(response.Value);
             return Ok(response.Value);
         }
-
+        [Authorize()]
         [HttpPost("calendar/events/{eventId}")]
         public async Task<object> AcceptOrRejectEvent( string eventId, [FromBody] ActionDto actionDto)
         {
-            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto);
+            Guid userId = User.GetUserId();
+            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto, userId.ToString());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();

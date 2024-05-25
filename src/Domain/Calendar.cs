@@ -9,6 +9,17 @@ namespace Domain
 {
     public class Calendar
     {
+        public enum UserEventType
+        {
+            Usterka,
+            SpotkanieAdmin
+        }
+
+        public enum AdminEventType
+        {
+            Custom,
+            SpotkanieOrganizacyjne
+        }
         public class ActionDto
         {
             public string actionDto { get; set; }
@@ -90,6 +101,7 @@ namespace Domain
                 eventDto.From = e.StartTime;
                 eventDto.To = e.EndTime;
                 eventDto.Invited = new List<string>();
+                
                 foreach (var item in e.Invited.Split([',']))
                 {
                     eventDto.Invited.Add(item);
@@ -125,7 +137,7 @@ namespace Domain
                 return monthObject;
             }
 
-            public static Event castEventDtoToServer(CalendarEventDto e )
+            public static Event castEventDtoToServer(CalendarEventDto e ,string ownderId)
             {
                 Event serverEvent = new Event();
                 serverEvent.EventPublicId = e.EventId;
@@ -136,6 +148,7 @@ namespace Domain
                 serverEvent.EndTime = e.To;
                 serverEvent.State = "Created";
                 serverEvent.Month = months[e.From.Month-1];
+                serverEvent.owner = ownderId;
                 serverEvent.Invited = "";
                 StringBuilder sb = new StringBuilder();
                 foreach (string id in e.Invited)
