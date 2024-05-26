@@ -26,7 +26,7 @@ namespace Api.Mappers
                   //.ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
                   //.ForMember(dest => dest.ApartmentNumber, opt => opt.MapFrom(src => src.ApartmentNumber))
                   //.ForMember(dest => dest.Floor, opt => opt.MapFrom(src => src.Floor))
-                  .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
+                  //  .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
                   .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                   .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => AccountStatus.Pending))
                   .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
@@ -48,7 +48,7 @@ namespace Api.Mappers
      //.ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
      //.ForMember(dest => dest.ApartmentNumber, opt => opt.MapFrom(src => src.ApartmentNumber))
      //.ForMember(dest => dest.Floor, opt => opt.MapFrom(src => src.Floor))
-     .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
+     // .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
      .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
      .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
         }

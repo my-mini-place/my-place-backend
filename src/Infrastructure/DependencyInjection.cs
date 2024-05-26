@@ -45,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
                         .AddRoles<IdentityRole>()
-                        .AddEntityFrameworkStores<ApplicationDbContext>();
+                        .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             // .AddApiEndpoints();
 
             services.AddAuthentication(options =>

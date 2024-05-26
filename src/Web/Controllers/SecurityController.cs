@@ -55,7 +55,7 @@ namespace My_Place_Backend.Controllers
             {
                 return response.ToProblemDetails();
             }
-            return Ok();
+                return Ok();
         }
 
         [HttpPost("resetPassword")]

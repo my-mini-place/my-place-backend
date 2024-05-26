@@ -124,7 +124,10 @@ namespace Infrastructure.Identity
 
         public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
+           
             return await _userManager.ResetPasswordAsync(user, token, newPassword);
+             
+
         }
 
         public async Task<string> ForgotPasswordAsync(ApplicationUser user)

@@ -20,7 +20,7 @@ namespace Infrastructure
 
                 var context = services.GetRequiredService<ApplicationDbContext>();
 
-                await context.Database.MigrateAsync();
+               await context.Database.MigrateAsync();
         }
     }
 }

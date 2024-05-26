@@ -40,11 +40,11 @@ namespace Api.Services
 
         public async Task<Result<Guid>> CreateAccount(RegisterDTO userDTO)
         {
-            if (userDTO is null) return Result.Failure<Guid>(Error.Failure("userDTO", "User DTO is null"));
+            if (userDTO is null) return Result.Failure<Guid>(Error.Validation("userDTO", "User DTO is null"));
 
             // czy istnieje
             var userExists = await _identityRepository.FindUserByEmailAsync(userDTO.Email);
-            if (userExists != null) return Result.Failure<Guid>(Error.Failure("UserExists", "User already registered"));
+            if (userExists != null) return Result.Failure<Guid>(Error.Conflict("UserExists", "User already registered"));
 
             Guid newUserId = Guid.NewGuid();
 
@@ -129,7 +129,7 @@ namespace Api.Services
             if (!result.Succeeded)
             {
                 return Result.Failure(Error.Failure("ResetPasswordFailed", $"{result.Errors}"));
-            }
+            } 
 
             return Result.Success();
         }
