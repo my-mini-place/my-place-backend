@@ -71,6 +71,7 @@ namespace Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
+
         public void Remove(T entity)
         {
             dbSet.Remove(entity);

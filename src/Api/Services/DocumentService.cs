@@ -11,8 +11,6 @@ using Domain;
 using Domain.ExternalInterfaces;
 using Domain.Repositories;
 using static Domain.Models.Document.DocumentModels;
-using static Domain.Calendar;
-
 
 namespace Api.Services
 {
@@ -39,14 +37,26 @@ namespace Api.Services
         public async Task<Result<Document>> GetDocumentById(int id)
         {
 
-           var documents = await _documentRepository.GetAll(x => x.DocumentId == id);
-
-            if (documents.Count != 0)
+            if (id < 0)
             {
+                return Result.Failure<Document>(Error.Failure("Wrong index", "No such index of document exist!"));
+            }
+
+           List<Document> documents = await _documentRepository.GetAll(x => x.DocumentId == id, null);
+
+
+
+            if (documents != null)
+            {
+                if (documents.Count == 0)
+                {
+                    return Result.Failure<Document>(Error.Failure("There are no Documents!", "No such index of document exist!"));
+                }
                 return Result.Success(documents[0]);
             }
             else
             {
+                
                 return Result.Failure<Document>(Error.Failure("Couldn't find such document!", "No such index of document exist!"));
             }
             
