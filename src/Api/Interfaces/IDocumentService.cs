@@ -19,5 +19,6 @@ namespace Api.Interfaces
 
         Task<Result<Document>> GetDocumentById(int id);
 
+        Task<Result<string>> AddDocument(DocumentDto documentDto);
     }
 }

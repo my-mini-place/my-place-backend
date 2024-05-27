@@ -15,6 +15,7 @@ using Domain.IRepositories;
 using Infrastructure.Repositories;
 using Azure;
 using Api.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace My_Place_Backend.Controllers
 {
@@ -118,6 +119,36 @@ namespace My_Place_Backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Wystąpił błąd podczas przetwarzania danych bitmapy: {ex.Message}");
+            }
+        }
+
+
+
+        [HttpPost]
+        [Route("/AddDocumentToDb")]
+        public async Task<IActionResult> AddDocumentToDb([FromBody] DocumentDto document)
+        {
+            if (document == null)
+            {
+                return BadRequest("Document object is null");
+            }
+
+            try
+            {
+                // Ustawienie daty utworzenia dokumentu na bieżącą
+                document.creation_date = DateTime.Now;
+                document.description += " !!!DODAWANE DO DB!!!";
+                // Dodanie dokumentu do kontekstu bazy danych
+                _documentService.AddDocument(document);
+                //await _documentService.SaveChangesAsync();
+
+                // Zwrócenie odpowiedzi z sukcesem
+                return Ok("Document created successfully");
+            }
+            catch (Exception ex)
+            {
+                // Jeśli wystąpił błąd podczas zapisywania dokumentu do bazy danych, zwróć błąd
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
