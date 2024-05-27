@@ -50,15 +50,15 @@ namespace Api.Services
 
             var newUser = new ApplicationUser
             {
-                UserId = newUserId,
-                Name = userDTO.Name,
+                UserId = newUserId.ToString(),
+              
                 Email = userDTO.Email,
                 UserName = userDTO.Email
             };
 
             var UserInfo = _mapper.Map<User>(userDTO);
 
-            UserInfo.UserId = newUserId;
+            UserInfo.UserId = newUserId.ToString();
 
             var createUserResult = await _identityRepository.CreateUserAsync(newUser, userDTO.Password);
             if (!createUserResult.Succeeded)
@@ -81,11 +81,14 @@ namespace Api.Services
                 return Result.Failure<Guid>(Error.Failure("Role", "Error to add user Role "));
             }
 
+            await _userRepository.Save();
+
             return Result.Success(newUserId);
         }
 
         public async Task<Result<string>> forgotPassword(ForgotPasswordDTO forgotPasswordDTO)
         {
+            
             if (forgotPassword == null)
             {
                 return Result.Failure<string>(Error.Failure("forgotPasswordDTO is null", "Login DTO is null"));

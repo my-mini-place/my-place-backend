@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories
         public async Task Add(T entity)
         {
             await dbSet.AddAsync(entity);
-            _db.SaveChanges();
+           
         }
 
         // tracked zwiększa performence dla danych tylko do odczytu
@@ -74,13 +74,13 @@ namespace Infrastructure.Repositories
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
-            _db.SaveChanges();
+           
         }
 
         public void RemoveRange(IEnumerable<T> entity)
         {
             dbSet.RemoveRange(entity);
-            _db.SaveChanges();
+          
         }
 
         public void Update(T obj)
@@ -88,11 +88,17 @@ namespace Infrastructure.Repositories
             try
             {
                 dbSet.Update(obj);
-                _db.SaveChanges();
+              
             }
             catch
             {
             }
+        }
+
+
+        public async  Task Save()
+        {
+           await  _db.SaveChangesAsync();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Domain.Entities
     public class Resident
     {
         public int Id { get; set; }
+        public string Guid { get; set; } = null!;
+
 
         public string UserId { get; set; } = null!;
         public User User { get; set; } = null!;

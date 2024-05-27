@@ -1,4 +1,5 @@
-﻿using Domain.ValueObjects;
+﻿using Api.DTO.AccountManagment;
+using Domain.ValueObjects;
 
 namespace My_Place_Backend.DTO.AccountManagment
 {
@@ -8,14 +9,15 @@ namespace My_Place_Backend.DTO.AccountManagment
         public string Email { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-
-        public string PostalCode { get; set; }
-        public string Street { get; set; }
-        public string BuildingNumber { get; set; }
-        public string ApartmentNumber { get; set; }
-        public int Floor { get; set; }
-        public string Nickname { get; set; }
         public string PhoneNumber { get; set; }
+
+        public ResidenceDTO? Residence { get; set; }
+
+        public TimeSpan? StartWorkTime { get; set; }
+        public TimeSpan? EndWorkTime { get; set; }
+
+        public string? BlockName { get; set;  }
+        public string Role { get; set; }
         public AccountStatus Status { get; set; }
     }
 }

@@ -23,8 +23,8 @@ namespace Api.Interfaces
 
         Task<Result> SetUserAvailability();
 
-        Task<Result> UpdateUserRole(string UserId, string newRole);
+        Task<Result> UpdateUserRole(string userId, string newRole);
 
-        Task<Result<UserDTO>> GetUserInfo(string UserId);
+        Task<Result<UserDTO>> GetUserInfo(string userId,string userRole);
     }
 }

@@ -19,10 +19,10 @@ namespace Api.Services
     {
         private readonly ICalendarRepository _calendarRepository;
 
-        private readonly List<string> months = new List<string> {
+        private readonly List<string> months = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
-             };
+             ];
 
         private enum Actions
         { Accept, TReject };

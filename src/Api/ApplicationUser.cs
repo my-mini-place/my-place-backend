@@ -9,7 +9,7 @@ namespace Infrastructure.Data
 {
     public class ApplicationUser : IdentityUser
     {
-        public Guid UserId { get; set; }
-        public string? Name { get; set; }
+        public string UserId { get; set; }
+      
     }
 }

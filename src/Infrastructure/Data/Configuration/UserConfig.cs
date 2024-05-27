@@ -1,4 +1,5 @@
-﻿using Domain.Models.Identity;
+﻿using Domain.Entities;
+using Domain.Models.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -14,6 +15,12 @@ namespace Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.Id);
+           
+
+            builder.HasIndex(u => u.UserId).IsUnique();
+
+          
+              
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240526171729_addUsers")]
-    partial class addUsers
+    [Migration("20240526224823_modelsconfig")]
+    partial class modelsconfig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,18 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Administrators");
                 });
@@ -73,12 +84,53 @@ namespace Infrastructure.Migrations
                     b.Property<TimeSpan>("EndWorkTime")
                         .HasColumnType("time");
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan>("StartWorkTime")
                         .HasColumnType("time");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Managers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Repairman", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("EndWorkTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("StartWorkTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Repairman");
                 });
 
             modelBuilder.Entity("Domain.Entities.Residence", b =>
@@ -126,6 +178,10 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ResidenceId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -135,16 +191,14 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ResidenceId1");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Resident");
                 });
@@ -199,11 +253,11 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 26, 21, 17, 29, 132, DateTimeKind.Local).AddTicks(3610),
-                            EventPublicId = "58ee7c3c-038f-4638-8f9c-45a36c742294",
+                            EndTime = new DateTime(2024, 5, 27, 2, 48, 23, 394, DateTimeKind.Local).AddTicks(148),
+                            EventPublicId = "b7606680-2368-4074-ae1a-5ac1e386483d",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 26, 19, 17, 29, 132, DateTimeKind.Local).AddTicks(3542),
+                            StartTime = new DateTime(2024, 5, 27, 0, 48, 23, 394, DateTimeKind.Local).AddTicks(40),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -246,10 +300,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Usersinfo");
                 });
@@ -393,15 +451,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f60fbde0-537d-4be5-af8d-a0cd9d91de8e",
+                            ConcurrencyStamp = "50c57990-cc87-468e-9860-c2947886affc",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB/OHeBjg4BdyNcoz2pRbvHOQYaCRsHuXJrT/l5amxVITrpPy/eCrZjWAOW6bX/eYw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIJ4UjHC4NlcVIop7Tkkb8tEK9P22T7pMCC8SPChppn0hbjR1FZmcFEa6PSbgKTANw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "f088d3c1-690f-4cdf-9fc5-e92d0a5e8b28",
+                            SecurityStamp = "6ec7015e-863a-4104-996b-c21549ada355",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Admin123@gmail.com"
@@ -410,15 +468,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "14238e66-5657-4f48-8298-85ffc37bb31e",
+                            ConcurrencyStamp = "984da328-4f5d-42de-9b00-c50f9533fa9f",
                             Email = "Manager123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "MANAGER123@GMAIL.COM",
                             NormalizedUserName = "MANAGER123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELrnmQ+E63//3UqBzW0DZ56oy0CSNXlg3Ap2j+1SGL9M9+miu0f+VmJoeju2u9KyTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEUzyWs8pa3f+CKctqdmc/Gw72KoAaVvdNokJBj9yc6ed/lGCXJK9XkyuhwZKgHaWQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "b59965b4-8bcd-4852-a817-195b1422eb7d",
+                            SecurityStamp = "c118f02f-fe43-4d57-9ba0-3996c3d5e5c2",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Manager123@gmail.com"
@@ -427,15 +485,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "78fbe803-ddaf-490a-8c43-1e7c2d4063dd",
+                            ConcurrencyStamp = "04a32618-4a07-4817-906f-0f11f5cfe265",
                             Email = "Resident123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "RESIDENT123@GMAIL.COM",
                             NormalizedUserName = "RESIDENT123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENoJLcmPvz+yHpbeESHkxO8U/LwpXhrcRsbJ8odiFtEXyrPmdLGNphmgVNMIC0GDrg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFR9BANrbtuLGOA0yWfu06xAXkn6C7cb50csYmANtvRswU37kxFn8KehQ/QafAhyqQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "b181a010-2432-4a06-bb87-fafc9e9f73a9",
+                            SecurityStamp = "fcdeca27-7941-4350-8a9c-9dceac1047fe",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Resident123@gmail.com"
@@ -444,15 +502,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "84d26d49-da84-46cc-84af-e03f60eddbc1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cc72fe3f-e6a1-4ae1-9eed-22778c0f7397",
+                            ConcurrencyStamp = "bbf9f7a0-1634-47db-bb27-4e227050cccd",
                             Email = "RepairMan123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "REPAIRMAN123@GMAIL.COM",
                             NormalizedUserName = "REPAIRMAN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAf/9P1oR13jm9leMKIJiSMnfhzizLyvE6iexl4Mo1OuspuYMyi3Txcq/eb6duvzUA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK/ZnQM0ridIyxSJSTWPlXdSfM5Caomr+ZeE6T+7R1l8F6qVjiCtgjJEU8rnEiDeFA==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6c987979-dd4d-470e-a4e2-ca89e6cf0f5c",
+                            SecurityStamp = "d0931948-bdc5-4ad1-8745-9f04ec23085a",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "RepairMan123@gmail.com"
@@ -640,6 +698,42 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Administrator", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Administrator", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Manager", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Manager", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Repairman", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Repairman", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Residence", b =>
                 {
                     b.HasOne("Domain.Entities.Block", "Block")
@@ -660,8 +754,9 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Identity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Resident", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

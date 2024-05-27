@@ -10,16 +10,16 @@ using Domain.Models.Identity;
 
 namespace Infrastructure.Data.Configuration
 {
-    public class ResidenceConfiguration : IEntityTypeConfiguration<Residence>
+    public class RepairmanConfiguration : IEntityTypeConfiguration<Repairman>
     {
-        public void Configure(EntityTypeBuilder<Residence> builder)
+        public void Configure(EntityTypeBuilder<Repairman> builder)
         {
             builder.HasKey(x => x.Id);
 
+            builder.HasOne(x => x.User)
+                .WithOne()
+                .HasForeignKey<Repairman>(x => x.UserId).HasPrincipalKey<User>(x => x.UserId);
 
-            builder.HasOne(x => x.Block)
-               .WithOne()
-               .HasForeignKey<Residence>(x => x.BlockId).HasPrincipalKey<Block>(x => x.BlockId);
 
         }
     }

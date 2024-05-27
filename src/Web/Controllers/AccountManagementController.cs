@@ -71,10 +71,14 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("getUserInfo/{userId}")]
-            [Authorize("IsAdmin")]
-            public async Task<IActionResult> GetUserInfo(string userId)
+            [Authorize("IsAny")]
+            public async Task<IActionResult> GetUserInfo()
             {
-                var result = await _accountManagementService.GetUserInfo(userId);
+
+                string userId = User.GetUserId().ToString();
+                string userRole = User.GetUserRole();
+
+                var result = await _accountManagementService.GetUserInfo(userId,userRole);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);

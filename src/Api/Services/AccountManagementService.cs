@@ -109,9 +109,11 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            public async Task<Result<UserDTO>> GetUserInfo(string UserId)
+            public async Task<Result<UserDTO>> GetUserInfo(string userId,string userRole)
             {
-                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
+
+
+                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));

@@ -15,6 +15,9 @@ namespace Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Block> builder)
         {
             builder.HasKey(x => x.Id);
+
+
+            
         }
     }
 }

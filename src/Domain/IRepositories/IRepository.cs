@@ -20,5 +20,9 @@ namespace Domain.Repositories
         void RemoveRange(IEnumerable<T> entity);
 
         void Update(T entity);
+
+        Task Save();
+
+
     }
 }

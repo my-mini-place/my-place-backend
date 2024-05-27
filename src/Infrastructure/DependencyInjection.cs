@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DockerConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
@@ -69,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthorization(config =>
             {
                 config.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", Roles.Administrator));
-                config.AddPolicy("IsMenagerOrAdmin", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator));
+                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator,Roles.Repairman,Roles.User));
                 config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", "User", Roles.Administrator));
                 config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
                 config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));
