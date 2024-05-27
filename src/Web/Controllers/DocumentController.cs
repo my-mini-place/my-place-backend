@@ -57,41 +57,89 @@ namespace My_Place_Backend.Controllers
             return Ok(response.Value); 
         }
 
-
-        // Endpoint POST do podpisywania dokumentu
-        [HttpPost("sign")]
-        public ActionResult<bool> SignDocument([FromBody] SignDocumentRequest request)
+        [HttpGet("getDocumentsSortedByDate{descending}")]
+        public async Task<object> getDocumentsSortedByDate(bool descending)
         {
-            //logika
+            var response = await _documentService.GetDocuments();
 
-            return Ok(true); 
-        }
-
-        [HttpPost("bitmap/{id}")]
-        public IActionResult GetBitmap(int id)
-        {
-            var document = _documentService.GetDocumentById(id);
-
-            if (document == null)
+            if (response.IsFailure)
             {
-                return NotFound(); 
+                return response.ToProblemDetails();
             }
 
-            //Zaimplementuje tutaj tworzenie Bitmapy.
-            //var bitmap = GenerateBitmap(document);
+            List<Document> response_sorted;
 
-            // Konwertuj bitmapę na ciąg znaków
-            //var bitmapString = ConvertBitmapToString(bitmap);
+            if (descending)
+            {
+                response_sorted = response.Value.OrderByDescending(obj => obj.creation_date).ToList();
+            }
+            else
+            {
+                response_sorted = response.Value.OrderBy(obj => obj.creation_date).ToList();
+            }
 
-            //return Ok(bitmapString);
-            return null;
+            return Ok(response_sorted);
         }
 
+
+        [HttpPost]
+        [Route("/signDocument")]
+        public IActionResult SignDocument([FromBody] SignDocumentRequest request)
+        {
+            // Tutaj możesz umieścić logikę do podpisywania dokumentu
+            if (request.Signed)
+            {
+                return Ok("Dokument został pomyślnie podpisany.");
+            }
+            else
+            {
+                return BadRequest("Nie udało się podpisać dokumentu.");
+            }
+        }
+
+        [HttpPost]
+        [Route("sign/document/bitmap/{document_id}")]
+        public IActionResult SignDocumentBitmap(int document_id, [FromBody] BitmapDataRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.BitmapData))
+            {
+                return BadRequest("Nieprawidłowe żądanie");
+            }
+
+            // Tutaj możesz umieścić logikę przetwarzania danych bitmapy
+            try
+            {
+                // Przykładowa logika przetwarzania danych bitmapy
+                var signingDocument = new SigningDocument();
+                request = signingDocument.SignDocument(request);
+
+                return Ok("Pomyślnie podpisano dokument,  Treść dokumentu: " + request.BitmapData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Wystąpił błąd podczas przetwarzania danych bitmapy: {ex.Message}");
+            }
+        }
+
+        public class SigningDocument
+        {
+            public BitmapDataRequest SignDocument(BitmapDataRequest request)
+            {
+                request.BitmapData += "    -   Dodaje podpis od dokumentu";
+
+                return request;
+            }
+
+        }
 
         public class SignDocumentRequest
         {
             public bool Signed { get; set; }
         }
 
+        public class BitmapDataRequest
+        {
+            public string BitmapData { get; set; }
+        }
     }
 }
