@@ -121,6 +121,34 @@ namespace My_Place_Backend.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("/AddDocumentToDb")]
+        public async Task<IActionResult> AddDocumentToDb([FromBody] DocumentDto document)
+        {
+            if (document == null)
+            {
+                return BadRequest("Document object is null");
+            }
+
+            try
+            {
+                // Ustawienie daty utworzenia dokumentu na bieżącą
+                document.creation_date = DateTime.Now;
+                document.description += " !!!DODAWANE DO DB!!!";
+                // Dodanie dokumentu do kontekstu bazy danych
+                _documentService.AddDocument(document);
+                //await _documentService.SaveChangesAsync();
+
+                // Zwrócenie odpowiedzi z sukcesem
+                return Ok("Document created successfully");
+            }
+            catch (Exception ex)
+            {
+                // Jeśli wystąpił błąd podczas zapisywania dokumentu do bazy danych, zwróć błąd
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         public class SigningDocument
         {
             public BitmapDataRequest SignDocument(BitmapDataRequest request)

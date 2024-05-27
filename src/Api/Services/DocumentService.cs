@@ -11,6 +11,7 @@ using Domain;
 using Domain.ExternalInterfaces;
 using Domain.Repositories;
 using static Domain.Models.Document.DocumentModels;
+using static Domain.Models.Documents.Documents;
 
 namespace Api.Services
 {
@@ -62,6 +63,16 @@ namespace Api.Services
             
         }
 
+        public async Task<Result<string>> AddDocument(DocumentDto documentDto)
+        {
+            string id = Guid.NewGuid().ToString();
+            int Id;
+            int.TryParse(id, out Id);
+            documentDto.DocumentId = Id;
+            await _documentRepository.Add(DocumentMapper.castDtoDocumentToDocument(documentDto));
+
+            return Result.Success(id);
+        }
 
 
     }

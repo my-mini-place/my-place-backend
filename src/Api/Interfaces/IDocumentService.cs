@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using static Domain.Models.Document.DocumentModels;
 using static Domain.Calendar;
 using Domain.IRepositories;
+using static Domain.Models.Documents.Documents;
 
 namespace Api.Interfaces
 {
@@ -19,5 +20,6 @@ namespace Api.Interfaces
 
         Task<Result<Document>> GetDocumentById(int id);
 
+        Task<Result<string>> AddDocument(DocumentDto documentDto);
     }
 }
