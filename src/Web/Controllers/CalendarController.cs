@@ -60,6 +60,7 @@ namespace My_Place_Backend.Controllers
         public async Task<object> AcceptOrRejectEvent( string eventId, [FromBody] ActionDto actionDto)
         {
             Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto);
+
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
@@ -78,6 +79,7 @@ namespace My_Place_Backend.Controllers
             return Ok(response.Value);
 
         }
+
 
         [HttpGet("availability")]
         [ProducesResponseType(typeof(List<AvailabilityResponseDto>), 200)]

@@ -13,6 +13,7 @@ using Domain.Repositories;
 using static Domain.Models.Document.DocumentModels;
 using static Domain.Calendar;
 
+
 namespace Api.Services
 {
     public class DocumentService : IDocumentService
@@ -25,14 +26,13 @@ namespace Api.Services
 
         }
 
-        public  IEnumerable<Document> GetDocuments()
+        public  async Task<Result<IEnumerable<Document>>> GetDocuments()
         {
-            //List<Document> documents = new List<Document>();
-            //documents = _documentRepository.GetAll();
-            //return documents;
+            var documents = await _documentRepository.GetAll();
 
+            var documentsEnumerable = documents.Cast<Document>();
 
-            return null;
+            return Result.Success(documentsEnumerable);
         }
 
 
@@ -52,9 +52,7 @@ namespace Api.Services
             
         }
 
-        public async Task<Result<List<Document>>> GetDocumentList()
-        {
-            return null;
-        }
+
+
     }
 }

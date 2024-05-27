@@ -14,6 +14,7 @@ using Web.Extensions;
 using Domain.IRepositories;
 using Infrastructure.Repositories;
 using Azure;
+using Api.Services;
 
 namespace My_Place_Backend.Controllers
 {
@@ -29,26 +30,31 @@ namespace My_Place_Backend.Controllers
         }
 
         //Pobierz wszystkie dokumenty
-        [HttpGet]
-        public ActionResult<IEnumerable<Document>> Get()
+        [HttpGet("getDocuments")]
+        public async Task<object> GetDocuments()
         {
-            var documents = _documentService.GetDocuments();
+            var response = await _documentService.GetDocuments();
 
-            return Ok(documents);
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+
+            return Ok(response.Value);
         }
 
         // Pobierz dokument o wybranym id 
-        [HttpGet("{id}")]
-        public ActionResult<Document> GetById(int id)
+        [HttpGet("/getDocumentById{id}")]
+        public async Task<object> GetById(int id)
         {
-            var document = _documentService.GetDocumentById(id);
+            Result<Document> response = await _documentService.GetDocumentById(id);
 
-            if (document == null)
+            if (response.IsFailure)
             {
-                return NotFound(); 
+                return response.ToProblemDetails();
             }
 
-            return Ok(document); 
+            return Ok(response.Value); 
         }
 
 

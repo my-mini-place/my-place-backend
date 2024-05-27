@@ -21,7 +21,7 @@ namespace UnitTests.Document
             var service = new DocumentService(null);
 
             // Act
-            var result = await service.GetDocumentList();
+            //var result = await service.GetDocumentList();
 
 
             // Assert

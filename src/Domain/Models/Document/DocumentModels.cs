@@ -16,9 +16,13 @@ namespace Domain.Models.Document
         public class Document
         {
             [Key]
-            public int DocumentId { get; set; }
-            
-            public string pdfFile { get; set; }
+            public int DocumentId { get; set; }   
+            public string content { get; set; }
+            public string  name {  get; set; }
+            public bool signed { get; set; }
+            public string description { get; set; }
+            public DateTime creation_date { get; set; }
+
         }
 
     }

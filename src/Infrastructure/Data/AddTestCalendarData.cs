@@ -31,6 +31,8 @@ namespace Infrastructure.Data
                 Description = "To jest opis przykładowego wydarzenia",
                 owner = "John Doe" // Przykładowy właściciel
             };
+
+
             modelBuilder.Entity<Event>().HasData(sampleEvent);
         }
     }
