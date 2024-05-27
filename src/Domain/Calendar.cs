@@ -20,6 +20,13 @@ namespace Domain
             Custom,
             SpotkanieOrganizacyjne
         }
+
+        public class usersDTO
+        {
+           public string email { get; set; }
+           public string id{ get; set; }
+         //  public string roles { get; set; }
+        }
         public class ActionDto
         {
             public string actionDto { get; set; }

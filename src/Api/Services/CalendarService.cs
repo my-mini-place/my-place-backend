@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Identity;
 using static Domain.Models.Calendar.CalendarModels;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.Xml;
+using Api.Interfaces.IRepositories;
+using IIdentityRepository = Api.Interfaces.IIdentityRepository;
 
 namespace Api.Services
 {
@@ -81,29 +83,33 @@ namespace Api.Services
     {
         private readonly ICalendarRepository _calendarRepository;
         private readonly UserManager<ApplicationUser> _userManager ;
+        private readonly IIdentityRepository _identityRepository;
+
 
         private readonly List<string> months = new List<string> {
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
+            "january", "february", "march", "april", "may", "june",
+            "july", "august", "september", "october", "november", "december"
              };
 
         private enum  actions { Accept, TReject };
 
-    public CalendarService(ICalendarRepository calendarRepository, UserManager<ApplicationUser> userManager )
+    public CalendarService(ICalendarRepository calendarRepository, UserManager<ApplicationUser> userManager, IIdentityRepository identityRepository)
         {
             _calendarRepository = calendarRepository;
             _userManager = userManager;
+            _identityRepository = identityRepository;
+
         }
 
         public async Task<Result<CalendarMonthEventsDto>> GetEventsByMonth(string month,string userid)
         {
-            if (months.Contains(month))
+            if (months.Contains(month.ToLower()))
             {
-                int index = months.IndexOf(month) + 1;
+                int index = months.IndexOf(month.ToLower()) + 1;
                 //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
-                var events =  await _calendarRepository.GetAll(x => (x.Month == month)&&(x.Invited.Contains(userid)||x.owner==userid));
+                var events =  await _calendarRepository.GetAll(x => (x.Month.ToLower() == month.ToLower()) &&(x.Invited.Contains(userid)||x.owner==userid));
 
-                CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month);
+                CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month.ToLower());
                 return Result.Success(monthEvents);
             }
             else
@@ -113,18 +119,62 @@ namespace Api.Services
             }
         }
 
-        public Result<string> GetUsers()
+        public async Task<Result<List<usersDTO>>> GetUsers(string name,string role)
         {
-
-            var users  = _userManager.Users;
-            StringBuilder sb = new StringBuilder();
-            foreach (var user in users)
+            foreach (var user in _userManager.Users)
             {
                 Console.WriteLine("----");
-                Console.WriteLine(user);
-                sb.Append(user.Id + ",");
+               // Console.WriteLine(user);
+                Console.WriteLine(user.UserName);
+               // sb.Append(user.Id + ",");
             }
-            return Result.Success(sb.ToString());
+            StringBuilder sb = new StringBuilder();
+            List<usersDTO> output = new List<usersDTO>();
+            List<ApplicationUser> users = _userManager.Users.Where(u => u.Email.ToLower().StartsWith(name.ToLower())).ToList();
+            if (role != "")
+            {
+                foreach (ApplicationUser user in users)
+                {
+                    var roleResult = await _identityRepository.GetUserRolesAsync(user);
+                   // Console.WriteLine("==========Role===========");
+                   // Console.WriteLine(roleResult);
+
+                    foreach (string s in roleResult)
+                    {
+                       // C/onsole.WriteLine("==========Rola===========");
+                        //Console.WriteLine(s);
+                    }
+                    if (roleResult.Contains(role))
+                    {
+                        usersDTO us = new usersDTO();
+                        us.email = user.Email;
+                        us.id = user.Id;
+                        //us.roles = roleResult.ToString();
+                        output.Add(us);
+                        //sb.Append(user.Id + ",");
+
+                    }
+                }
+
+                //  users = users.Where(u => u.)
+            }
+            else
+            {
+
+
+                foreach (var user in users)
+                {
+                    //Console.WriteLine("----");
+                    //Console.WriteLine(user);
+                   // sb.Append(user.Id + ",");
+                    usersDTO us = new usersDTO();
+                    us.email = user.Email;
+                    us.id = user.Id;
+                    //us.roles = roleResult.ToString();
+                    output.Add(us);
+                }
+            }
+            return Result.Success(output);
         }
         public async Task<Result<string>> AddUserEvent(CalendarEventDto eventDto,string ownerId)
         {

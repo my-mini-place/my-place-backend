@@ -14,10 +14,10 @@ namespace UnitTests.Calendar
         public async Task GetEventsByMonth_WrongMonth_ReturnsFailure()
         {
             // Arrange
-            var service = new CalendarService(null);
+            var service = new CalendarService(null,null);
 
             // Act
-            var result = await service.GetEventsByMonth("janray");
+            var result = await service.GetEventsByMonth("janray","0");
 
             // Assert
             result.IsSuccess.Should().BeFalse();

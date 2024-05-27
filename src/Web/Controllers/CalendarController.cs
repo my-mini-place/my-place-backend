@@ -93,10 +93,9 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet("users")]
-        public IActionResult GetUsers([FromQuery] string name, [FromQuery] string role)
+        public async Task<object> GetUsers([FromQuery] string name="", [FromQuery] string role="")
         {
-            Result<string> response = _calendarService.GetUsers();
-            Console.WriteLine("--------------");
+            Result<List<usersDTO>> response = await _calendarService.GetUsers(name,role);
             Console.WriteLine(response.Value);
             return Ok(response.Value);
         }
