@@ -2,6 +2,7 @@
 {
     using Api.DTO.AccountManagment;
     using Api.Interfaces;
+    using Domain;
     using global::My_Place_Backend.Authorization;
     using global::My_Place_Backend.DTO.AccountManagment;
     using Microsoft.AspNetCore.Authorization;
@@ -43,9 +44,14 @@
             }
 
             [HttpGet("users")]
-            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int page, int pageSize)
+            public async Task<IActionResult> ListUsers(int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder)
             {
                 var users = await _accountManagementService.ListUsers(page, pageSize, searchTerm, sortColumn, sortOrder);
+                if (users.IsFailure)
+                {
+                    return BadRequest(users.Error);
+                }
+
                 return Ok(users.Value);
             }
 
@@ -62,13 +68,17 @@
             }
 
             [HttpGet("getUserInfo/{userId}")]
-            [Authorize("IsAny")]
-            public async Task<IActionResult> GetUserInfo()
+            //[Authorize("IsAny")]
+            public async Task<IActionResult> GetUserInfo(string? userId)
             {
-                string userId = User.GetUserId().ToString();
-                string userRole = User.GetUserRole();
 
-                var result = await _accountManagementService.GetUserInfo(userId, userRole);
+                if (userId == null)
+                {
+                     userId = User.GetUserId().ToString();
+                    //string userRole = User.GetUserRole();
+                }
+
+                var result = await _accountManagementService.GetUserInfo(userId);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);

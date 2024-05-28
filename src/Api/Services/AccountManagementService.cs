@@ -7,6 +7,7 @@
     using Domain.Models.Identity;
     using Domain.ValueObjects;
     using global::Api.DTO.AccountManagment;
+    using global::Api.DTO.Residence;
     using global::Api.Interfaces;
     using My_Place_Backend.DTO.AccountManagment;
     using System.Threading.Tasks;
@@ -18,11 +19,19 @@
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper;
             private readonly IIdentityRepository _identityRepository;
+            private readonly IResidentRepository _residentRepository;
+            private readonly IRepairmanRepository _repairmanRepository;
+            private readonly IAdministratorRepository _administratorRepository;
+            private readonly IManagerRepository _managerRepository;
 
             private readonly Dictionary<string, Func<string, Task<UserFullInfoDTO>>> _userInfoSwitch;
 
-            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository, Dictionary<string, Func<string, Task<UserFullInfoDTO>>> _userInfoSwitch)
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository, IResidentRepository residentRepository,IAdministratorRepository administratorRepository,IManagerRepository managerRepository,IRepairmanRepository repairmanRepository)
             {
+                _repairmanRepository = repairmanRepository;
+                _administratorRepository = administratorRepository;
+                _managerRepository= managerRepository;
+                _residentRepository = residentRepository;
                 _userRepository = userRepository;
                 _mapper = mapper;
                 _identityRepository = identityRepository;
@@ -31,9 +40,10 @@
             {
                 {Roles.Manager, GetManagerInfo },
                 {Roles.Administrator, GetAdminInfo },
-                 {Roles.Manager, GetManagerInfo },
+                 {Roles.Resident, GetResidentInfo },
                 {Roles.Repairman, GetRepairManInfo },
             };
+                _residentRepository = residentRepository;
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
@@ -111,7 +121,7 @@
                 return Result.Success();
             }
 
-            public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId, string userRole)
+            public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId)
             {
                 var user = await _userRepository.Get(u => u.UserId == userId);
                 if (user == null)
@@ -119,8 +129,16 @@
                     return Result.Failure<UserFullInfoDTO>(Error.NotFound("User", "User not found"));
                 }
 
-                ///stara
-                ///
+                var userIdentity = await _identityRepository.FindUserById(userId);
+
+                if(userIdentity==null)
+                {
+                    return Result.Failure<UserFullInfoDTO>(Error.NotFound("UserApp", "UserApp not found"));
+                }
+
+                string userRole = user.Role;
+
+
 
                 try
                 {
@@ -147,26 +165,102 @@
 
             public async Task<UserFullInfoDTO> GetAdminInfo(string UserId)
             {
-                throw new NotImplementedException();
+                var GetResidentInfoResult = await _administratorRepository.Get(u => u.UserId == UserId, "User");
+
+
+                UserFullInfoDTO result = new()
+                {
+                    Id = UserId,
+                  //  Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
+                    Role = Roles.Resident,
+                    Email = GetResidentInfoResult.User.Email,
+                    Status = GetResidentInfoResult.User.Status,
+                    Name = GetResidentInfoResult.User.Name,
+                    Surname = GetResidentInfoResult.User.Surname,
+                    PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+
+                };
+
+                return result;
             }
 
             public async Task<UserFullInfoDTO> GetRepairManInfo(string UserId)
             {
-                throw new NotImplementedException();
+                var GetResidentInfoResult = await  _repairmanRepository.Get(u => u.UserId == UserId, "User");
+
+
+                UserFullInfoDTO result = new()
+                {
+                    Id = UserId,
+                    Role = Roles.Resident,
+                    Email = GetResidentInfoResult.User.Email,
+                    Status = GetResidentInfoResult.User.Status,
+                    Name = GetResidentInfoResult.User.Name,
+                    Surname = GetResidentInfoResult.User.Surname,
+                    PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+
+                };
+
+                return result;
             }
 
             public async Task<UserFullInfoDTO> GetResidentInfo(string UserId)
             {
-                throw new NotImplementedException();
+
+                var GetResidentInfoResult = await _residentRepository.Get(u => u.UserId == UserId,"Residence,User");
+
+
+                UserFullInfoDTO result = new()
+                {
+                    Id = UserId,
+                    Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
+                    Role = Roles.Resident,
+                    Email = GetResidentInfoResult.User.Email,
+                    Status = GetResidentInfoResult.User.Status,
+                    Name = GetResidentInfoResult.User.Name,
+                    Surname = GetResidentInfoResult.User.Surname,
+                    PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+                    
+                };
+
+                return result;
+
+               
+               
+
             }
 
             public async Task<UserFullInfoDTO> GetManagerInfo(string UserId)
             {
-                throw new NotImplementedException();
+                var GetResidentInfoResult = await _managerRepository.Get(u => u.UserId == UserId, "User");
+
+
+                UserFullInfoDTO result = new()
+                {
+                    Id = UserId,
+                   // Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
+                    Role = Roles.Resident,
+                    Email = GetResidentInfoResult.User.Email,
+                    Status = GetResidentInfoResult.User.Status,
+                    Name = GetResidentInfoResult.User.Name,
+                    Surname = GetResidentInfoResult.User.Surname,
+                    PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+
+                };
+
+                return result;
             }
 
             public async Task<Result<PagedList<UserDTO>>> ListUsers(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder)
             {
+
+                if (page <= 0||pageSize<=0)
+                {
+                    return Result.Failure<PagedList<UserDTO>>(Error.Validation("page and pageSize", "Page and pagesize must be > 0."));
+
+
+                }
+
                 PagedList<User> users = await _userRepository.GetAll(page, pageSize);
 
                 List<UserDTO> userDTOs = users.Items.Select(u => _mapper.Map<UserDTO>(u)).ToList();

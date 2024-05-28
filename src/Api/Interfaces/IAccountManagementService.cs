@@ -18,6 +18,6 @@ namespace Api.Interfaces
 
         Task<Result> UpdateUserRole(string userId, string newRole);
 
-        Task<Result<UserFullInfoDTO>> GetUserInfo(string userId, string userRole);
+        Task<Result<UserFullInfoDTO>> GetUserInfo(string userId);
     }
 }

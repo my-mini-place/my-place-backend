@@ -53,6 +53,9 @@ namespace Infrastructure.Identity
             return roles.ToList();
         }
 
+
+       
+
         public string GenerateToken(UserSession user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -122,6 +125,16 @@ namespace Infrastructure.Identity
         public async Task<string> ForgotPasswordAsync(ApplicationUser user)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<string> GeUserRoleAsync(string appUserid)
+        {
+          throw new NotImplementedException();
+        }
+
+        public async Task<ApplicationUser?> FindUserById(string userId)
+        {
+           return await _userManager.FindByUserIdCustomAsync(userId);
         }
     }
 }

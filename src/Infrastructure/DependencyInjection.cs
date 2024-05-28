@@ -28,6 +28,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
+
+            // scopy 
+
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -35,6 +38,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IBlockRepository, BlockRepository>();
             services.AddScoped<IResidenceRepository, ResidenceRepository>();
+            services.AddScoped<IResidentRepository, ResidentRepository>();
+            services.AddScoped<IAdministratorRepository,AdministratorRepository>();
+            services.AddScoped<IRepairmanRepository, RepairmanRepository>();
+            services.AddScoped<IManagerRepository, ManagerRepository>();
+
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
