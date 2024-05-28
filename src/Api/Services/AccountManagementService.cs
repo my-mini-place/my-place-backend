@@ -109,25 +109,34 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            public async Task<Result<UserDTO>> GetUserInfo(string userId,string userRole)
+            public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId,string userRole)
             {
 
 
-                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
-                if (user == null)
-                {
-                    return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));
-                }
+                //var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
+                //if (user == null)
+                //{
+                //    return Result.Failure<UserDTO>(Error.NotFound("User", "User not found"));
+                //}
 
-                var userDTO = _mapper.Map<UserDTO>(user);
-                return Result.Success(userDTO);
+                //var userDTO = _mapper.Map<UserDTO>(user);
+                //return Result.Success(userDTO);
+
+                throw new NotImplementedException();
+
             }
 
-            public async Task<Result<List<UserDTO>>> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
+            public async Task<Result<PagedList<UserDTO>>> ListUsers( int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder )
             {
-                List<User> user = await _userRepository.GetAll();
+                PagedList<User> users = await _userRepository.GetAll(page, pageSize);
 
-                return Result.Success(_mapper.Map<List<UserDTO>>(user));
+                
+                List<UserDTO> userDTOs = users.Items.Select(u =>  _mapper.Map<UserDTO>(u)).ToList();
+
+                
+                PagedList<UserDTO> userDTOPage = new PagedList<UserDTO>(userDTOs, users.TotalCount, users.PageIndex, users.PageSize);
+
+                return Result.Success(userDTOPage);
             }
         }
     }

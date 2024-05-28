@@ -1,4 +1,4 @@
-﻿using Domain.Models.Identity;
+﻿using Domain.Entities;
 using Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.IRepositories
 {
-    public interface IUserRepository : IPagedRepository<User>
+    public  interface IBlockRepository : IRepository<Block>
     {
-
-     
     }
-} 
+}

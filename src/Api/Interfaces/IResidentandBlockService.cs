@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Api.DTO.Blocks;
+using Api.DTO.Residence;
+using Domain;
 using Domain.Entities;
 using Domain.Errors;
 using System.Collections.Generic;
@@ -8,24 +10,24 @@ namespace Api.Services
 {
     public interface IResidenceAndBlockService
     {
-        Task<Result<List<Block>>> GetAllBlocks();
+        Task<Result<List<BlockDTO>>> GetAllBlocks();
 
-        Task<Result<Block>> GetBlockById(int id);
+        Task<Result<BlockDTO>> GetBlockById(string id);
 
-        Task<Result> AddBlock(Block block);
+        Task<Result> AddBlock(BlockCreateDTO block);
 
-        Task<Result> UpdateBlock(Block block);
+        Task<Result> UpdateBlock(BlockDTO block);
 
-        Task<Result> DeleteBlock(int id);
+        Task<Result> DeleteBlock(string id);
 
-        Task<Result<List<Residence>>> GetAllResidences();
+        Task<Result<List<ResidenceDTO>>> GetAllResidences();
 
-        Task<Result<Residence>> GetResidenceById(int id);
+        Task<Result<ResidenceDTO>> GetResidenceById(string id);
 
-        Task<Result> AddResidence(Residence residence);
+        Task<Result> AddResidence(ResidenceCreateDTO residence);
 
-        Result UpdateResidence(Residence residence);
+        Task<Result> UpdateResidence(ResidenceUpdate residence,string id);
 
-        Result DeleteResidence(int id);
+       Task< Result> DeleteResidence(string id);
     }
 }

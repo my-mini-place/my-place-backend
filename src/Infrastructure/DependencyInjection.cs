@@ -41,6 +41,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IBlockRepository, BlockRepository>();
+            services.AddScoped<IResidenceRepository, ResidenceRepository>();
+
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()

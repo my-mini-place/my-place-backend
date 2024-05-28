@@ -17,7 +17,7 @@ namespace Api.Interfaces
 
         Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO);
 
-        Task<Result<List<UserDTO>>> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize);
+        Task<Result<PagedList<UserDTO>>> ListUsers(int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder );
 
         Task<Result> DeleteUser(string userId);
 
@@ -25,6 +25,6 @@ namespace Api.Interfaces
 
         Task<Result> UpdateUserRole(string userId, string newRole);
 
-        Task<Result<UserDTO>> GetUserInfo(string userId,string userRole);
+        Task<Result<UserFullInfoDTO>> GetUserInfo(string userId,string userRole);
     }
 }

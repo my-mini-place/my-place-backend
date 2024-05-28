@@ -1,7 +1,5 @@
-﻿
-
-
-
+﻿using Domain;
+using Domain.IRepositories;
 using Domain.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +7,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class PagedRepository<T> : IPagedRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
 
-        public Repository(ApplicationDbContext db)
+        public PagedRepository(ApplicationDbContext db)
         {
             _db = db;
             this.dbSet = _db.Set<T>();
@@ -54,10 +53,11 @@ namespace Infrastructure.Repositories
                     query = query.Include(includeProp);
                 }
             }
-            return await query.FirstAsync();
+            return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
+        public async Task<PagedList<T>> GetAll(int page, int pageSize, Expression<Func<T, bool>>? filter = null, string? includeProperties = null,
+            string? sortColumn = null, string? sortOrder = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -72,7 +72,14 @@ namespace Infrastructure.Repositories
                     query = query.Include(includeProp);
                 }
             }
-            return await query.ToListAsync();
+
+
+            // var Items=  await query.Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
+
+            var items = await PagedList<T>.CreateAsync(query, page, pageSize);
+
+
+            return items;
         }
 
         public void Remove(T entity)
@@ -104,5 +111,7 @@ namespace Infrastructure.Repositories
         {
             await _db.SaveChangesAsync();
         }
+
+       
     }
 }

@@ -2,6 +2,7 @@
 using Api.Services;
 using Domain.Entities;
 using Domain.Errors;
+using Api.DTO.Blocks;
 
 namespace My_Place_Backend.Controllers
 {
@@ -28,7 +29,7 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBlock(int id)
+        public async Task<IActionResult> GetBlock(string id)
         {
             var result = await _service.GetBlockById(id);
             if (result.IsFailure)
@@ -39,41 +40,41 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBlock([FromBody] Block block)
+        public async Task<IActionResult> CreateBlock([FromBody]  BlockCreateDTO blockCreateDTO)
         {
-            var result = await _service.AddBlock(block);
+            var result = await _service.AddBlock(blockCreateDTO);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-            return CreatedAtAction(nameof(GetBlock), new { id = block.Id }, block);
+            return Ok();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlock(int id, [FromBody] Block block)
+        [HttpPut()]
+        public async Task<IActionResult> UpdateBlock( [FromBody] BlockDTO block)
         {
-            if (id != block.Id)
-            {
-                return BadRequest();
-            }
+            
 
             var result = await _service.UpdateBlock(block);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBlock(int id)
+        public async Task<IActionResult> DeleteBlock(string id)
         {
             var result = await _service.DeleteBlock(id);
+
+
+
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-            return NoContent();
+            return Ok();
         }
     }
 }

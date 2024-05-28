@@ -14,6 +14,6 @@ namespace Domain.Entities
 
         public string Name { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
-        public int floors;
+        public int Floors { get; set; }
     }
 }

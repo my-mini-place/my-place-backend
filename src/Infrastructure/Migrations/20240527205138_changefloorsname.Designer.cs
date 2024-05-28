@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240527205138_changefloorsname")]
+    partial class changefloorsname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,7 +208,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlockId");
+                    b.HasIndex("BlockId")
+                        .IsUnique();
 
                     b.ToTable("Residences");
 
@@ -312,11 +316,11 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 28, 3, 15, 3, 98, DateTimeKind.Local).AddTicks(6571),
-                            EventPublicId = "61b68707-a28e-4680-be79-19167ed0bd0d",
+                            EndTime = new DateTime(2024, 5, 28, 0, 51, 37, 618, DateTimeKind.Local).AddTicks(3340),
+                            EventPublicId = "214921ca-e1b0-4e75-a83c-e40c01ac4934",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 28, 1, 15, 3, 98, DateTimeKind.Local).AddTicks(6515),
+                            StartTime = new DateTime(2024, 5, 27, 22, 51, 37, 618, DateTimeKind.Local).AddTicks(3276),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -349,10 +353,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -378,12 +378,11 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -1,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 90, DateTimeKind.Local).AddTicks(212),
+                            CreatedAt = new DateTime(2024, 5, 27, 22, 51, 37, 605, DateTimeKind.Local).AddTicks(1224),
                             Email = "Admin123@gmail.com",
                             IsActive = true,
                             Name = "Admin",
                             PhoneNumber = "123456789",
-                            Role = "Administrator",
                             Status = 0,
                             Surname = "amin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -392,12 +391,11 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -3,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 90, DateTimeKind.Local).AddTicks(490),
+                            CreatedAt = new DateTime(2024, 5, 27, 22, 51, 37, 605, DateTimeKind.Local).AddTicks(1537),
                             Email = "RepairMan123@gmail.com",
                             IsActive = true,
                             Name = "RepairMan",
                             PhoneNumber = "123456789",
-                            Role = "Repairman",
                             Status = 0,
                             Surname = "Repairowski",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -406,12 +404,11 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -2,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 95, DateTimeKind.Local).AddTicks(1059),
+                            CreatedAt = new DateTime(2024, 5, 27, 22, 51, 37, 609, DateTimeKind.Local).AddTicks(9590),
                             Email = "Manager123@gmail.com",
                             IsActive = true,
                             Name = "Menager",
                             PhoneNumber = "123456789",
-                            Role = "Manager",
                             Status = 0,
                             Surname = "Menadzerski",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -420,12 +417,11 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -4,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 95, DateTimeKind.Local).AddTicks(1201),
+                            CreatedAt = new DateTime(2024, 5, 27, 22, 51, 37, 609, DateTimeKind.Local).AddTicks(9722),
                             Email = "Resident123@gmail.com",
                             IsActive = true,
                             Name = "Resident",
                             PhoneNumber = "123456789",
-                            Role = "Resident",
                             Status = 0,
                             Surname = "Cucolkt",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -570,15 +566,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "76e761ac-da6a-40f8-b48d-37f938dc0e81",
+                            ConcurrencyStamp = "7a8e8a99-719f-48f7-9ce7-aca0c961e806",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFF7DmX3Y4qhq8O8sQ5zNzitPWWulFPmYGljwrJ4+ann7NHO+7jDlMnN8m4ZmA0LMg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF+Ccs17KGk2zUi3L46hTo6Txdp/a96hiTPTs9t51ZzNd6Gx1OQokFb5ZRt7g7xlKw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0efa18d3-e569-45e6-b19f-0c01353058c7",
+                            SecurityStamp = "7988ed2c-16b4-4967-876a-a46d3b553b2e",
                             TwoFactorEnabled = false,
                             UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
                             UserName = "Admin123@gmail.com"
@@ -587,15 +583,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "147ed571-cee9-41b7-baf8-7969ccba4caf",
+                            ConcurrencyStamp = "e63e13d2-9ed9-40da-a6d3-beaecbc9b126",
                             Email = "Manager123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "MANAGER123@GMAIL.COM",
                             NormalizedUserName = "MANAGER123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEINyvxmlI8ZdNsk33UgYJaw0OyVxv8cJLC0xWxjdvyQ61YpCQ7CiazFqe8yXw7CrnQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHLtC85TCcxx6Fk8bbBsJjvIEQNGftkxjspXAOd43Pz0HWmp6C/K+/+V38yY7RCUdQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "e1d73e90-47bc-4634-846c-68fc371bc14f",
+                            SecurityStamp = "2cd6af47-1296-48ed-b819-4b9817711fdd",
                             TwoFactorEnabled = false,
                             UserId = "36df4b07-2984-4182-a57c-de26516670cc",
                             UserName = "Manager123@gmail.com"
@@ -604,15 +600,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "62ef3a55-dc73-453a-906b-20362ad01e3e",
+                            ConcurrencyStamp = "612a552a-84b7-483c-852b-9c9f6c4b2ba0",
                             Email = "Resident123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "RESIDENT123@GMAIL.COM",
                             NormalizedUserName = "RESIDENT123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDiM67554EOVp+IpM9dKWfonaQFCMehFxP1OXbHptB0u2/JBirVbQnyLa+cs2OdhFQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC15YyU7VYp186cR1mJaLtLEAqY7ugNRz4/EVlmeheeFF1hT2j4cORKl8nrFVUJKgg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "68112cf9-9237-46a0-8ed9-c4381d3dcc2f",
+                            SecurityStamp = "157d878c-9d7d-4c23-a2c9-adae075aab41",
                             TwoFactorEnabled = false,
                             UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
                             UserName = "Resident123@gmail.com"
@@ -621,15 +617,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "84d26d49-da84-46cc-84af-e03f60eddbc1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e6b76fd-9f0e-48d6-8272-81a4b84b8e6e",
+                            ConcurrencyStamp = "811c315b-cb75-4ba9-a10d-f903ec1e4a94",
                             Email = "RepairMan123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "REPAIRMAN123@GMAIL.COM",
                             NormalizedUserName = "REPAIRMAN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK34YN2PoYMcHOiYwsKtOqBntPnmxTbC7J697s1kkd7WZONTVBu0w0lqo6Z/z+655g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMGj5SLKmcNAqiaZy95rPwg0t8OtgzwgP28JsE1O3KcAeaQAxyrmiPp2kiByNF6GHw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "5e291a0e-b9f6-4d69-ab97-b52a9f597b33",
+                            SecurityStamp = "af020fcc-f821-4055-a4ed-7d4a4d5b4b14",
                             TwoFactorEnabled = false,
                             UserId = "f805f338-2c36-4e94-a574-6021cc0a2431",
                             UserName = "RepairMan123@gmail.com"
@@ -856,9 +852,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Residence", b =>
                 {
                     b.HasOne("Domain.Entities.Block", "Block")
-                        .WithMany()
-                        .HasForeignKey("BlockId")
-                        .HasPrincipalKey("BlockId")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Residence", "BlockId")
+                        .HasPrincipalKey("Domain.Entities.Block", "BlockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

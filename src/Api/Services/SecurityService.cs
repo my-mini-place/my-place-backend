@@ -66,6 +66,7 @@ namespace Api.Services
                 return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()!.Description));
             }
 
+            UserInfo.Role=Roles.User;
             // dodanie informacji o userze do tabeli user
             await _userRepository.Add(UserInfo);
 

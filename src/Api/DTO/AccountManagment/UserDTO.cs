@@ -1,5 +1,7 @@
 ﻿using Api.DTO.AccountManagment;
+using Api.DTO.Residence;
 using Domain.ValueObjects;
+using System.Data;
 
 namespace My_Place_Backend.DTO.AccountManagment
 {
@@ -11,13 +13,10 @@ namespace My_Place_Backend.DTO.AccountManagment
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
 
-        public ResidenceDTO? Residence { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Role { get; set; } = null!;
 
-        public TimeSpan? StartWorkTime { get; set; }
-        public TimeSpan? EndWorkTime { get; set; }
-
-        public string? BlockName { get; set;  }
-        public string Role { get; set; }
         public AccountStatus Status { get; set; }
+
     }
 }

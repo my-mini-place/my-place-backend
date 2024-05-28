@@ -52,9 +52,9 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
-            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
+            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int page, int pageSize)
             {
-                var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
+                var users = await _accountManagementService.ListUsers(page,pageSize,searchTerm,sortColumn,sortOrder);
                 return Ok(users.Value);
             }
 

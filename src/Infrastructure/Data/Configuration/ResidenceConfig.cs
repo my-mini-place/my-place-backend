@@ -18,8 +18,8 @@ namespace Infrastructure.Data.Configuration
 
 
             builder.HasOne(x => x.Block)
-               .WithOne()
-               .HasForeignKey<Residence>(x => x.BlockId).HasPrincipalKey<Block>(x => x.BlockId);
+               .WithMany()
+               .HasForeignKey(x => x.BlockId).HasPrincipalKey(x => x.BlockId);
 
         }
     }

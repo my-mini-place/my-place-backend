@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Api.DTO.Blocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Api.DTO.Residence
 {
-    public class Residence
+    public class ResidenceDTO
     {
-        public int Id;
         public string ResidenceId { get; set; } = null!;
 
         public string Street { get; set; } = null!;
@@ -16,7 +16,7 @@ namespace Domain.Entities
         public string ApartmentNumber { get; set; } = null!;
         public int Floor { get; set; }
 
-        public string BlockId { get; set; } = null!;
-        public Block Block { get; set; } = null!;
+ 
+
     }
 }

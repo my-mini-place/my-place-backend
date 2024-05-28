@@ -3,6 +3,8 @@ using Api.Services;
 using Domain.Entities;
 using Domain.Errors;
 using Domain;
+using Web.Extensions;
+using Api.DTO.Residence;
 
 namespace My_Place_Backend.Controllers
 {
@@ -23,13 +25,13 @@ namespace My_Place_Backend.Controllers
             var result = await _service.GetAllResidences();
             if (result.IsFailure)
             {
-                return BadRequest(result.Error);
+                return BadRequest(result.ToProblemDetails());
             }
             return Ok(result.Value);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetResidence(int id)
+        public async Task<IActionResult> GetResidence(string id)
         {
             var result = await _service.GetResidenceById(id);
             if (result.IsFailure)
@@ -40,27 +42,20 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateResidence([FromBody] Residence residence)
+        public async Task<IActionResult> CreateResidence([FromBody] ResidenceCreateDTO residence)
         {
             var result = await _service.AddResidence(residence);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-            return CreatedAtAction(nameof(GetResidence), new { id = residence.Id }, residence);
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateResidence(int id)
+        public  async Task<IActionResult> UpdateResidence(ResidenceUpdate residenceUpdate, string id )
         {
-            Result<Residence> residence = await _service.GetResidenceById(id);
-
-            if (id != residence.Value.Id)
-            {
-                return BadRequest();
-            }
-
-            var result = _service.UpdateResidence(residence.Value);
+             var result =  await  _service.UpdateResidence(residenceUpdate,id);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -69,9 +64,9 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResidence(int id)
+        public async Task<IActionResult> DeleteResidence(string id)
         {
-            var result = _service.DeleteResidence(id);
+            var result =  await  _service.DeleteResidence(id);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

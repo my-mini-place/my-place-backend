@@ -13,10 +13,15 @@ namespace Microsoft.Extensions.DependencyInjection
             var assembly = typeof(SecurityService).Assembly;
             services.AddAutoMapper(assembly);
 
+            services.AddAutoMapper(typeof(BlockMappers).Assembly);
+
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddScoped<IAccountManagementService, AccountManagementService>();
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IResidenceAndBlockService, ResidenceAndBlockService>();
+
+
 
             return services;
         }

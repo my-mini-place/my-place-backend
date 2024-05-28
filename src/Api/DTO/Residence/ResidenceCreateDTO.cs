@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Api.DTO.Residence
 {
-    public class Residence
+    public class ResidenceCreateDTO
     {
-        public int Id;
-        public string ResidenceId { get; set; } = null!;
 
+        [Required]
         public string Street { get; set; } = null!;
+        [Required]
         public string BuildingNumber { get; set; } = null!;
+        [Required]
         public string ApartmentNumber { get; set; } = null!;
+        [Required]
         public int Floor { get; set; }
+        [Required]
+        public string BlokId { get; set; }
 
-        public string BlockId { get; set; } = null!;
-        public Block Block { get; set; } = null!;
+
+
+
     }
 }
