@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Api.DTO.Residence;
 using Api.Services;
-using Domain.Entities;
-using Domain.Errors;
-using Domain;
+using Microsoft.AspNetCore.Mvc;
 using Web.Extensions;
-using Api.DTO.Residence;
 
 namespace My_Place_Backend.Controllers
 {
@@ -53,9 +50,9 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public  async Task<IActionResult> UpdateResidence(ResidenceUpdate residenceUpdate, string id )
+        public async Task<IActionResult> UpdateResidence(ResidenceUpdate residenceUpdate, string id)
         {
-             var result =  await  _service.UpdateResidence(residenceUpdate,id);
+            var result = await _service.UpdateResidence(residenceUpdate, id);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -66,7 +63,7 @@ namespace My_Place_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteResidence(string id)
         {
-            var result =  await  _service.DeleteResidence(id);
+            var result = await _service.DeleteResidence(id);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

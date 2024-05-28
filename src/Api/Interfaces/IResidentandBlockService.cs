@@ -1,10 +1,6 @@
 ﻿using Api.DTO.Blocks;
 using Api.DTO.Residence;
 using Domain;
-using Domain.Entities;
-using Domain.Errors;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Api.Services
 {
@@ -26,8 +22,8 @@ namespace Api.Services
 
         Task<Result> AddResidence(ResidenceCreateDTO residence);
 
-        Task<Result> UpdateResidence(ResidenceUpdate residence,string id);
+        Task<Result> UpdateResidence(ResidenceUpdate residence, string id);
 
-       Task< Result> DeleteResidence(string id);
+        Task<Result> DeleteResidence(string id);
     }
 }

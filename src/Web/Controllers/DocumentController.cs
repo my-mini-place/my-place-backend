@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Api.Interfaces;
 using Domain;
-
-using Api.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace My_Place_Backend.Controllers
 {

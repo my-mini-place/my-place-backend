@@ -1,22 +1,14 @@
 ﻿using Api.Interfaces;
 using Domain;
 using Domain.Entities;
-using Domain.Models.Identity;
 using Infrastructure.Data;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using My_Place_Backend.DTO.AccountManagment;
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using static Domain.Entities.ServiceResponses;
 
 namespace Infrastructure.Identity
 {
@@ -124,10 +116,7 @@ namespace Infrastructure.Identity
 
         public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
-           
             return await _userManager.ResetPasswordAsync(user, token, newPassword);
-             
-
         }
 
         public async Task<string> ForgotPasswordAsync(ApplicationUser user)

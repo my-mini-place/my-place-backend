@@ -1,25 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using System.Data;
-using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Domain;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Domain.Repositories;
-
-using Infrastructure.Identity;
-using Api.Interfaces;
-using Api.Services;
-using Infrastructure.EmailServices;
+﻿using Api.Interfaces;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using static Domain.Models.CalendarModels;
-using Domain.Models.Identity;
 using Domain.ValueObjects;
+using Infrastructure.Data;
+using Infrastructure.EmailServices;
+using Infrastructure.Identity;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -43,7 +35,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IBlockRepository, BlockRepository>();
             services.AddScoped<IResidenceRepository, ResidenceRepository>();
-
 
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
@@ -72,7 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthorization(config =>
             {
                 config.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", Roles.Administrator));
-                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator,Roles.Repairman,Roles.User));
+                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator, Roles.Repairman, Roles.User));
                 config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", "User", Roles.Administrator));
                 config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
                 config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));

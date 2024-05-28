@@ -4,11 +4,6 @@ using Domain.ValueObjects;
 using Infrastructure.Data;
 using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Api.Mappers
 {
@@ -44,7 +39,7 @@ namespace Api.Mappers
      .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
      .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
 
-     .ForMember(dest=> dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+     .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
      .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
 
      .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))

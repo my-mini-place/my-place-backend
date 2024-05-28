@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Api.DTO.Blocks;
 using Api.Services;
-using Domain.Entities;
-using Domain.Errors;
-using Api.DTO.Blocks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace My_Place_Backend.Controllers
 {
@@ -40,7 +38,7 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBlock([FromBody]  BlockCreateDTO blockCreateDTO)
+        public async Task<IActionResult> CreateBlock([FromBody] BlockCreateDTO blockCreateDTO)
         {
             var result = await _service.AddBlock(blockCreateDTO);
             if (result.IsFailure)
@@ -51,10 +49,8 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPut()]
-        public async Task<IActionResult> UpdateBlock( [FromBody] BlockDTO block)
+        public async Task<IActionResult> UpdateBlock([FromBody] BlockDTO block)
         {
-            
-
             var result = await _service.UpdateBlock(block);
             if (result.IsFailure)
             {
@@ -67,8 +63,6 @@ namespace My_Place_Backend.Controllers
         public async Task<IActionResult> DeleteBlock(string id)
         {
             var result = await _service.DeleteBlock(id);
-
-
 
             if (result.IsFailure)
             {

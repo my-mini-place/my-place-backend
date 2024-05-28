@@ -1,20 +1,11 @@
-﻿using Domain.Models.Identity;
-using System.Data;
-using System.IO;
-
-namespace My_Place_Backend.Controllers
+﻿namespace My_Place_Backend.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
+    using Api.DTO.AccountManagment;
     using Api.Interfaces;
-
+    using global::My_Place_Backend.Authorization;
     using global::My_Place_Backend.DTO.AccountManagment;
     using Microsoft.AspNetCore.Authorization;
-    using Api.DTO.AccountManagment;
-    using Domain.Models.Identity;
-    using Microsoft.AspNetCore.Identity;
-
-    using Web.Authorization;
-    using global::My_Place_Backend.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     namespace My_Place_Backend.Controllers
     {
@@ -54,7 +45,7 @@ namespace My_Place_Backend.Controllers
             [HttpGet("users")]
             public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int page, int pageSize)
             {
-                var users = await _accountManagementService.ListUsers(page,pageSize,searchTerm,sortColumn,sortOrder);
+                var users = await _accountManagementService.ListUsers(page, pageSize, searchTerm, sortColumn, sortOrder);
                 return Ok(users.Value);
             }
 
@@ -74,11 +65,10 @@ namespace My_Place_Backend.Controllers
             [Authorize("IsAny")]
             public async Task<IActionResult> GetUserInfo()
             {
-
                 string userId = User.GetUserId().ToString();
                 string userRole = User.GetUserRole();
 
-                var result = await _accountManagementService.GetUserInfo(userId,userRole);
+                var result = await _accountManagementService.GetUserInfo(userId, userRole);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);

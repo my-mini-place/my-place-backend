@@ -1,7 +1,4 @@
-﻿using Api.DTO.AccountManagment;
-using Api.DTO.Residence;
-using Domain.ValueObjects;
-using System.Data;
+﻿using Domain.ValueObjects;
 
 namespace My_Place_Backend.DTO.AccountManagment
 {
@@ -17,6 +14,5 @@ namespace My_Place_Backend.DTO.AccountManagment
         public string Role { get; set; } = null!;
 
         public AccountStatus Status { get; set; }
-
     }
 }

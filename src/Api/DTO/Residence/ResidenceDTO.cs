@@ -1,11 +1,4 @@
-﻿using Api.DTO.Blocks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Api.DTO.Residence
+﻿namespace Api.DTO.Residence
 {
     public class ResidenceDTO
     {
@@ -15,8 +8,5 @@ namespace Api.DTO.Residence
         public string BuildingNumber { get; set; } = null!;
         public string ApartmentNumber { get; set; } = null!;
         public int Floor { get; set; }
-
- 
-
     }
 }

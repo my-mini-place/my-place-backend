@@ -1,5 +1,4 @@
 using Infrastructure;
-using Infrastructure.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +16,6 @@ await app.EnsureMigrationOfContext();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    
 //}
 app.UseSwagger();
 app.UseSwaggerUI();

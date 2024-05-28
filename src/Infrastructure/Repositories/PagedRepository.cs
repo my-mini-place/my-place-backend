@@ -1,15 +1,8 @@
 ﻿using Domain;
 using Domain.IRepositories;
-using Domain.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -28,7 +21,6 @@ namespace Infrastructure.Repositories
         public async Task Add(T entity)
         {
             await dbSet.AddAsync(entity);
-
         }
 
         // tracked zwiększa performence dla danych tylko do odczytu
@@ -73,11 +65,9 @@ namespace Infrastructure.Repositories
                 }
             }
 
-
-            // var Items=  await query.Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
+            // var Items= await query.Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
 
             var items = await PagedList<T>.CreateAsync(query, page, pageSize);
-
 
             return items;
         }
@@ -85,13 +75,11 @@ namespace Infrastructure.Repositories
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
-
         }
 
         public void RemoveRange(IEnumerable<T> entity)
         {
             dbSet.RemoveRange(entity);
-
         }
 
         public void Update(T obj)
@@ -99,19 +87,15 @@ namespace Infrastructure.Repositories
             try
             {
                 dbSet.Update(obj);
-
             }
             catch
             {
             }
         }
 
-
         public async Task Save()
         {
             await _db.SaveChangesAsync();
         }
-
-       
     }
 }

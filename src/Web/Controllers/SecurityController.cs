@@ -1,9 +1,7 @@
 ﻿using Api.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 using Serilog;
 using Web.Extensions;
@@ -55,7 +53,7 @@ namespace My_Place_Backend.Controllers
             {
                 return response.ToProblemDetails();
             }
-                return Ok();
+            return Ok();
         }
 
         [HttpPost("resetPassword")]

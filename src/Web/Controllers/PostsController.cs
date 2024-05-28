@@ -1,18 +1,17 @@
+using Api.DTO.Posts;
+using Domain.Models;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Domain.Models;
-using Api.DTO.Posts;
-using Infrastructure.Data;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace My_Place_Backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController: ControllerBase
+    public class PostsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+
         public PostsController(ApplicationDbContext context)
         {
             _context = context;
@@ -21,20 +20,19 @@ namespace My_Place_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<List<PostDTO>>> GetPosts()
         {
-
             var posts = await _context.Posts.ToListAsync();
             var postsDTO = await Task.WhenAll(posts.Select(async post =>
             {
                 List<OptionDTO> options = null;
                 bool surveyClosed = false;
-                if(post.IsSurvey)
+                if (post.IsSurvey)
                 {
-                    if(DateTime.UtcNow > post.SurveyClosureDateTime)
+                    if (DateTime.UtcNow > post.SurveyClosureDateTime)
                         surveyClosed = true;
 
                     options = await _context.Options
                         .Where(option => option.PostId == post.Id)
-                        .Select(option => new OptionDTO 
+                        .Select(option => new OptionDTO
                         {
                             Id = option.Id,
                             Text = option.Text,
@@ -42,7 +40,7 @@ namespace My_Place_Backend.Controllers
                         })
                         .ToListAsync();
                 }
-                return new PostDTO 
+                return new PostDTO
                 {
                     Id = post.Id,
                     Title = post.Title,
@@ -63,7 +61,8 @@ namespace My_Place_Backend.Controllers
         [HttpPost("newtext")]
         public async Task<IActionResult> CeateTextPost(PostDTO postDTO)
         {
-            var post = new Post {
+            var post = new Post
+            {
                 Title = postDTO.Title,
                 Content = postDTO.Content,
                 CreationDateTime = DateTime.UtcNow,
@@ -78,7 +77,8 @@ namespace My_Place_Backend.Controllers
         [HttpPost("newsurvey")]
         public async Task<IActionResult> CeateSurveyPost(PostDTO postDTO)
         {
-            var post = new Post {
+            var post = new Post
+            {
                 Title = postDTO.Title,
                 Content = postDTO.Content,
                 CreationDateTime = DateTime.UtcNow,
@@ -97,34 +97,20 @@ namespace My_Place_Backend.Controllers
             return Ok();
         }
 
-        // [HttpPost("{optionId}")]
-        // public async Task<IActionResult> CeateOrUpdateVote(Guid optionId)
-        // {
-        //     var option = await _context.Options.FindAsync(optionId);
-        //     if(option == null)
-        //         return NotFound();
+        // [HttpPost("{optionId}")] public async Task<IActionResult> CeateOrUpdateVote(Guid
+        // optionId) { var option = await _context.Options.FindAsync(optionId); if(option == null)
+        // return NotFound();
 
-        //     var post = await _context.Posts.FindAsync(option.PostId);
-        //     if(post == null)
-        //         return NotFound();
+        // var post = await _context.Posts.FindAsync(option.PostId); if(post == null) return NotFound();
 
-        //     if(post.SurveyClosureDateTime < DateTime.UtcNow)
-        //     {
-        //         var vote = new Vote 
-        //         {
-        //             OptionId = optionId
-        //         };
-        //         _context.Votes.Add(vote);
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     return Ok();
-        // }
+        // if(post.SurveyClosureDateTime < DateTime.UtcNow) { var vote = new Vote { OptionId =
+        // optionId }; _context.Votes.Add(vote); await _context.SaveChangesAsync(); } return Ok(); }
 
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(Guid postId)
         {
             var post = await _context.Posts.FindAsync(postId);
-            if(post != null)
+            if (post != null)
             {
                 _context.Remove(post);
                 await _context.SaveChangesAsync();

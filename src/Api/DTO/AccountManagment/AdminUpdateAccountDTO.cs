@@ -1,6 +1,4 @@
-﻿using Domain.ValueObjects;
-
-namespace My_Place_Backend.DTO.AccountManagment
+﻿namespace My_Place_Backend.DTO.AccountManagment
 {
     public class AdminUpdateAccountDTO
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public partial class changeCalendar : Migration
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -105,7 +104,7 @@ namespace Infrastructure.Migrations
                 values: new object[] { "3d4682bf-14d5-48b5-bb02-eff473422a0d", "AQAAAAIAAYagAAAAEOmbxT4OxK1qqVFIUfZ0iv3dNsGknxjpgRsS7U/1PBA+Eskg/DwdoqBhqtODTqO1YQ==", "7543d29d-d434-441d-af98-b6208b991d40" });
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(

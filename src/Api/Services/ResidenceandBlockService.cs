@@ -1,14 +1,10 @@
-﻿using Api.DTO.AccountManagment;
-using Api.DTO.Blocks;
+﻿using Api.DTO.Blocks;
 using Api.DTO.Residence;
-using Api.Repositories;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Domain.Errors;
 using Domain.IRepositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Api.Services
 {
@@ -32,7 +28,7 @@ namespace Api.Services
                 var blocks = await _blockRepository.GetAll();
 
                 var blocklist = blocks.Select(element => _mapper.Map<BlockDTO>(element)).ToList();
-           return Result.Success(blocklist);
+                return Result.Success(blocklist);
             }
             catch (System.Exception)
             {
@@ -42,23 +38,16 @@ namespace Api.Services
 
         public async Task<Result<BlockDTO>> GetBlockById(string id)
         {
-            
-                var block = await _blockRepository.Get(b => b.BlockId==id);
-                if (block != null)
-                    return Result.Success(_mapper.Map<BlockDTO>(block));
+            var block = await _blockRepository.Get(b => b.BlockId == id);
+            if (block != null)
+                return Result.Success(_mapper.Map<BlockDTO>(block));
 
-
-
-
-                return Result.Failure<BlockDTO>(Error.NotFound("NotFound", $"Block with ID {id} not found"));
-            
-           
+            return Result.Failure<BlockDTO>(Error.NotFound("NotFound", $"Block with ID {id} not found"));
         }
 
         public async Task<Result> AddBlock(BlockCreateDTO block)
         {
-             // validacja do dodania
-
+            // validacja do dodania
 
             // automaper do dodania
             Block newBlock = new Block
@@ -66,12 +55,11 @@ namespace Api.Services
                 Name = block.Name,
                 BlockId = Guid.NewGuid().ToString(),
                 PostalCode = block.PostalCode,
-                Floors = block.floors,     
+                Floors = block.floors,
             };
 
             try
             {
-
                 await _blockRepository.Add(newBlock);
                 await _blockRepository.Save();
                 return Result.Success();
@@ -86,15 +74,14 @@ namespace Api.Services
         {
             try
             {
-                var updateblock =  await _blockRepository.Get(b => b.BlockId == block.BlockId);
+                var updateblock = await _blockRepository.Get(b => b.BlockId == block.BlockId);
 
                 if (updateblock == null)
                     return Result.Failure(Error.NotFound("NotFound", $"Block with ID {block.BlockId} not found"));
 
-
-                updateblock.Name = block.Name?? updateblock.Name;
-                updateblock.PostalCode = block.PostalCode?? updateblock.PostalCode;
-                updateblock.Floors = block.Floors??updateblock.Floors;
+                updateblock.Name = block.Name ?? updateblock.Name;
+                updateblock.PostalCode = block.PostalCode ?? updateblock.PostalCode;
+                updateblock.Floors = block.Floors ?? updateblock.Floors;
 
                 _blockRepository.Update(updateblock);
 
@@ -116,12 +103,11 @@ namespace Api.Services
                     return Result.Failure(Error.NotFound("NotFound", $"Block with ID {id} not found"));
 
                 var residences = await _residenceRepository.GetAll(r => r.BlockId == id);
-                 
-                if(residences.Count > 0)
+
+                if (residences.Count > 0)
                 {
                     return Result.Failure(Error.Failure("DeleteBlockFailure", "Block has residences, cannot delete"));
                 }
-                 
 
                 _blockRepository.Remove(block);
 
@@ -158,7 +144,6 @@ namespace Api.Services
                 if (residence != null)
                     return Result.Success(_mapper.Map<ResidenceDTO>(residence));
 
-
                 return Result.Failure<ResidenceDTO>(Error.NotFound("NotFound", $"Residence with ID {id} not found"));
             }
             catch (System.Exception)
@@ -173,8 +158,7 @@ namespace Api.Services
             {
                 var block = await _blockRepository.Get(b => b.BlockId == residence.BlokId);
                 if (block == null)
-                    return Result.Failure(Error.NotFound("NotFound", $"Block with ID {residence.BlokId} not found"));   
-
+                    return Result.Failure(Error.NotFound("NotFound", $"Block with ID {residence.BlokId} not found"));
 
                 Residence newResidence = new Residence
                 {
@@ -184,8 +168,6 @@ namespace Api.Services
                     BuildingNumber = residence.BuildingNumber,
                     Street = residence.Street,
                     BlockId = residence.BlokId,
-
-
                 };
 
                 await _residenceRepository.Add(newResidence);
@@ -199,7 +181,7 @@ namespace Api.Services
             }
         }
 
-        public async Task<Result> UpdateResidence(ResidenceUpdate residence,string ResidenceId)
+        public async Task<Result> UpdateResidence(ResidenceUpdate residence, string ResidenceId)
         {
             try
             {
@@ -211,8 +193,6 @@ namespace Api.Services
                 residenceToUpdate.BuildingNumber = residence.BuildingNumber ?? residenceToUpdate.BuildingNumber;
                 residenceToUpdate.ApartmentNumber = residence.ApartmentNumber ?? residenceToUpdate.ApartmentNumber;
                 residenceToUpdate.Floor = residence.Floor ?? residenceToUpdate.Floor;
-               
-
 
                 _residenceRepository.Update(residenceToUpdate);
                 await _residenceRepository.Save();
@@ -224,15 +204,14 @@ namespace Api.Services
             }
         }
 
-        public  async Task<Result> DeleteResidence(string id)
+        public async Task<Result> DeleteResidence(string id)
         {
             try
             {
-                 var ResidenceToDelete = await _residenceRepository.Get(r => r.ResidenceId == id);
+                var ResidenceToDelete = await _residenceRepository.Get(r => r.ResidenceId == id);
 
                 if (ResidenceToDelete == null)
                     return Result.Failure(Error.NotFound("NotFound", $"Residence with ID {id} not found"));
-
 
                 _residenceRepository.Remove(ResidenceToDelete);
 

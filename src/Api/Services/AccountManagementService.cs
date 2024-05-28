@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Api.Services
+﻿namespace Api.Services
 {
     using AutoMapper;
     using Domain;
     using Domain.Errors;
     using Domain.IRepositories;
     using Domain.Models.Identity;
-    using Domain.Repositories;
     using Domain.ValueObjects;
     using global::Api.DTO.AccountManagment;
     using global::Api.Interfaces;
-    using Infrastructure.Data;
     using My_Place_Backend.DTO.AccountManagment;
     using System.Threading.Tasks;
 
@@ -27,11 +19,21 @@ namespace Api.Services
             private readonly IMapper _mapper;
             private readonly IIdentityRepository _identityRepository;
 
-            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository)
+            private readonly Dictionary<string, Func<string, Task<UserFullInfoDTO>>> _userInfoSwitch;
+
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository, Dictionary<string, Func<string, Task<UserFullInfoDTO>>> _userInfoSwitch)
             {
                 _userRepository = userRepository;
                 _mapper = mapper;
                 _identityRepository = identityRepository;
+
+                _userInfoSwitch = new Dictionary<string, Func<string, Task<UserFullInfoDTO>>>()
+            {
+                {Roles.Manager, GetManagerInfo },
+                {Roles.Administrator, GetAdminInfo },
+                 {Roles.Manager, GetManagerInfo },
+                {Roles.Repairman, GetRepairManInfo },
+            };
             }
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
@@ -109,9 +111,27 @@ namespace Api.Services
                 return Result.Success();
             }
 
-            public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId,string userRole)
+            public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId, string userRole)
             {
+                var user = await _userRepository.Get(u => u.UserId == userId);
+                if (user == null)
+                {
+                    return Result.Failure<UserFullInfoDTO>(Error.NotFound("User", "User not found"));
+                }
 
+                ///stara
+                ///
+
+                try
+                {
+                    var UserFullInfodto = await _userInfoSwitch[userRole](userId);
+
+                    return Result.Success(UserFullInfodto);
+                }
+                catch (Exception)
+                {
+                    return Result.Failure<UserFullInfoDTO>(Error.Failure("GetUserData", "Total failure."));
+                }
 
                 //var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 //if (user == null)
@@ -122,18 +142,35 @@ namespace Api.Services
                 //var userDTO = _mapper.Map<UserDTO>(user);
                 //return Result.Success(userDTO);
 
-                throw new NotImplementedException();
-
+             
             }
 
-            public async Task<Result<PagedList<UserDTO>>> ListUsers( int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder )
+            public async Task<UserFullInfoDTO> GetAdminInfo(string UserId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task<UserFullInfoDTO> GetRepairManInfo(string UserId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task<UserFullInfoDTO> GetResidentInfo(string UserId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task<UserFullInfoDTO> GetManagerInfo(string UserId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task<Result<PagedList<UserDTO>>> ListUsers(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder)
             {
                 PagedList<User> users = await _userRepository.GetAll(page, pageSize);
 
-                
-                List<UserDTO> userDTOs = users.Items.Select(u =>  _mapper.Map<UserDTO>(u)).ToList();
+                List<UserDTO> userDTOs = users.Items.Select(u => _mapper.Map<UserDTO>(u)).ToList();
 
-                
                 PagedList<UserDTO> userDTOPage = new PagedList<UserDTO>(userDTOs, users.TotalCount, users.PageIndex, users.PageSize);
 
                 return Result.Success(userDTOPage);

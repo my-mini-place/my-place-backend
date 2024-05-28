@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-using Microsoft.Extensions.Configuration;
-
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
+﻿using Microsoft.OpenApi.Models;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

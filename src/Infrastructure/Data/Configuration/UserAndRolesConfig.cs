@@ -1,9 +1,8 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Entities;
+using Domain.Models.Identity;
+using Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Domain.ValueObjects;
-using Domain.Models.Identity;
-using Domain.Entities;
 
 namespace Infrastructure.Data.Configuration
 {
@@ -11,7 +10,6 @@ namespace Infrastructure.Data.Configuration
     {
         public static void ConfigurationUserAndRole(this ModelBuilder modelBuilder)
         {
-
             #region IdentityRole
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole()
@@ -27,7 +25,6 @@ namespace Infrastructure.Data.Configuration
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole()
                 {
-
                     Id = ManagerRoleGuid,
                     Name = Roles.Manager,
                     NormalizedName = Roles.Manager.ToUpper()
@@ -56,8 +53,7 @@ namespace Infrastructure.Data.Configuration
                 }
                 );
 
-            #endregion
-
+            #endregion IdentityRole
 
             #region UsersIdentity
             var hasher = new PasswordHasher<IdentityUser>();
@@ -110,7 +106,6 @@ namespace Infrastructure.Data.Configuration
                 {
                     RoleId = ManagerRoleGuid,
                     UserId = ManagerId
-
                 }
                 );
             string ResidentId = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf";
@@ -137,7 +132,6 @@ namespace Infrastructure.Data.Configuration
                 {
                     RoleId = ResidentRoleGuid,
                     UserId = ResidentId,
-
                 }
                 );
 
@@ -165,12 +159,10 @@ namespace Infrastructure.Data.Configuration
                 {
                     RoleId = RepairManRoleGuid,
                     UserId = RepairManId
-
                 }
                 );
 
-            #endregion
-
+            #endregion UsersIdentity
 
             #region UsersInfos
             modelBuilder.Entity<User>().HasData(
@@ -186,10 +178,6 @@ namespace Infrastructure.Data.Configuration
                                    Name = "Admin",
                                    Surname = "amin",
                                    Status = AccountStatus.Active,
-
-
-
-
                                }
                                   ); ;
 
@@ -212,10 +200,6 @@ namespace Infrastructure.Data.Configuration
                                    Name = "RepairMan",
                                    Surname = "Repairowski",
                                    Status = AccountStatus.Active,
-
-
-
-
                                }
                                   ); ;
 
@@ -226,11 +210,10 @@ namespace Infrastructure.Data.Configuration
                 Guid = "21ee064d-3c9b-4fa0-9cf6-7a5387c3c9fc",
             });
 
-
             modelBuilder.Entity<User>().HasData(
                               new User()
                               {
-                                  Role= Roles.Manager,
+                                  Role = Roles.Manager,
                                   Id = -2,
                                   UserId = "36df4b07-2984-4182-a57c-de26516670cc",
                                   CreatedAt = System.DateTime.Now,
@@ -240,10 +223,6 @@ namespace Infrastructure.Data.Configuration
                                   Name = "Menager",
                                   Surname = "Menadzerski",
                                   Status = AccountStatus.Active,
-
-
-
-
                               }
                                  ); ;
 
@@ -251,13 +230,11 @@ namespace Infrastructure.Data.Configuration
             {
                 EndWorkTime = new System.TimeSpan(16, 0, 0),
                 StartWorkTime = new System.TimeSpan(8, 0, 0),
-                
+
                 Id = -1,
                 UserId = "36df4b07-2984-4182-a57c-de26516670cc",
                 Guid = "f84ee215-a41f-4e35-bb5a-e8dee5fc7d83\r\n",
-               
             });
-
 
             modelBuilder.Entity<User>().HasData(
                               new User()
@@ -272,14 +249,8 @@ namespace Infrastructure.Data.Configuration
                                   Name = "Resident",
                                   Surname = "Cucolkt",
                                   Status = AccountStatus.Active,
-
-
-
-
                               }
                                  ); ;
-
-
 
             modelBuilder.Entity<Block>().HasData(new Block()
             {
@@ -294,29 +265,22 @@ namespace Infrastructure.Data.Configuration
             {
                 Id = -1,
                 Floor = 5,
-                
+
                 ApartmentNumber = "18",
                 BuildingNumber = "1",
                 Street = "Kwiatowa",
                 BlockId = "1",
                 ResidenceId = "1",
-
             }); ;
-
 
             modelBuilder.Entity<Resident>().HasData(new Resident()
             {
-                
                 Id = -1,
                 UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
                 Guid = "a1748a86-481f-4a39-893a-42c5e6ca980b",
-               ResidenceId="1"
-          
-
+                ResidenceId = "1"
             });
-            #endregion
-
-
+            #endregion UsersInfos
         }
     }
 }

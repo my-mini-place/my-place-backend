@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain
 {
@@ -25,7 +20,6 @@ namespace Domain
 
         public bool HasNextPage => PageIndex * PageSize < TotalCount;
         public bool HasPreviousPage => PageIndex > 1;
-
 
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> query, int pagaIndex, int pageSize)
         {

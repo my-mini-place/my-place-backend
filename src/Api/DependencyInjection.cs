@@ -2,7 +2,6 @@
 using Api.Mappers;
 using Api.Services;
 using Api.Services.Api.Services;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -20,8 +19,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IResidenceAndBlockService, ResidenceAndBlockService>();
-
-
 
             return services;
         }
