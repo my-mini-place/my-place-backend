@@ -23,11 +23,13 @@
             private readonly IRepairmanRepository _repairmanRepository;
             private readonly IAdministratorRepository _administratorRepository;
             private readonly IManagerRepository _managerRepository;
+            private readonly IResidenceRepository _residenceRepository;
 
             private readonly Dictionary<string, Func<string, Task<UserFullInfoDTO>>> _userInfoSwitch;
 
-            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository, IResidentRepository residentRepository,IAdministratorRepository administratorRepository,IManagerRepository managerRepository,IRepairmanRepository repairmanRepository)
+            public AccountManagementService(IUserRepository userRepository, IMapper mapper, IIdentityRepository identityRepository, IResidentRepository residentRepository,IAdministratorRepository administratorRepository,IManagerRepository managerRepository,IRepairmanRepository repairmanRepository, IResidenceRepository residenceRepository)
             {
+                _residenceRepository = residenceRepository;
                 _repairmanRepository = repairmanRepository;
                 _administratorRepository = administratorRepository;
                 _managerRepository= managerRepository;
@@ -89,13 +91,57 @@
             // dodaj usuwanie z identiyy repisotry
             public async Task<Result> DeleteUser(string userId)
             {
+
                 var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                _userRepository.Remove(user);
+                var userRole = user.Role;
+
+                try
+                {
+                    switch (user.Role)
+                    {
+                        case (Roles.User):
+                            _userRepository.Remove(user);
+                            // usun z identity repository 
+
+                            break;
+
+                        case (Roles.Resident):
+                            {
+
+                                _residentRepository.Remove(await _residentRepository.Get(u => u.UserId == userId));
+                                break;
+                            }
+
+                        case (Roles.Administrator):
+                            {
+                                _administratorRepository.Remove(await _administratorRepository.Get(u => u.UserId == userId));
+                                break;
+                            }
+                        case (Roles.Manager):
+                            {
+                                _managerRepository.Remove(await _managerRepository.Get(u => u.UserId == userId));
+                                break;
+                            }
+                        case (Roles.Repairman):
+                            {
+                                _repairmanRepository.Remove(await _repairmanRepository.Get(u => u.UserId == userId));
+                                break;
+                            }
+
+                    }
+                }
+                catch(Exception)
+                {
+                    return Result.Failure(Error.Failure("DeleteUser", "Total failure."));
+                }
+                
+
+                _userRepository.Save();
 
                 return Result.Success();
             }
@@ -167,7 +213,7 @@
             {
                 var GetResidentInfoResult = await _administratorRepository.Get(u => u.UserId == UserId, "User");
 
-
+                // automaper
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
@@ -178,7 +224,6 @@
                     Name = GetResidentInfoResult.User.Name,
                     Surname = GetResidentInfoResult.User.Surname,
                     PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
-
                 };
 
                 return result;
@@ -188,7 +233,7 @@
             {
                 var GetResidentInfoResult = await  _repairmanRepository.Get(u => u.UserId == UserId, "User");
 
-
+                 // add automaper
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
@@ -198,6 +243,8 @@
                     Name = GetResidentInfoResult.User.Name,
                     Surname = GetResidentInfoResult.User.Surname,
                     PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+                    EndWorkTime = GetResidentInfoResult.EndWorkTime,
+                    StartWorkTime = GetResidentInfoResult.StartWorkTime,
 
                 };
 
@@ -209,7 +256,7 @@
 
                 var GetResidentInfoResult = await _residentRepository.Get(u => u.UserId == UserId,"Residence,User");
 
-
+                 // add automaper
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
@@ -220,6 +267,7 @@
                     Name = GetResidentInfoResult.User.Name,
                     Surname = GetResidentInfoResult.User.Surname,
                     PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+                    
                     
                 };
 
@@ -234,7 +282,7 @@
             {
                 var GetResidentInfoResult = await _managerRepository.Get(u => u.UserId == UserId, "User");
 
-
+                 // add automaper
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
@@ -245,6 +293,9 @@
                     Name = GetResidentInfoResult.User.Name,
                     Surname = GetResidentInfoResult.User.Surname,
                     PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+                    EndWorkTime = GetResidentInfoResult.EndWorkTime,
+                    StartWorkTime = GetResidentInfoResult.StartWorkTime,
+
 
                 };
 
