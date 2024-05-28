@@ -71,7 +71,7 @@
                 return Result.Success();
             }
 
-            public async Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO)
+            public async Task<Result> UpdateAccount(string userId, UserUpdateDTO updateAccountDTO,string senderRole)
             {
                 var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
@@ -79,11 +79,98 @@
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                // przypisanie danychz updateAccountDTO
+                user.Surname = updateAccountDTO.Surname ?? user.Surname;
+                user.Name = updateAccountDTO.Name ?? user.Name;
+                user.PhoneNumber = updateAccountDTO.PhoneNumber ?? user.PhoneNumber;
+                user.Email = updateAccountDTO.Email ?? user.Email;
 
-                // jeszcze to zmien w identity ten email ok dasz rade
+                 _userRepository.Update(user);
 
-                _userRepository.Update(user);
+                // da sie to zamienic na słownik itd fabryke ale to tylko 3 opcje wiec nei ma sensu  ewentualnie admina/manager/repairmana/residenent servisy
+                switch (user.Role)
+                {
+                    case (Roles.User):
+                       
+                       if(updateAccountDTO.ResidenceId!=null)
+                        {
+                            return Result.Failure(Error.Conflict("UpdateAccount", "User cant have residence id"));
+                        }
+
+                      
+
+                        _userRepository.Update(user);
+
+
+                        break;
+
+                    case (Roles.Resident):
+                        {
+
+                           
+
+                            var resident = await _residentRepository.Get(u => u.UserId == userId);
+                            if (resident != null)
+                            {
+                                resident.ResidenceId = updateAccountDTO.ResidenceId ?? resident.ResidenceId;
+                                _residentRepository.Update(resident);
+                            }
+                            else
+                            {
+                                return Result.Failure(Error.NotFound("Resident", "Resident not found"));
+                            }
+
+                            break;
+                        }
+
+                    case (Roles.Administrator):
+                        {
+
+                            
+                            break;
+                        }
+                    case (Roles.Manager):
+                        {
+                            var manager = await _managerRepository.Get(u => u.UserId == userId);
+                            if (manager != null)
+                            {
+                                manager.StartWorkTime = updateAccountDTO.StartWorkTime ?? manager.StartWorkTime;
+                                manager.EndWorkTime = updateAccountDTO.EndWorkTime ?? manager.EndWorkTime;
+
+                               _managerRepository.Update(manager);
+                            }
+                            else
+                            {
+                                return Result.Failure(Error.NotFound("Resident", "Resident not found"));
+                            }
+
+                            break;
+                        }
+                    case (Roles.Repairman):
+                        {
+
+                            var Repairman = await _repairmanRepository.Get(u => u.UserId == userId);
+                            if (Repairman != null)
+                            {
+                                Repairman.StartWorkTime = updateAccountDTO.StartWorkTime ?? Repairman.StartWorkTime;
+                                Repairman.EndWorkTime = updateAccountDTO.EndWorkTime ?? Repairman.EndWorkTime;
+
+                                _repairmanRepository.Update(Repairman);
+                            }
+                            else
+                            {
+                                return Result.Failure(Error.NotFound("Resident", "Resident not found"));
+                            }
+
+                            break;
+                        }
+
+                }
+
+                
+
+                // czy ten zapis robi sie dla wszystkich entitiy czy tylko dla jednego, raczej dla kazdego bo dziala na db a nie dbsecie
+                await _residenceRepository.Save();
+               await _userRepository.Save();
 
                 return Result.Success();
             }

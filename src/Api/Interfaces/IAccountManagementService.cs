@@ -8,7 +8,7 @@ namespace Api.Interfaces
     {
         Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO);
 
-        Task<Result> UpdateAccount(string userId, AdminUpdateAccountDTO updateAccountDTO);
+        Task<Result> UpdateAccount(string userId, UserUpdateDTO updateAccountDTO,string senderRole);
 
         Task<Result<PagedList<UserDTO>>> ListUsers(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder);
 

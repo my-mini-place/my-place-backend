@@ -32,10 +32,16 @@
                 return Ok();
             }
 
-            [HttpPatch("updateAccount/{userId}")]
-            public async Task<IActionResult> UpdateAccount(string userId, [FromBody] AdminUpdateAccountDTO updateAccountDTO)
+            [HttpPatch("updateAccount")]
+            public async Task<IActionResult> UpdateAccount( [FromBody] UserUpdateDTO updateAccountDTO)
             {
-                var result = await _accountManagementService.UpdateAccount(userId, updateAccountDTO);
+                //string UserRole = "Administrator";
+                //if (User.GetUserRole()!= null)
+                //{
+                //UserRole=User.GetUserRole();
+                //}
+
+                var result = await _accountManagementService.UpdateAccount(updateAccountDTO.Id, updateAccountDTO,"Administrator");
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);
