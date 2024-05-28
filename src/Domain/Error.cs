@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Domain.Errors
+﻿namespace Domain.Errors
 
 {
     // może sie przydać

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Residence
     {
         public int Id;
-        public string ResidenceId = null!;
+        public string ResidenceId { get; set; } = null!;
 
         public string Street { get; set; } = null!;
         public string BuildingNumber { get; set; } = null!;

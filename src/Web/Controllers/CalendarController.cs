@@ -1,18 +1,10 @@
 ﻿using Api.Interfaces;
-using Api.Services;
 using Domain;
-using Domain.Repositories;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.Extensions.Logging;
-using My_Place_Backend.DTO.AccountManagment;
+using Web.Extensions;
+
 //using Domain.Calendar;
 using static Domain.Calendar;
-using static Domain.Models.CalendarModels;
-using Web.Extensions;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace My_Place_Backend.Controllers
 {
@@ -22,7 +14,7 @@ namespace My_Place_Backend.Controllers
     {
         private readonly ICalendarService _calendarService;
 
-        public CalendarController( ICalendarService calendarService)
+        public CalendarController(ICalendarService calendarService)
         {
             _calendarService = calendarService;
         }
@@ -36,15 +28,12 @@ namespace My_Place_Backend.Controllers
                 return response.ToProblemDetails();
             }
             return Ok(response.Value);
-           // return Ok();
+            // return Ok();
         }
 
         [HttpPost("admin/calendar/event")]
         public IActionResult AddAdminEvent([FromBody] CalendarEventDto eventDto)
         {
-
-
-
             // Analogicznie jak powyżej, tutaj dodajesz wydarzenie jako administrator
             return Ok(new { eventId = Guid.NewGuid().ToString() });
         }
@@ -52,14 +41,14 @@ namespace My_Place_Backend.Controllers
         [HttpGet("users")]
         public IActionResult GetUsers([FromQuery] string name, [FromQuery] string role)
         {
-            // Tutaj pobierasz listę użytkowników w zależności od podanych parametrów
-            // Użyj serwisu lub repozytorium do pobrania danych użytkowników
+            // Tutaj pobierasz listę użytkowników w zależności od podanych parametrów Użyj serwisu
+            // lub repozytorium do pobrania danych użytkowników
             var users = new List<UserDto>(); // Zastąp tę linię kodem, który pobiera użytkowników
             return Ok(users);
         }
 
         [HttpPost("calendar/events/{eventId}")]
-        public async Task<object> AcceptOrRejectEvent( string eventId, [FromBody] ActionDto actionDto)
+        public async Task<object> AcceptOrRejectEvent(string eventId, [FromBody] ActionDto actionDto)
         {
             Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto);
             if (response.IsFailure)
@@ -78,7 +67,6 @@ namespace My_Place_Backend.Controllers
                 return response.ToProblemDetails();
             }
             return Ok(response.Value);
-
         }
 
         [HttpGet("availability")]

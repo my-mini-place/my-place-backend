@@ -1,14 +1,6 @@
 ﻿using Domain.IRepositories;
-using Domain.Models.Identity;
 using Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Domain.Models.CalendarModels;
-using Domain.Repositories;
-
 
 namespace Infrastructure.Repositories
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public partial class user_info : Migration
     {
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
@@ -62,7 +61,7 @@ namespace Infrastructure.Migrations
                 values: new object[] { new DateTime(2024, 5, 24, 22, 32, 8, 121, DateTimeKind.Local).AddTicks(4255), "6d7018e0-2656-4a19-91f4-4a55012a2962", new DateTime(2024, 5, 24, 20, 32, 8, 121, DateTimeKind.Local).AddTicks(4195) });
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(

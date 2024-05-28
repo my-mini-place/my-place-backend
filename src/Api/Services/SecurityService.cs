@@ -1,25 +1,14 @@
 ﻿using Api.Interfaces;
+using AutoMapper;
 using Domain;
+using Domain.Entities;
 using Domain.Errors;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using static Domain.Entities.ServiceResponses;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using AutoMapper;
 using Domain.Models.Identity;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-using Domain.Entities;
 using Domain.ValueObjects;
+using Infrastructure.Data;
+using My_Place_Backend.DTO.Auth;
 
 namespace Api.Services
 {
@@ -50,15 +39,15 @@ namespace Api.Services
 
             var newUser = new ApplicationUser
             {
-                UserId = newUserId,
-                Name = userDTO.Name,
+                UserId = newUserId.ToString(),
+
                 Email = userDTO.Email,
                 UserName = userDTO.Email
             };
 
             var UserInfo = _mapper.Map<User>(userDTO);
 
-            UserInfo.UserId = newUserId;
+            UserInfo.UserId = newUserId.ToString();
 
             var createUserResult = await _identityRepository.CreateUserAsync(newUser, userDTO.Password);
             if (!createUserResult.Succeeded)
@@ -66,6 +55,7 @@ namespace Api.Services
                 return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()!.Description));
             }
 
+            UserInfo.Role = Roles.User;
             // dodanie informacji o userze do tabeli user
             await _userRepository.Add(UserInfo);
 
@@ -80,6 +70,8 @@ namespace Api.Services
             {
                 return Result.Failure<Guid>(Error.Failure("Role", "Error to add user Role "));
             }
+
+            await _userRepository.Save();
 
             return Result.Success(newUserId);
         }
@@ -129,7 +121,7 @@ namespace Api.Services
             if (!result.Succeeded)
             {
                 return Result.Failure(Error.Failure("ResetPasswordFailed", $"{result.Errors}"));
-            } 
+            }
 
             return Result.Success();
         }

@@ -1,20 +1,12 @@
-﻿using Domain.Models.Identity;
-using System.Data;
-using System.IO;
-
-namespace My_Place_Backend.Controllers
+﻿namespace My_Place_Backend.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
+    using Api.DTO.AccountManagment;
     using Api.Interfaces;
-
+    using Domain;
+    using global::My_Place_Backend.Authorization;
     using global::My_Place_Backend.DTO.AccountManagment;
     using Microsoft.AspNetCore.Authorization;
-    using Api.DTO.AccountManagment;
-    using Domain.Models.Identity;
-    using Microsoft.AspNetCore.Identity;
-
-    using Web.Authorization;
-    using global::My_Place_Backend.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     namespace My_Place_Backend.Controllers
     {
@@ -52,9 +44,14 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
-            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
+            public async Task<IActionResult> ListUsers(int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder)
             {
-                var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
+                var users = await _accountManagementService.ListUsers(page, pageSize, searchTerm, sortColumn, sortOrder);
+                if (users.IsFailure)
+                {
+                    return BadRequest(users.Error);
+                }
+
                 return Ok(users.Value);
             }
 
@@ -71,9 +68,16 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("getUserInfo/{userId}")]
-            [Authorize("IsAdmin")]
-            public async Task<IActionResult> GetUserInfo(string userId)
+            //[Authorize("IsAny")]
+            public async Task<IActionResult> GetUserInfo(string? userId)
             {
+
+                if (userId == null)
+                {
+                     userId = User.GetUserId().ToString();
+                    //string userRole = User.GetUserRole();
+                }
+
                 var result = await _accountManagementService.GetUserInfo(userId);
                 if (result.IsFailure)
                 {

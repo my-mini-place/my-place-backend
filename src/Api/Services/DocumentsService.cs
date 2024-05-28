@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Domain.Document;
-using Domain.Errors;
-using Domain.IRepositories;
-using Api.Interfaces;
-using AutoMapper;
+﻿using Api.Interfaces;
 using Domain;
-using Domain.ExternalInterfaces;
-using Domain.Repositories;
+using Domain.IRepositories;
 
 namespace Api.Services
 {

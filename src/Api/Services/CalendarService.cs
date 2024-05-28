@@ -1,17 +1,8 @@
 ﻿using Api.Interfaces;
-using AutoMapper;
 using Domain;
-using Domain.ExternalInterfaces;
-using Domain.IRepositories;
-using Domain.Repositories;
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Domain.Calendar;
 using Domain.Errors;
+using Domain.IRepositories;
+using static Domain.Calendar;
 
 namespace Api.Services
 {
@@ -19,10 +10,20 @@ namespace Api.Services
     {
         private readonly ICalendarRepository _calendarRepository;
 
-        private readonly List<string> months = new List<string> {
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-             };
+        private readonly List<string> months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+             ];
 
         private enum Actions
         { Accept, TReject };

@@ -1,11 +1,7 @@
 ﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Models.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.Configuration
 {
@@ -14,6 +10,14 @@ namespace Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Resident> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.HasOne(x => x.User)
+                  .WithOne()
+                  .HasForeignKey<Resident>(x => x.UserId).HasPrincipalKey<User>(x => x.UserId);
+
+            builder.HasOne(x => x.Residence)
+                  .WithOne()
+                  .HasForeignKey<Resident>(x => x.ResidenceId).HasPrincipalKey<Residence>(x => x.ResidenceId);
         }
     }
 }

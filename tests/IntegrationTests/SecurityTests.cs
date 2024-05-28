@@ -1,17 +1,6 @@
-﻿using Api.Interfaces;
-using Api.Services;
-using AutoMapper;
-using Domain;
-using Domain.ExternalInterfaces;
-using Domain.IRepositories;
-using FluentAssertions;
-using Infrastructure.Data;
+﻿using FluentAssertions;
 using IntegrationTests;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using My_Place_Backend.DTO.Auth;
-using System.Reflection;
 
 namespace Application.IntegrationTests;
 
@@ -54,7 +43,7 @@ public class ProductTests : BaseIntegrationTest
     [Fact]
     public async Task Login_Account_Success()
     {
-        //Arrange generated 
+        //Arrange generated
 
         var loginDTO = new LoginDTO
         {

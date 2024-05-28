@@ -1,19 +1,10 @@
-﻿using Domain;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Models;
 using Domain.Models.Identity;
 using Infrastructure.Data.Configuration;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using static Domain.Models.CalendarModels;
-using Domain.Models;
 
 namespace Infrastructure.Data
 {
@@ -34,7 +25,7 @@ namespace Infrastructure.Data
         public DbSet<Event> CalendarEvents { get; set; }
 
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Option>  Options { get; set; }
+        public DbSet<Option> Options { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

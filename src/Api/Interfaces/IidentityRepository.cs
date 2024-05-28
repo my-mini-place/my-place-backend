@@ -1,15 +1,6 @@
-﻿using Domain;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
-using My_Place_Backend.DTO.AccountManagment;
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Domain.Entities.ServiceResponses;
 
 namespace Api.Interfaces
 {
@@ -21,6 +12,8 @@ namespace Api.Interfaces
 
         Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password);
 
+        Task<ApplicationUser?> FindUserById(string userId);
+
         Task<IdentityResult> AddUserToRoleAsync(ApplicationUser user, string role);
 
         Task<IdentityResult> EnsureRoleAsync(string roleName);
@@ -29,10 +22,13 @@ namespace Api.Interfaces
 
         Task<ApplicationUser?> FindUserByEmailAsync(string email);
 
+
+        Task<string> GeUserRoleAsync(string appUserid);
         Task<List<string>> GetUserRolesAsync(ApplicationUser user);
 
         Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword);
 
         Task<string> ForgotPasswordAsync(ApplicationUser user);
+     
     }
 }

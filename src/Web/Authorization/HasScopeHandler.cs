@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace Web.Authorization;
+﻿namespace Web.Authorization;
 
 // moze sie przydac
 

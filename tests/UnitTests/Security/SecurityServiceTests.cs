@@ -6,7 +6,6 @@ using Domain.IRepositories;
 using FluentAssertions;
 using Infrastructure.Data;
 using Moq;
-using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 
 namespace UnitTests.Security

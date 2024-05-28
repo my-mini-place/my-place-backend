@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Block
     {
@@ -14,6 +7,6 @@ namespace Domain.Entities
 
         public string Name { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
-        public int floors;
+        public int Floors { get; set; }
     }
 }
