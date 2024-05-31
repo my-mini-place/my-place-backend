@@ -74,15 +74,20 @@
             }
 
             [HttpGet("getUserInfo/{userId}")]
-            //[Authorize("IsAny")]
-            public async Task<IActionResult> GetUserInfo(string? userId)
+            [Authorize("IsAny")]
+            public async Task<IActionResult> GetUserInfo(string userId)
             {
 
-                if (userId == null)
+                string userRole = User.GetUserRole();
+                string senderId = User.GetUserId().ToString();
+
+                if ((userRole!= "Administrator"&&userRole!= "Manager")&&senderId!=userId)
                 {
-                     userId = User.GetUserId().ToString();
-                    //string userRole = User.GetUserRole();
+                    return BadRequest(Result.Failure(Domain.Errors.Error.Conflict("Dont have permission", "No permission")));
                 }
+                //     userId = User.GetUserId().ToString();
+                    //string userRole = User.GetUserRole();
+                
 
                 var result = await _accountManagementService.GetUserInfo(userId);
                 if (result.IsFailure)
@@ -92,28 +97,18 @@
                 return Ok(result.Value);
             }
 
-            [HttpPatch("updateUserRole/{userId}")]
-            [Authorize("")]
-            public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] string role)
-            {
-                var result = await _accountManagementService.UpdateUserRole(userId, role);
-                if (result.IsFailure)
-                {
-                    return BadRequest(result.Error);
-                }
-                return Ok();
-            }
+          
 
-            [HttpPatch("setUserAvailability/{userId}")]
-            public async Task<IActionResult> SetUserAvailability([FromBody] UserDTO a)
-            {
-                var result = await _accountManagementService.SetUserAvailability();
-                if (result.IsFailure)
-                {
-                    return BadRequest(result.Error);
-                }
-                return Ok();
-            }
+            //[HttpPatch("setUserAvailability/{userId}")]
+            //public async Task<IActionResult> SetUserAvailability([FromBody] UserDTO a)
+            //{
+            //    var result = await _accountManagementService.SetUserAvailability();
+            //    if (result.IsFailure)
+            //    {
+            //        return BadRequest(result.Error);
+            //    }
+            //    return Ok();
+            //}
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthorization(config =>
             {
                 config.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", Roles.Administrator));
-                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator, Roles.Repairman, Roles.User));
+                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator, Roles.Repairman, Roles.User,Roles.Resident));
                 config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", "User", Roles.Administrator));
                 config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
                 config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));

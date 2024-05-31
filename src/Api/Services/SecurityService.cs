@@ -152,7 +152,7 @@ namespace Api.Services
                 return Result.Failure<LoginResponseDTO>(Error.Failure("InvalidCredentials", "Invalid email/password"));
 
             var roles = await _identityRepository.GetUserRolesAsync(user);
-            var token = _identityRepository.GenerateToken(new UserSession(user.Id, user.UserName, user.Email, roles.FirstOrDefault()));
+            var token = _identityRepository.GenerateToken(new UserSession(user.UserId, user.UserName, user.Email, roles.FirstOrDefault()));
 
             return Result.Success(new LoginResponseDTO()
             {

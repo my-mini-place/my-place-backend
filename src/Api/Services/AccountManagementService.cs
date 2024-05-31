@@ -276,6 +276,7 @@
                 try
                 {
                     var UserFullInfodto = await _userInfoSwitch[userRole](userId);
+                    UserFullInfodto.Role=userRole;
 
                     return Result.Success(UserFullInfodto);
                 }
@@ -304,8 +305,8 @@
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
-                  //  Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
-                    Role = Roles.Resident,
+                    //  Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
+                   
                     Email = GetResidentInfoResult.User.Email,
                     Status = GetResidentInfoResult.User.Status,
                     Name = GetResidentInfoResult.User.Name,
@@ -324,7 +325,7 @@
                 UserFullInfoDTO result = new()
                 {
                     Id = UserId,
-                    Role = Roles.Resident,
+                   // Role = Roles.Resident,
                     Email = GetResidentInfoResult.User.Email,
                     Status = GetResidentInfoResult.User.Status,
                     Name = GetResidentInfoResult.User.Name,
@@ -348,7 +349,7 @@
                 {
                     Id = UserId,
                     Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
-                    Role = Roles.Resident,
+                //    Role = Roles.Resident,
                     Email = GetResidentInfoResult.User.Email,
                     Status = GetResidentInfoResult.User.Status,
                     Name = GetResidentInfoResult.User.Name,
@@ -374,7 +375,7 @@
                 {
                     Id = UserId,
                    // Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
-                    Role = Roles.Resident,
+              //      Role = Roles.Resident,
                     Email = GetResidentInfoResult.User.Email,
                     Status = GetResidentInfoResult.User.Status,
                     Name = GetResidentInfoResult.User.Name,
