@@ -37,7 +37,7 @@ namespace My_Place_Backend.Controllers
                         .Where(option => option.PostId == post.Id)
                         .Select(option => new OptionDTO
                         {
-                            Id = option.Id,
+                           Id = option.Id,
                             Text = option.Text,
                             NumVotes = surveyClosed ? _context.Votes.Count(vote => vote.OptionId == option.Id) : null
                         })
@@ -55,17 +55,22 @@ namespace My_Place_Backend.Controllers
                     OptionsWithNumVotes = options
                 };
             });
+            
 
 
-            PagedList<PostDTO> pagedPost =  PagedList<PostDTO>.CreateFromListAsync(postsDTO.ToList(), page, pagesize);
+            PagedList<PostDTO> pagedPost =  PagedList<PostDTO>.CreateFromListAsync(postsDTO.OrderByDescending(p => p.CreationDateTime).ToList(), page, pagesize);;
+             
+
+          
+
 
             return pagedPost;
         }
 
       
 
-        [HttpPost("newpost")]
-        public async Task<IActionResult> CeateSurveyPost(PostCreateDTO postDTO)
+        [HttpPost("create")]
+        public async Task<IActionResult> CeateSurveyPost([FromBody] PostCreateDTO postDTO)
         {
 
             Guid postId = Guid.NewGuid();
@@ -79,6 +84,8 @@ namespace My_Place_Backend.Controllers
                 SurveyClosureDateTime = postDTO.SurveyClosureDateTime, // check for null
                 Options = postDTO.IsSurvey ? postDTO.OptionsWithNumVotes!.Select(optionDTO => new Option  // check for null
                 {
+                    Id=Guid.NewGuid(),
+                   
                     Text = optionDTO.Text,
                     PostId =postId,
                 })
@@ -86,6 +93,29 @@ namespace My_Place_Backend.Controllers
             };
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+
+        [HttpPatch("Update")]
+        public async Task<IActionResult> UpdatePost([FromBody] PostUpdateDTO postDTO)
+        {       
+
+            var post = await _context.Posts.FindAsync(Guid.Parse(postDTO.Id));
+
+            if (post == null)
+                return BadRequest();
+
+
+            post.Title = postDTO.Title ?? post.Title;
+            post.Content = postDTO.Content ?? post.Content;
+
+           _context.Posts.Update(post);
+            _context.SaveChanges();
+
+
 
             return Ok();
         }
