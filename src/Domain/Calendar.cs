@@ -4,11 +4,44 @@ namespace Domain
 {
     public class Calendar
     {
+        public enum UserEventType
+        {
+            Usterka,
+            SpotkanieAdmin
+        }
+
+        public enum AdminEventType
+        {
+            Custom,
+            SpotkanieOrganizacyjne
+        }
+
+        public class usersDTO
+        {
+           public string email { get; set; }
+           public string id{ get; set; }
+         //  public string roles { get; set; }
+        }
         public class ActionDto
         {
             public string actionDto { get; set; } = null!;
         }
-
+        public class CalendarMonthFreeTime
+        {
+            public string Month { get; set; }
+            public List<CalendarDayFreeTime> Days { get; set; }
+        }
+        public class CalendarDayFreeTime
+        {
+            public string Day { get; set; }
+            public int DayNumber { get; set; }
+            public List<Slot> FreeTimeList { get; set; }
+        }
+        public class Slot
+        {
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+        }
         public class CalendarMonthEventsDto
         {
             public string Month { get; set; } = null!;
@@ -69,6 +102,12 @@ namespace Domain
                 eventDto.Description = e.Description;
                 eventDto.From = e.StartTime;
                 eventDto.To = e.EndTime;
+                eventDto.Invited = new List<string>();
+                
+                foreach (var item in e.Invited.Split([',']))
+                {
+                    eventDto.Invited.Add(item);
+                }
                 return eventDto;
             }
 
@@ -101,7 +140,7 @@ namespace Domain
                 return monthObject;
             }
 
-            public static Event castEventDtoToServer(CalendarEventDto e)
+            public static Event castEventDtoToServer(CalendarEventDto e ,string ownderId)
             {
                 Event serverEvent = new Event();
                 serverEvent.EventPublicId = e.EventId;
@@ -111,8 +150,16 @@ namespace Domain
                 serverEvent.StartTime = e.From;
                 serverEvent.EndTime = e.To;
                 serverEvent.State = "Created";
-                serverEvent.Month = months[e.From.Month - 1];
+                serverEvent.Month = months[e.From.Month-1];
+                serverEvent.owner = ownderId;
+                serverEvent.Invited = "";
+                StringBuilder sb = new StringBuilder();
+                foreach (string id in e.Invited)
+                {
 
+                    sb.Append(id + ",");
+                }
+                serverEvent.Invited = sb.ToString();
                 return serverEvent;
             }
         }

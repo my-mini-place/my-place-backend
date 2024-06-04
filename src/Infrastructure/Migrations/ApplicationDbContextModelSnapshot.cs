@@ -281,6 +281,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Invited")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Month")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -570,15 +573,25 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
+<<<<<<< HEAD
                             ConcurrencyStamp = "76e761ac-da6a-40f8-b48d-37f938dc0e81",
+=======
+                            ConcurrencyStamp = "02237237-070d-45bc-9bd9-d915318730ea",
+>>>>>>> features/calendarApi
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
+<<<<<<< HEAD
                             PasswordHash = "AQAAAAIAAYagAAAAEFF7DmX3Y4qhq8O8sQ5zNzitPWWulFPmYGljwrJ4+ann7NHO+7jDlMnN8m4ZmA0LMg==",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "0efa18d3-e569-45e6-b19f-0c01353058c7",
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEImCWux23ADm2S4xD4qtfs/BFDiUQE15ygwRfyXlu/Aqh5z67OaVsDjOqtsMLTH4eQ==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "8e44f1f5-bb3a-46b1-a6ce-fe3b359bed6c",
+>>>>>>> features/calendarApi
                             TwoFactorEnabled = false,
                             UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
                             UserName = "Admin123@gmail.com"
@@ -671,19 +684,31 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
+<<<<<<< HEAD
                             Id = "64ac29e2-753c-4a05-9ba4-d4d61bad421f",
+=======
+                            Id = "559fe26a-6b81-462c-a7fd-7a8539975123",
+>>>>>>> features/calendarApi
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
+<<<<<<< HEAD
                             Id = "8e4829d4-2a36-4332-b19d-4720c4de64fa",
+=======
+                            Id = "3e822dd0-26ca-49e3-9ab6-e4ee24f41f73",
+>>>>>>> features/calendarApi
                             Name = "Resident",
                             NormalizedName = "RESIDENT"
                         },
                         new
                         {
+<<<<<<< HEAD
                             Id = "b766b57c-20ce-4aaa-86be-1eabc7fb1ad4",
+=======
+                            Id = "53cc1f82-5fe4-4355-a41e-05b06c429ad6",
+>>>>>>> features/calendarApi
                             Name = "Repairman",
                             NormalizedName = "REPAIRMAN"
                         });

@@ -20,6 +20,7 @@ namespace Infrastructure.Data
                 State = "Created",
                 Type = "Custom",
                 Description = "To jest opis przykładowego wydarzenia",
+                Invited= "8e445865-a24d-4543-a6c6-9443d048cdb9,id2",
                 owner = "John Doe" // Przykładowy właściciel
             };
             modelBuilder.Entity<Event>().HasData(sampleEvent);

@@ -5,5 +5,6 @@ namespace Domain.IRepositories
 {
     public interface ICalendarRepository : IRepository<Event>
     {
+     //   void GetAll(Func<Event, bool> func);
     }
 }
