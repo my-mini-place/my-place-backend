@@ -1,7 +1,4 @@
 ﻿using Api.Services;
-<<<<<<< HEAD
-using FluentAssertions;
-=======
 using Domain;
 using Domain.Models.Identity;
 using Domain.IRepositories;
@@ -17,7 +14,6 @@ using Infrastructure.Data;
 using static Domain.Calendar;
 using static Domain.Models.Calendar.CalendarModels;
 using Api.Interfaces;
->>>>>>> features/calendarApi
 
 namespace UnitTests.Calendar
 {
@@ -46,9 +42,6 @@ namespace UnitTests.Calendar
         public async Task GetEventsByMonth_WrongMonth_ReturnsFailure()
         {
             // Arrange
-<<<<<<< HEAD
-            var service = new CalendarService(null!);
-=======
             var service = new CalendarService(null, null, null);
 
             // Act
@@ -87,7 +80,6 @@ namespace UnitTests.Calendar
             // Arrange
             string month = "InvalidMonth";
             string userId = "testUser";
->>>>>>> features/calendarApi
 
             // Act
             var result = await _calendarService.GetEventsByMonth(month, userId);
