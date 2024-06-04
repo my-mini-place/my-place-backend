@@ -1,4 +1,6 @@
-﻿using static Domain.Models.CalendarModels;
+﻿using Domain.Models.Calendar;
+using System.Text;
+using static Domain.Models.Calendar.CalendarModels;
 
 namespace Domain
 {

@@ -4,7 +4,8 @@ using Domain.Models.Identity;
 using Infrastructure.Data.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using static Domain.Models.CalendarModels;
+using static Domain.Models.Calendar.CalendarModels;
+
 
 namespace Infrastructure.Data
 {

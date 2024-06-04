@@ -1,6 +1,7 @@
 ﻿using Domain.IRepositories;
 using Infrastructure.Data;
-using static Domain.Models.CalendarModels;
+using static Domain.Models.Calendar.CalendarModels;
+
 
 namespace Infrastructure.Repositories
 {

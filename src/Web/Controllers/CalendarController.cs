@@ -5,8 +5,6 @@ using Web.Extensions;
 
 //using Domain.Calendar;
 using static Domain.Calendar;
-<<<<<<< HEAD
-=======
 using static Domain.Models.Calendar.CalendarModels;
 using Web.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -16,7 +14,6 @@ using Domain.IRepositories;
 using System.Security.Cryptography.Xml;
 using Domain.Errors;
 
->>>>>>> features/calendarApi
 
 namespace My_Place_Backend.Controllers
 {
@@ -52,8 +49,8 @@ namespace My_Place_Backend.Controllers
 
             }
 
-            Guid userId = User.GetUserId();
-            Result<string> response = await _calendarService.AddUserEvent(eventDto, userId.ToString());
+
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
@@ -81,8 +78,8 @@ namespace My_Place_Backend.Controllers
                 return NotFound(r.Value);
 
             }
-            Guid userId = User.GetUserId();
-            Result<string> response = await _calendarService.AddUserEvent(eventDto, userId.ToString());
+
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
@@ -101,8 +98,7 @@ namespace My_Place_Backend.Controllers
         [HttpPost("calendar/events/{eventId}")]
         public async Task<object> AcceptOrRejectEvent(string eventId, [FromBody] ActionDto actionDto)
         {
-            Guid userId = User.GetUserId();
-            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto, userId.ToString());
+            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
@@ -116,12 +112,12 @@ namespace My_Place_Backend.Controllers
         public async Task<object> GetEventsByMonth([FromQuery] string month)
         {
 
-            Guid userId = User.GetUserId();
+
             //string userRole = User.GetUserRole();
             //Console.WriteLine("------------------------------------");
             //Console.WriteLine(userId.ToString());
 
-            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month,userId.ToString());
+            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();

@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.Xml;
 using Api.Interfaces.IRepositories;
 using IIdentityRepository = Api.Interfaces.IIdentityRepository;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services
 {
@@ -83,22 +85,8 @@ namespace Api.Services
             "july", "august", "september", "october", "november", "december"
              };
 
-        private readonly List<string> months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-             ];
 
-        private enum Actions
+        public enum actions
         { Accept, TReject };
 
     public CalendarService(ICalendarRepository calendarRepository, UserManager<ApplicationUser> userManager, IIdentityRepository identityRepository)
@@ -116,7 +104,10 @@ namespace Api.Services
                 int index = months.IndexOf(month.ToLower()) + 1;
                 //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
                 var events =  await _calendarRepository.GetAll(x => (x.Month.ToLower() == month.ToLower()) &&(x.Invited.Contains(userid)||x.owner==userid));
-
+                foreach(var e in events)
+                {
+                    Console.WriteLine(e);
+                }    
                 CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month.ToLower());
                 return Result.Success(monthEvents);
             }
@@ -187,7 +178,11 @@ namespace Api.Services
         {
             string id = Guid.NewGuid().ToString();
             eventDto.EventId = id;
+            Console.WriteLine("DODAJE NOWE WYDARZENIE");
+            Console.WriteLine(eventDto.Type);
             await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto,ownerId));
+            await _calendarRepository.Save();
+
             return Result.Success(id);
             // throw new NotImplementedException();
         }
