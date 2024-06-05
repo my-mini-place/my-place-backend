@@ -12,20 +12,7 @@ namespace Infrastructure.Migrations
         /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "58653e52-8c28-4041-bb40-5c3fb134e865");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "73e2ae89-985c-4635-99f8-bc1daf6c72a6");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "c93e3ab0-495c-4f39-8082-86ec7287fcd3");
+           
 
             migrationBuilder.AlterColumn<string>(
                 name: "Nickname",
@@ -88,15 +75,7 @@ namespace Infrastructure.Migrations
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50);
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "58653e52-8c28-4041-bb40-5c3fb134e865", null, "Repairman", "REPAIRMAN" },
-                    { "73e2ae89-985c-4635-99f8-bc1daf6c72a6", null, "Resident", "RESIDENT" },
-                    { "c93e3ab0-495c-4f39-8082-86ec7287fcd3", null, "Manager", "MANAGER" }
-                });
+            
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",

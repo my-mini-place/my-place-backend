@@ -374,31 +374,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("AspNetRoles", (string)null);
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "b1775dc0-0b27-4943-82f1-c0cadf2b8147",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "e83e0a9a-28f4-4f8f-9b4b-12ee4f47a64c",
-                            Name = "Resident",
-                            NormalizedName = "RESIDENT"
-                        },
-                        new
-                        {
-                            Id = "9275e636-7dc0-4931-bcf3-f86b63cd7ed8",
-                            Name = "Repairman",
-                            NormalizedName = "REPAIRMAN"
-                        });
+                   
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -129,15 +129,7 @@ namespace Infrastructure.Migrations
                 table: "Usersinfo",
                 column: "Id");
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "9275e636-7dc0-4931-bcf3-f86b63cd7ed8", null, "Repairman", "REPAIRMAN" },
-                    { "b1775dc0-0b27-4943-82f1-c0cadf2b8147", null, "Manager", "MANAGER" },
-                    { "e83e0a9a-28f4-4f8f-9b4b-12ee4f47a64c", null, "Resident", "RESIDENT" }
-                });
+           
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
@@ -213,20 +205,7 @@ namespace Infrastructure.Migrations
                 name: "PK_Usersinfo",
                 table: "Usersinfo");
 
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "9275e636-7dc0-4931-bcf3-f86b63cd7ed8");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "b1775dc0-0b27-4943-82f1-c0cadf2b8147");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "e83e0a9a-28f4-4f8f-9b4b-12ee4f47a64c");
+          
 
             migrationBuilder.DropColumn(
                 name: "BlockId",

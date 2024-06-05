@@ -90,7 +90,7 @@ namespace My_Place_Backend.Controllers
         [HttpGet("users")]
         public async Task<object> GetUsers([FromQuery] string name="", [FromQuery] string role="")
         {
-            Result<List<usersDTO>> response = await _calendarService.GetUsers(name,role);
+            Result<List<usersDTO>> response = await _calendarService.GetUsers(name, role);
             Console.WriteLine(response.Value);
             return Ok(response.Value);
         }

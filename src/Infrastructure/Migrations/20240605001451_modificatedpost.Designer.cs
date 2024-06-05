@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240520162746_posts")]
-    partial class posts
+    [Migration("20240605001451_modificatedpost")]
+    partial class modificatedpost
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -33,9 +33,28 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Administrators");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Guid = "e2865b47-dabd-4984-ad52-e42e3e875a44",
+                            UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Block", b =>
@@ -47,7 +66,11 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BlockId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Floors")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -60,6 +83,16 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Blocks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            BlockId = "1",
+                            Floors = 5,
+                            Name = "BRUDNY",
+                            PostalCode = "12-345"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Manager", b =>
@@ -73,12 +106,73 @@ namespace Infrastructure.Migrations
                     b.Property<TimeSpan>("EndWorkTime")
                         .HasColumnType("time");
 
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan>("StartWorkTime")
                         .HasColumnType("time");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Managers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            EndWorkTime = new TimeSpan(0, 16, 0, 0, 0),
+                            Guid = "f84ee215-a41f-4e35-bb5a-e8dee5fc7d83\r\n",
+                            StartWorkTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UserId = "36df4b07-2984-4182-a57c-de26516670cc"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Repairman", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("EndWorkTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("StartWorkTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Repairman");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            EndWorkTime = new TimeSpan(0, 0, 0, 0, 0),
+                            Guid = "21ee064d-3c9b-4fa0-9cf6-7a5387c3c9fc",
+                            StartWorkTime = new TimeSpan(0, 0, 0, 0, 0),
+                            UserId = "f805f338-2c36-4e94-a574-6021cc0a2431"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Residence", b =>
@@ -95,10 +189,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("BlockId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BlockId1")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BuildingNumber")
                         .IsRequired()
@@ -107,15 +198,31 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
+                    b.Property<string>("ResidenceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlockId1");
+                    b.HasIndex("BlockId");
 
                     b.ToTable("Residences");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            ApartmentNumber = "18",
+                            BlockId = "1",
+                            BuildingNumber = "1",
+                            Floor = 5,
+                            ResidenceId = "1",
+                            Street = "Kwiatowa"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Resident", b =>
@@ -126,30 +233,39 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ResidenceId")
+                    b.Property<string>("Guid")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ResidenceId1")
-                        .HasColumnType("int");
+                    b.Property<string>("ResidenceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId1")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResidenceId1");
+                    b.HasIndex("ResidenceId")
+                        .IsUnique();
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Resident");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Guid = "a1748a86-481f-4a39-893a-42c5e6ca980b",
+                            ResidenceId = "1",
+                            UserId = "de40243b-e960-425b-a980-5c6e8e1895dc"
+                        });
                 });
 
-            modelBuilder.Entity("Domain.Models.CalendarModels+Event", b =>
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Event", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -166,6 +282,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("EventPublicId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Invited")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Month")
@@ -199,11 +318,12 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 20, 20, 27, 46, 303, DateTimeKind.Local).AddTicks(8780),
-                            EventPublicId = "81219c56-6a31-46a6-a2ab-ba8eccacc8c9",
+                            EndTime = new DateTime(2024, 6, 5, 4, 14, 50, 908, DateTimeKind.Local).AddTicks(8081),
+                            EventPublicId = "76a93b90-e19f-4f8b-bb41-b72e674ef5d8",
+                            Invited = "8e445865-a24d-4543-a6c6-9443d048cdb9,id2",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 20, 18, 27, 46, 303, DateTimeKind.Local).AddTicks(8730),
+                            StartTime = new DateTime(2024, 6, 5, 2, 14, 50, 908, DateTimeKind.Local).AddTicks(8035),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -232,11 +352,11 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nickname")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -250,12 +370,74 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Usersinfo");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 900, DateTimeKind.Local).AddTicks(9903),
+                            Email = "Admin123@gmail.com",
+                            IsActive = true,
+                            Name = "Admin",
+                            PhoneNumber = "123456789",
+                            Role = "Administrator",
+                            Status = 0,
+                            Surname = "amin",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908"
+                        },
+                        new
+                        {
+                            Id = -3,
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 901, DateTimeKind.Local).AddTicks(93),
+                            Email = "RepairMan123@gmail.com",
+                            IsActive = true,
+                            Name = "RepairMan",
+                            PhoneNumber = "123456789",
+                            Role = "Repairman",
+                            Status = 0,
+                            Surname = "Repairowski",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "f805f338-2c36-4e94-a574-6021cc0a2431"
+                        },
+                        new
+                        {
+                            Id = -2,
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 905, DateTimeKind.Local).AddTicks(7358),
+                            Email = "Manager123@gmail.com",
+                            IsActive = true,
+                            Name = "Menager",
+                            PhoneNumber = "123456789",
+                            Role = "Manager",
+                            Status = 0,
+                            Surname = "Menadzerski",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "36df4b07-2984-4182-a57c-de26516670cc"
+                        },
+                        new
+                        {
+                            Id = -4,
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 905, DateTimeKind.Local).AddTicks(7482),
+                            Email = "Resident123@gmail.com",
+                            IsActive = true,
+                            Name = "Resident",
+                            PhoneNumber = "123456789",
+                            Role = "Resident",
+                            Status = 0,
+                            Surname = "Cucolkt",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "de40243b-e960-425b-a980-5c6e8e1895dc"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Models.Option", b =>
@@ -347,9 +529,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -373,8 +552,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -397,18 +577,69 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d5e6dc4-a6c1-4681-ac63-ef0ef90a10d8",
+                            ConcurrencyStamp = "ea086588-943f-49ac-9cfb-c289d3b623d6",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHO/6g0b3IW2L/gkv6HXBDL1jftWfgkzDNfYc0PFHz8sxc2Y+O12O1LxrV/76RvQ0A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDOdlNnAEjNG2WKLysiaz9/UhyGvSSKhua/2UsH6jjnJCLz/gN3hzIFlK/+JVrQlVg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "baf07c77-d46f-4c06-b9f9-d7d549907fd4",
+                            SecurityStamp = "54423d84-7af1-4768-8538-dadac059ae1b",
                             TwoFactorEnabled = false,
-                            UserId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
                             UserName = "Admin123@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "dd451f40-d06c-4a2a-a454-5f290a74ca02",
+                            Email = "Manager123@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "MANAGER123@GMAIL.COM",
+                            NormalizedUserName = "MANAGER123@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGB27Oc8KR3PeUCZ3RF+Wrah+zoSYmYp/WX5bySE5rVrFnQ4HjUMfdfjpRZmCuzTFw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "8e459a6f-4209-4894-ba99-c8f2defb1f99",
+                            TwoFactorEnabled = false,
+                            UserId = "36df4b07-2984-4182-a57c-de26516670cc",
+                            UserName = "Manager123@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "da671bf0-4525-47f7-a9de-affc56b2ad67",
+                            Email = "Resident123@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "RESIDENT123@GMAIL.COM",
+                            NormalizedUserName = "RESIDENT123@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEBxy8YIMplKDHkg7A0e8mQIlWLT17hve9SV0Arke0K+2LGrd9s7/BFNILI5RLgbsw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "3f8d434d-a6df-4268-8c32-e12592bf2ad3",
+                            TwoFactorEnabled = false,
+                            UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
+                            UserName = "Resident123@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "84d26d49-da84-46cc-84af-e03f60eddbc1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6b544d82-8cb2-4609-9879-d3f4999eac69",
+                            Email = "RepairMan123@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "REPAIRMAN123@GMAIL.COM",
+                            NormalizedUserName = "REPAIRMAN123@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKdRnzWADLba+WZKQo/7wWKTgg9FHgJSiv/1c/zcEJdSCq2ONhPdMxIo4y7rc8lVyg==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "dafaab34-2824-46ba-8b86-179deec75766",
+                            TwoFactorEnabled = false,
+                            UserId = "f805f338-2c36-4e94-a574-6021cc0a2431",
+                            UserName = "RepairMan123@gmail.com"
                         });
                 });
 
@@ -447,19 +678,19 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = "c93e3ab0-495c-4f39-8082-86ec7287fcd3",
+                            Id = "64ac29e2-753c-4a05-9ba4-d4d61bad421f",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "73e2ae89-985c-4635-99f8-bc1daf6c72a6",
+                            Id = "8e4829d4-2a36-4332-b19d-4720c4de64fa",
                             Name = "Resident",
                             NormalizedName = "RESIDENT"
                         },
                         new
                         {
-                            Id = "58653e52-8c28-4041-bb40-5c3fb134e865",
+                            Id = "b766b57c-20ce-4aaa-86be-1eabc7fb1ad4",
                             Name = "Repairman",
                             NormalizedName = "REPAIRMAN"
                         });
@@ -556,6 +787,21 @@ namespace Infrastructure.Migrations
                         {
                             UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210"
+                        },
+                        new
+                        {
+                            UserId = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
+                            RoleId = "64ac29e2-753c-4a05-9ba4-d4d61bad421f"
+                        },
+                        new
+                        {
+                            UserId = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
+                            RoleId = "8e4829d4-2a36-4332-b19d-4720c4de64fa"
+                        },
+                        new
+                        {
+                            UserId = "84d26d49-da84-46cc-84af-e03f60eddbc1",
+                            RoleId = "b766b57c-20ce-4aaa-86be-1eabc7fb1ad4"
                         });
                 });
 
@@ -578,11 +824,48 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Administrator", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Administrator", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Manager", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Manager", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Repairman", b =>
+                {
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Repairman", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Residence", b =>
                 {
                     b.HasOne("Domain.Entities.Block", "Block")
                         .WithMany()
-                        .HasForeignKey("BlockId1")
+                        .HasForeignKey("BlockId")
+                        .HasPrincipalKey("BlockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -592,14 +875,16 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Resident", b =>
                 {
                     b.HasOne("Domain.Entities.Residence", "Residence")
-                        .WithMany()
-                        .HasForeignKey("ResidenceId1")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Resident", "ResidenceId")
+                        .HasPrincipalKey("Domain.Entities.Residence", "ResidenceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Identity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Resident", "UserId")
+                        .HasPrincipalKey("Domain.Models.Identity.User", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

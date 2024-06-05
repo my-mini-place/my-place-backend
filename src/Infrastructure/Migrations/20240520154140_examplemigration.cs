@@ -13,20 +13,7 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "40820103-c6af-4be7-aee9-8af11f557b14");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "73727b13-7c97-4b4d-9ea7-5dafb2138cab");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "7d85f1a5-5c6f-4b4f-a61e-813668090b8c");
+           
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
@@ -71,15 +58,7 @@ namespace Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "b95d564d-83d7-478b-880b-868f2713e5a2");
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "40820103-c6af-4be7-aee9-8af11f557b14", null, "Manager", "MANAGER" },
-                    { "73727b13-7c97-4b4d-9ea7-5dafb2138cab", null, "Repairman", "REPAIRMAN" },
-                    { "7d85f1a5-5c6f-4b4f-a61e-813668090b8c", null, "Resident", "RESIDENT" }
-                });
+            
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",

@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,7 +43,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Administrators", (string)null);
+                    b.ToTable("Administrators");
 
                     b.HasData(
                         new
@@ -79,7 +79,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blocks", (string)null);
+                    b.ToTable("Blocks");
 
                     b.HasData(
                         new
@@ -119,7 +119,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers", (string)null);
+                    b.ToTable("Managers");
 
                     b.HasData(
                         new
@@ -159,7 +159,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Repairman", (string)null);
+                    b.ToTable("Repairman");
 
                     b.HasData(
                         new
@@ -207,7 +207,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("BlockId");
 
-                    b.ToTable("Residences", (string)null);
+                    b.ToTable("Residences");
 
                     b.HasData(
                         new
@@ -250,7 +250,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Resident", (string)null);
+                    b.ToTable("Resident");
 
                     b.HasData(
                         new
@@ -262,7 +262,7 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Models.CalendarModels+Event", b =>
+            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Event", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -279,6 +279,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("EventPublicId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Invited")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Month")
@@ -305,18 +308,19 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("CalendarEvents", (string)null);
+                    b.ToTable("CalendarEvents");
 
                     b.HasData(
                         new
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 28, 3, 15, 3, 98, DateTimeKind.Local).AddTicks(6571),
-                            EventPublicId = "61b68707-a28e-4680-be79-19167ed0bd0d",
+                            EndTime = new DateTime(2024, 6, 5, 4, 14, 50, 908, DateTimeKind.Local).AddTicks(8081),
+                            EventPublicId = "76a93b90-e19f-4f8b-bb41-b72e674ef5d8",
+                            Invited = "8e445865-a24d-4543-a6c6-9443d048cdb9,id2",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 28, 1, 15, 3, 98, DateTimeKind.Local).AddTicks(6515),
+                            StartTime = new DateTime(2024, 6, 5, 2, 14, 50, 908, DateTimeKind.Local).AddTicks(8035),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -372,13 +376,13 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Usersinfo", (string)null);
+                    b.ToTable("Usersinfo");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 90, DateTimeKind.Local).AddTicks(212),
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 900, DateTimeKind.Local).AddTicks(9903),
                             Email = "Admin123@gmail.com",
                             IsActive = true,
                             Name = "Admin",
@@ -392,7 +396,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -3,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 90, DateTimeKind.Local).AddTicks(490),
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 901, DateTimeKind.Local).AddTicks(93),
                             Email = "RepairMan123@gmail.com",
                             IsActive = true,
                             Name = "RepairMan",
@@ -406,7 +410,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -2,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 95, DateTimeKind.Local).AddTicks(1059),
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 905, DateTimeKind.Local).AddTicks(7358),
                             Email = "Manager123@gmail.com",
                             IsActive = true,
                             Name = "Menager",
@@ -420,7 +424,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -4,
-                            CreatedAt = new DateTime(2024, 5, 28, 1, 15, 3, 95, DateTimeKind.Local).AddTicks(1201),
+                            CreatedAt = new DateTime(2024, 6, 5, 2, 14, 50, 905, DateTimeKind.Local).AddTicks(7482),
                             Email = "Resident123@gmail.com",
                             IsActive = true,
                             Name = "Resident",
@@ -450,7 +454,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("Domain.Models.Post", b =>
@@ -478,7 +482,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Domain.Models.Vote", b =>
@@ -494,7 +498,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("Votes", (string)null);
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.ApplicationUser", b =>
@@ -570,15 +574,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "76e761ac-da6a-40f8-b48d-37f938dc0e81",
+                            ConcurrencyStamp = "ea086588-943f-49ac-9cfb-c289d3b623d6",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFF7DmX3Y4qhq8O8sQ5zNzitPWWulFPmYGljwrJ4+ann7NHO+7jDlMnN8m4ZmA0LMg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDOdlNnAEjNG2WKLysiaz9/UhyGvSSKhua/2UsH6jjnJCLz/gN3hzIFlK/+JVrQlVg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0efa18d3-e569-45e6-b19f-0c01353058c7",
+                            SecurityStamp = "54423d84-7af1-4768-8538-dadac059ae1b",
                             TwoFactorEnabled = false,
                             UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
                             UserName = "Admin123@gmail.com"
@@ -587,15 +591,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "147ed571-cee9-41b7-baf8-7969ccba4caf",
+                            ConcurrencyStamp = "dd451f40-d06c-4a2a-a454-5f290a74ca02",
                             Email = "Manager123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "MANAGER123@GMAIL.COM",
                             NormalizedUserName = "MANAGER123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEINyvxmlI8ZdNsk33UgYJaw0OyVxv8cJLC0xWxjdvyQ61YpCQ7CiazFqe8yXw7CrnQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGB27Oc8KR3PeUCZ3RF+Wrah+zoSYmYp/WX5bySE5rVrFnQ4HjUMfdfjpRZmCuzTFw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "e1d73e90-47bc-4634-846c-68fc371bc14f",
+                            SecurityStamp = "8e459a6f-4209-4894-ba99-c8f2defb1f99",
                             TwoFactorEnabled = false,
                             UserId = "36df4b07-2984-4182-a57c-de26516670cc",
                             UserName = "Manager123@gmail.com"
@@ -604,15 +608,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "62ef3a55-dc73-453a-906b-20362ad01e3e",
+                            ConcurrencyStamp = "da671bf0-4525-47f7-a9de-affc56b2ad67",
                             Email = "Resident123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "RESIDENT123@GMAIL.COM",
                             NormalizedUserName = "RESIDENT123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDiM67554EOVp+IpM9dKWfonaQFCMehFxP1OXbHptB0u2/JBirVbQnyLa+cs2OdhFQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEBxy8YIMplKDHkg7A0e8mQIlWLT17hve9SV0Arke0K+2LGrd9s7/BFNILI5RLgbsw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "68112cf9-9237-46a0-8ed9-c4381d3dcc2f",
+                            SecurityStamp = "3f8d434d-a6df-4268-8c32-e12592bf2ad3",
                             TwoFactorEnabled = false,
                             UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
                             UserName = "Resident123@gmail.com"
@@ -621,15 +625,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "84d26d49-da84-46cc-84af-e03f60eddbc1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e6b76fd-9f0e-48d6-8272-81a4b84b8e6e",
+                            ConcurrencyStamp = "6b544d82-8cb2-4609-9879-d3f4999eac69",
                             Email = "RepairMan123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "REPAIRMAN123@GMAIL.COM",
                             NormalizedUserName = "REPAIRMAN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK34YN2PoYMcHOiYwsKtOqBntPnmxTbC7J697s1kkd7WZONTVBu0w0lqo6Z/z+655g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKdRnzWADLba+WZKQo/7wWKTgg9FHgJSiv/1c/zcEJdSCq2ONhPdMxIo4y7rc8lVyg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "5e291a0e-b9f6-4d69-ab97-b52a9f597b33",
+                            SecurityStamp = "dafaab34-2824-46ba-8b86-179deec75766",
                             TwoFactorEnabled = false,
                             UserId = "f805f338-2c36-4e94-a574-6021cc0a2431",
                             UserName = "RepairMan123@gmail.com"

@@ -34,15 +34,7 @@ namespace Infrastructure.Migrations
                 type: "nvarchar(max)",
                 nullable: true);
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "3e822dd0-26ca-49e3-9ab6-e4ee24f41f73", null, "Resident", "RESIDENT" },
-                    { "53cc1f82-5fe4-4355-a41e-05b06c429ad6", null, "Repairman", "REPAIRMAN" },
-                    { "559fe26a-6b81-462c-a7fd-7a8539975123", null, "Manager", "MANAGER" }
-                });
+           
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
@@ -62,20 +54,7 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "3e822dd0-26ca-49e3-9ab6-e4ee24f41f73");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "53cc1f82-5fe4-4355-a41e-05b06c429ad6");
-
-            migrationBuilder.DeleteData(
-                table: "AspNetRoles",
-                keyColumn: "Id",
-                keyValue: "559fe26a-6b81-462c-a7fd-7a8539975123");
+           
 
             migrationBuilder.DropColumn(
                 name: "Invited",
