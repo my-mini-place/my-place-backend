@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
@@ -31,6 +35,10 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="IntegrationTests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="appsettings.json" />
 	</ItemGroup>
 
 </Project>
