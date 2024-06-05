@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240527133839_addDocuments")]
-    partial class addDocuments
+    [Migration("20240513234820_fix users table")]
+    partial class Fixuserstable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,131 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.Calendar.CalendarModels+Event", b =>
+            modelBuilder.Entity("Domain.Entities.Administrator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Administrators");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Block", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BlockId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Blocks");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("EndWorkTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartWorkTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Managers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Residence", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApartmentNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BlockId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BlockId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BuildingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlockId1");
+
+                    b.ToTable("Residences");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Resident", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ResidenceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ResidenceId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResidenceId1");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Resident");
+                });
+
+            modelBuilder.Entity("Domain.Models.CalendarModels+Event", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -75,74 +199,14 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 5, 27, 17, 38, 39, 234, DateTimeKind.Local).AddTicks(3118),
-                            EventPublicId = "5d56089e-213b-410d-930b-28731f91500a",
+                            EndTime = new DateTime(2024, 5, 14, 3, 48, 19, 713, DateTimeKind.Local).AddTicks(6963),
+                            EventPublicId = "53c338d1-5f3b-45fd-ac70-9362cdbb792c",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 5, 27, 15, 38, 39, 234, DateTimeKind.Local).AddTicks(3073),
+                            StartTime = new DateTime(2024, 5, 14, 1, 48, 19, 713, DateTimeKind.Local).AddTicks(6900),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
-                        });
-                });
-
-            modelBuilder.Entity("Domain.Models.Document.DocumentModels+Document", b =>
-                {
-                    b.Property<int>("DocumentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"));
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("creation_date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("signed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("DocumentId");
-
-                    b.ToTable("Documents");
-
-                    b.HasData(
-                        new
-                        {
-                            DocumentId = 15,
-                            content = "Plik formatu pdf: Prosimy o wyrażenie zgody na wymianę drzwi frontowych",
-                            creation_date = new DateTime(2024, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "Pozwolenie na wymianę drzwi",
-                            name = "Wymiana drzwi",
-                            signed = false
-                        },
-                        new
-                        {
-                            DocumentId = 10,
-                            content = "Plik formatu pdf: Prosimy o wyrażenie zgody o zorganizowanie wydarzenia",
-                            creation_date = new DateTime(2024, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "Pozwolenie na zorganizowanie pikniku",
-                            name = "Organizacja pikniku",
-                            signed = false
-                        },
-                        new
-                        {
-                            DocumentId = 20,
-                            content = "Plik formatu pdf: Przykładowe",
-                            creation_date = new DateTime(2023, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            description = "Pozwolenie na Przykładowe",
-                            name = "Przykład ",
-                            signed = false
                         });
                 });
 
@@ -154,14 +218,6 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApartmentNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BuildingNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -169,8 +225,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Floor")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -184,16 +240,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -207,7 +255,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UsersInfo");
+                    b.ToTable("Usersinfo");
                 });
 
             modelBuilder.Entity("Infrastructure.Data.ApplicationUser", b =>
@@ -285,15 +333,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d4a8f065-87dd-47d7-b010-d91f8b831729",
+                            ConcurrencyStamp = "8b329075-7612-42e9-ab79-f9cee558ef8b",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAXJxKDPgIFFzUhjMIjj+feYmtdDxRZhRHWAyoOkNB1mXLqmPYTBPX96Lt3Mm6KZVg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENT9TOu6LX/COgGgEv+8Sg41SDn3emJrBjmamRqvIBDfsHXwQY2JHc3a+wIIDtoydg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "d08ea7af-246c-4205-a4c8-beaa74bd40f3",
+                            SecurityStamp = "bcfe5a5f-230b-4d6d-8db0-c3f2dabe91cc",
                             TwoFactorEnabled = false,
                             UserId = new Guid("00000000-0000-0000-0000-000000000000"),
                             UserName = "Admin123@gmail.com"
@@ -326,31 +374,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("AspNetRoles", (string)null);
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "a6e39a53-0728-40c9-8de0-bf8e56f69533",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "d99eb0c1-1b68-4bf9-a97b-3c386e78fa8e",
-                            Name = "Resident",
-                            NormalizedName = "RESIDENT"
-                        },
-                        new
-                        {
-                            Id = "5705bd62-9d02-43cb-ab97-d19e6c7d278a",
-                            Name = "Repairman",
-                            NormalizedName = "REPAIRMAN"
-                        });
+                   
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -464,6 +488,36 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.Residence", b =>
+                {
+                    b.HasOne("Domain.Entities.Block", "Block")
+                        .WithMany()
+                        .HasForeignKey("BlockId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Block");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Resident", b =>
+                {
+                    b.HasOne("Domain.Entities.Residence", "Residence")
+                        .WithMany()
+                        .HasForeignKey("ResidenceId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Residence");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

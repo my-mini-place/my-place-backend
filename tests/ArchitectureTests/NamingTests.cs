@@ -1,12 +1,5 @@
-﻿using FluentAssertions;
-using My_Place_Backend.DTO.AccountManagment;
-using NetArchTest.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using My_Place_Backend.DTO.AccountManagment;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArchitectureTest
 {

@@ -1,5 +1,4 @@
 using Infrastructure;
-using Infrastructure.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,15 +14,19 @@ var app = builder.Build();
 await app.EnsureMigrationOfContext();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 
+app.UseCors(builder =>
+       builder.WithOrigins("http://localhost:1234")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 app.UseAuthentication();
 
 app.UseAuthorization();

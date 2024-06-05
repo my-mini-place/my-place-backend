@@ -1,65 +1,107 @@
 ﻿using Api.Interfaces;
-using Api.Services;
 using Domain;
-using Domain.Repositories;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.Extensions.Logging;
-using My_Place_Backend.DTO.AccountManagment;
+using Web.Extensions;
+
 //using Domain.Calendar;
 using static Domain.Calendar;
 using static Domain.Models.Calendar.CalendarModels;
 using Web.Extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using My_Place_Backend.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Domain.IRepositories;
+using System.Security.Cryptography.Xml;
+using Domain.Errors;
+
 
 namespace My_Place_Backend.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : ControllerBase
     {
         private readonly ICalendarService _calendarService;
 
+
         public CalendarController( ICalendarService calendarService)
         {
             _calendarService = calendarService;
+
         }
 
+        [Authorize("IsResident")]
         [HttpPost("user/calendar/event")]
         public async Task<object> AddUserEvent([FromBody] CalendarEventDto eventDto)
         {
-            Result<string> response = await _calendarService.AddUserEvent(eventDto);
+
+            UserEventType eventType;
+            if (Enum.TryParse(eventDto.Type, out eventType))
+            {
+                Console.WriteLine($"Converted string to enum: {eventType}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to convert string to enum: {eventDto.Type}");
+                Result<String> r = Result.Failure<String>(Error.Failure("CantCreateThisType", "there is no such type for you"));
+                return NotFound(r.Value);
+
+            }
+
+
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, User.GetUserId());
+            if (response.IsFailure)
+            {
+                return response.ToProblemDetails();
+            }
+            if(response.IsSuccess)
+            return Ok(response.Value);
+            else
+             return BadRequest(response.Value);
+            // return Ok();
+        }
+
+        [Authorize("IsAdmin")]
+        [HttpPost("admin/calendar/event")]
+        public async Task<object> AddAdminEvent([FromBody] CalendarEventDto eventDto)
+        {
+            AdminEventType eventType;
+            if (Enum.TryParse(eventDto.Type, out eventType))
+            {
+                Console.WriteLine($"Converted string to enum: {eventType}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to convert string to enum: {eventDto.Type}");
+                Result<String> r = Result.Failure<String>(Error.Failure("CantCreateThisType", "there is no such type for you"));
+                return NotFound(r.Value);
+
+            }
+
+            Result<string> response = await _calendarService.AddUserEvent(eventDto, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
             }
             return Ok(response.Value);
-           // return Ok();
-        }
 
-        [HttpPost("admin/calendar/event")]
-        public IActionResult AddAdminEvent([FromBody] CalendarEventDto eventDto)
-        {
-
-            // Analogicznie jak powyżej, tutaj dodajesz wydarzenie jako administrator
-            return Ok(new { eventId = Guid.NewGuid().ToString() });
         }
 
         [HttpGet("users")]
-        public IActionResult GetUsers([FromQuery] string name, [FromQuery] string role)
+        public async Task<object> GetUsers([FromQuery] string name="", [FromQuery] string role="")
         {
-            // Tutaj pobierasz listę użytkowników w zależności od podanych parametrów
-            // Użyj serwisu lub repozytorium do pobrania danych użytkowników
-            var users = new List<UserDto>(); // Zastąp tę linię kodem, który pobiera użytkowników
-            return Ok(users);
+            Result<List<usersDTO>> response = await _calendarService.GetUsers(name, role);
+            Console.WriteLine(response.Value);
+            return Ok(response.Value);
         }
-
+        [Authorize()]
         [HttpPost("calendar/events/{eventId}")]
-        public async Task<object> AcceptOrRejectEvent( string eventId, [FromBody] ActionDto actionDto)
+        public async Task<object> AcceptOrRejectEvent(string eventId, [FromBody] ActionDto actionDto)
         {
-            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto);
+
+            Result<string> response = await _calendarService.AcceptOrRejectEvent(eventId, actionDto.actionDto, User.GetUserId());
 
             if (response.IsFailure)
             {
@@ -69,15 +111,22 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet("calendar/events")]
+        [Authorize()]
+
         public async Task<object> GetEventsByMonth([FromQuery] string month)
         {
-            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month);
+
+
+            //string userRole = User.GetUserRole();
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine(userId.ToString());
+
+            Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month, User.GetUserId());
             if (response.IsFailure)
             {
                 return response.ToProblemDetails();
             }
             return Ok(response.Value);
-
         }
 
 
@@ -115,6 +164,20 @@ namespace My_Place_Backend.Controllers
             };
 
             return Ok(response);
+        }
+        [HttpGet("MonthTimeAvailability")]
+        public async Task<object>  GetMonthFreeTime([FromQuery] string month)
+        {
+            Result<CalendarMonthFreeTime> resp = await _calendarService.GetAvailabilityByMonth(month);
+            //Console.WriteLine("-----------------");
+            //foreach (var t in resp.Value.Days)
+            //{
+            //    Console.WriteLine("kolejna");
+            //    foreach (var d in resp.Value.Days)
+            //    foreach (var da in d.FreeTimeList)
+            //            Console.WriteLine(da.Start.ToString() + "||" + da.End.ToString());
+            //}
+            return Ok(resp.Value);
         }
     }
 }

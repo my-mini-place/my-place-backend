@@ -1,4 +1,5 @@
 using Domain.Errors;
+
 namespace Domain;
 
 public class Result

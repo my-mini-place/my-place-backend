@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using static Domain.Models.Document.DocumentModels;
 using static Domain.Calendar;
 using Domain.IRepositories;
 using static Domain.Models.Documents.Documents;
+﻿using Domain;
 
 namespace Api.Interfaces
 {

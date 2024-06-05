@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
@@ -16,6 +17,10 @@ using Infrastructure.Repositories;
 using Azure;
 using Api.Services;
 using Microsoft.EntityFrameworkCore;
+﻿using Api.Interfaces;
+using Domain;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace My_Place_Backend.Controllers
 {
@@ -166,9 +171,11 @@ namespace My_Place_Backend.Controllers
             public bool Signed { get; set; }
         }
 
+
         public class BitmapDataRequest
         {
             public string BitmapData { get; set; }
         }
     }
 }
+

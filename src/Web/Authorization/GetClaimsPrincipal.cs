@@ -4,11 +4,11 @@ namespace My_Place_Backend.Authorization
 {
     public static class ClaimsPrincipalExtensions
     {
-        public static Guid GetUserId(this ClaimsPrincipal? principal)
+        public static string GetUserId(this ClaimsPrincipal? principal)
         {
             string? userId = principal?.FindFirstValue("Id");
 
-            return Guid.TryParse(userId, out Guid parsedUserId) ? parsedUserId : throw new ArgumentNullException(nameof(userId));
+            return userId!;
         }
 
         public static string GetUserRole(this ClaimsPrincipal? principal)

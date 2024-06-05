@@ -1,24 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using System.Data;
-using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Domain;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Domain.Repositories;
-
-using Infrastructure.Identity;
-using Api.Interfaces;
-using Api.Services;
-using Infrastructure.EmailServices;
+﻿using Api.Interfaces;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using static Domain.Models.Calendar.CalendarModels;
-using Domain.Models.Identity;
+using Domain.ValueObjects;
+using Infrastructure.Data;
+using Infrastructure.EmailServices;
+using Infrastructure.Identity;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -26,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DockerConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
@@ -35,18 +28,30 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString);
             });
 
+
+            // scopy 
+
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();  
 
+
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IBlockRepository, BlockRepository>();
+            services.AddScoped<IResidenceRepository, ResidenceRepository>();
+            services.AddScoped<IResidentRepository, ResidentRepository>();
+            services.AddScoped<IAdministratorRepository,AdministratorRepository>();
+            services.AddScoped<IRepairmanRepository, RepairmanRepository>();
+            services.AddScoped<IManagerRepository, ManagerRepository>();
+
+
             services
                       .AddIdentity<ApplicationUser, IdentityRole>()
-
-                      .AddRoles<IdentityRole>()
-                      .AddEntityFrameworkStores<ApplicationDbContext>();
-                       // .AddApiEndpoints();
+                        .AddRoles<IdentityRole>()
+                        .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+            // .AddApiEndpoints();
 
 
             services.AddAuthentication(options =>
@@ -70,7 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthorization(config =>
             {
                 config.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", Roles.Administrator));
-                config.AddPolicy("IsMenagerOrAdmin", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator));
+                config.AddPolicy("IsAny", policy => policy.RequireClaim("role", Roles.Manager, Roles.Administrator, Roles.Repairman, Roles.User,Roles.Resident));
                 config.AddPolicy("IsUserOrAdmin", policy => policy.RequireClaim("role", "User", Roles.Administrator));
                 config.AddPolicy("IsResident", policy => policy.RequireClaim("role", Roles.Resident));
                 config.AddPolicy("isRepairMan", policy => policy.RequireClaim("role", Roles.Repairman));

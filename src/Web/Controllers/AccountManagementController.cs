@@ -1,20 +1,12 @@
-﻿using Domain.Models.Identity;
-using System.Data;
-using System.IO;
-
-namespace My_Place_Backend.Controllers
+﻿namespace My_Place_Backend.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
+    using Api.DTO.AccountManagment;
     using Api.Interfaces;
-
+    using Domain;
+    using global::My_Place_Backend.Authorization;
     using global::My_Place_Backend.DTO.AccountManagment;
     using Microsoft.AspNetCore.Authorization;
-    using Api.DTO.AccountManagment;
-    using Domain.Models.Identity;
-    using Microsoft.AspNetCore.Identity;
-
-    using Web.Authorization;
-    using global::My_Place_Backend.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     namespace My_Place_Backend.Controllers
     {
@@ -40,10 +32,16 @@ namespace My_Place_Backend.Controllers
                 return Ok();
             }
 
-            [HttpPatch("updateAccount/{userId}")]
-            public async Task<IActionResult> UpdateAccount(string userId, [FromBody] AdminUpdateAccountDTO updateAccountDTO)
+            [HttpPatch("updateAccount")]
+            public async Task<IActionResult> UpdateAccount( [FromBody] UserUpdateDTO updateAccountDTO)
             {
-                var result = await _accountManagementService.UpdateAccount(userId, updateAccountDTO);
+                //string UserRole = "Administrator";
+                //if (User.GetUserRole()!= null)
+                //{
+                //UserRole=User.GetUserRole();
+                //}
+
+                var result = await _accountManagementService.UpdateAccount(updateAccountDTO.Id, updateAccountDTO,"Administrator");
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);
@@ -52,14 +50,14 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("users")]
-            [Authorize("IsUserOrAdmin")]
-            public async Task<IActionResult> ListUsers(string? searchTerm, string? sortColumn, string? sortOrder, int? page, int? pageSize)
+            public async Task<IActionResult> ListUsers(int page, int pageSize,string? searchTerm, string? sortColumn, string? sortOrder)
             {
-                // Guid userId = User.GetUserId();
-                //string userRole = User.GetUserRole();
+                var users = await _accountManagementService.ListUsers(page, pageSize, searchTerm, sortColumn, sortOrder);
+                if (users.IsFailure)
+                {
+                    return BadRequest(users.Error);
+                }
 
-                //Console.WriteLine($"{userId}");
-                var users = await _accountManagementService.ListUsers(searchTerm, sortColumn, sortOrder, page, pageSize);
                 return Ok(users.Value);
             }
 
@@ -76,9 +74,21 @@ namespace My_Place_Backend.Controllers
             }
 
             [HttpGet("getUserInfo/{userId}")]
-            [Authorize("IsAdmin")]
+            [Authorize("IsAny")]
             public async Task<IActionResult> GetUserInfo(string userId)
             {
+
+                string userRole = User.GetUserRole();
+                string senderId = User.GetUserId().ToString();
+
+                if ((userRole!= "Administrator"&&userRole!= "Manager")&&senderId!=userId)
+                {
+                    return BadRequest(Result.Failure(Domain.Errors.Error.Conflict("Dont have permission", "No permission")));
+                }
+                //     userId = User.GetUserId().ToString();
+                    //string userRole = User.GetUserRole();
+                
+
                 var result = await _accountManagementService.GetUserInfo(userId);
                 if (result.IsFailure)
                 {
@@ -87,28 +97,18 @@ namespace My_Place_Backend.Controllers
                 return Ok(result.Value);
             }
 
-            [HttpPatch("updateUserRole/{userId}")]
-            [Authorize("")]
-            public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] string role)
-            {
-                var result = await _accountManagementService.UpdateUserRole(userId, role);
-                if (result.IsFailure)
-                {
-                    return BadRequest(result.Error);
-                }
-                return Ok();
-            }
+          
 
-            [HttpPatch("setUserAvailability/{userId}")]
-            public async Task<IActionResult> SetUserAvailability([FromBody] UserDTO a)
-            {
-                var result = await _accountManagementService.SetUserAvailability();
-                if (result.IsFailure)
-                {
-                    return BadRequest(result.Error);
-                }
-                return Ok();
-            }
+            //[HttpPatch("setUserAvailability/{userId}")]
+            //public async Task<IActionResult> SetUserAvailability([FromBody] UserDTO a)
+            //{
+            //    var result = await _accountManagementService.SetUserAvailability();
+            //    if (result.IsFailure)
+            //    {
+            //        return BadRequest(result.Error);
+            //    }
+            //    return Ok();
+            //}
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.Auth;
+﻿namespace Domain.Entities;
 
 public class ServiceResponses
 {

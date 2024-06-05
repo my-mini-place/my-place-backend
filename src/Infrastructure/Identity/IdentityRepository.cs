@@ -1,22 +1,14 @@
 ﻿using Api.Interfaces;
 using Domain;
-using Domain.Models.Auth;
-using Domain.Models.Identity;
+using Domain.Entities;
 using Infrastructure.Data;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using My_Place_Backend.DTO.AccountManagment;
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using static Domain.Models.Auth.ServiceResponses;
 
 namespace Infrastructure.Identity
 {
@@ -61,16 +53,19 @@ namespace Infrastructure.Identity
             return roles.ToList();
         }
 
+
+       
+
         public string GenerateToken(UserSession user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var userClaims = new[]
             {
-                new Claim("Id", user.Id),
-                new Claim("Name", user.Name),
-                new Claim("Email", user.Email),
-                new Claim("Role", user.Role)
+                new Claim("Id", user.Id!),
+                new Claim("Name", user.Name!),
+                new Claim("Email", user.Email!),
+                new Claim("Role", user.Role!)
             };
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -130,6 +125,16 @@ namespace Infrastructure.Identity
         public async Task<string> ForgotPasswordAsync(ApplicationUser user)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<string> GeUserRoleAsync(string appUserid)
+        {
+          throw new NotImplementedException();
+        }
+
+        public async Task<ApplicationUser?> FindUserById(string userId)
+        {
+           return await _userManager.FindByUserIdCustomAsync(userId);
         }
     }
 }

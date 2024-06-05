@@ -39,7 +39,7 @@ namespace UnitTests.DocumentTests
 
             // Arrange
             var service = new DocumentService(null);
-
+            
             // Act
             var result = await service.GetDocumentById(-1);
 

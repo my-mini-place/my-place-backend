@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-using Microsoft.Extensions.Configuration;
-
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
+﻿using Microsoft.OpenApi.Models;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -53,6 +48,15 @@ public static class DependencyInjection
         }
     });
         });
+
+        //services.AddCors(options =>
+        //{
+        //    options.AddPolicy(name: "flutterfront",
+        //                      policy =>
+        //                      {
+        //                          policy.WithOrigins("http://localhost:51984");
+        //                      });
+        //});
 
         // Add JWT
 
