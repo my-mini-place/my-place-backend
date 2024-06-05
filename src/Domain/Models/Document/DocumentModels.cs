@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Domain.Calendar;
+using static Domain.Models.Calendar.CalendarModels;
 
 namespace Domain.Models.Document
 {
@@ -57,7 +59,7 @@ namespace Domain.Models.Document
             public string description { get; set; }
             public DateTime creation_date { get; set; }
 
-            public DocumentDto()
+            public DocumentDto()    
             {
                 DocumentId = 100;
                 description = "auto descrition";
@@ -71,8 +73,7 @@ namespace Domain.Models.Document
                 description = doc.description;
                 creation_date = doc.creation_date;
             }
-            public DocumentDto(Document doc)
-            {
+            public DocumentDto(Document doc) {
                 DocumentId = doc.DocumentId;
                 content = doc.content;
                 name = doc.name;
@@ -81,6 +82,7 @@ namespace Domain.Models.Document
                 creation_date = doc.creation_date;
             }
         }
+
 
         public static class DocumentMapper
         {

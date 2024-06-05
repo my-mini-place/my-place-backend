@@ -15,6 +15,7 @@ using Domain.IRepositories;
 using Infrastructure.Repositories;
 using Azure;
 using Api.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace My_Place_Backend.Controllers
 {
