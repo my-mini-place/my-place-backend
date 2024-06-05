@@ -18,17 +18,18 @@ namespace Api.Services
     public class CalendarService : ICalendarService
     {
         private readonly ICalendarRepository _calendarRepository;
+
         private readonly List<string> months = new List<string> {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
              };
 
-        private enum  actions { Accept, TReject };
+        private enum actions
+        { Accept, TReject };
 
         public CalendarService(ICalendarRepository calendarRepository)
         {
             _calendarRepository = calendarRepository;
-
         }
 
         public async Task<Result<CalendarMonthEventsDto>> GetEventsByMonth(string month)
@@ -37,15 +38,14 @@ namespace Api.Services
             {
                 int index = months.IndexOf(month) + 1;
                 //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
-                var events =  await _calendarRepository.GetAll(x => x.Month == month);
+                var events = await _calendarRepository.GetAll(x => x.Month == month);
 
                 CalendarMonthEventsDto monthEvents = CalednarMapper.castEventsToClient(events, index, month);
                 return Result.Success(monthEvents);
             }
             else
             {
-                return Result.Failure<CalendarMonthEventsDto>(Error.Failure("NoMonth","there is no such month"));
-
+                return Result.Failure<CalendarMonthEventsDto>(Error.Failure("NoMonth", "there is no such month"));
             }
         }
 
@@ -55,15 +55,15 @@ namespace Api.Services
             eventDto.EventId = id;
             await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto));
             return Result.Success(id);
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public async Task<Result<string>> AcceptOrRejectEvent(string eventId, string actionDto)
         {
             var e = await _calendarRepository.Get(x => x.EventPublicId == eventId);
 
-        try
-        {
+            try
+            {
                 actions userAction = (actions)Enum.Parse(typeof(actions), actionDto);
                 if (userAction == actions.Accept)
                 {
@@ -77,12 +77,11 @@ namespace Api.Services
                     _calendarRepository.Update(e);
                     return Result.Success("Event Rejected!!");
                 }
-        }
-        catch
-        {
-                return Result.Failure<String>(Error.Failure("NoSuchAction", "there is no such action"));
             }
-
+            catch
+            {
+                return Result.Failure<string>(Error.Failure("NoSuchAction", "there is no such action"));
+            }
         }
     }
 }
