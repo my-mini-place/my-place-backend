@@ -494,6 +494,12 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("OptionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OptionId");

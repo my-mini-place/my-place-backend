@@ -1,4 +1,5 @@
 using Api.DTO.Posts;
+using Domain;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PostDTO>>> GetPosts()
+        public async Task<ActionResult<PagedList<PostDTO>>> GetPosts(int page, int pagesize)
         {
             var posts = await _context.Posts.ToListAsync();
-            var postsDTO = await Task.WhenAll(posts.Select(async post =>
+
+
+            var postsDTO = posts.Select(post =>
             {
                 List<OptionDTO> options = null;
                 bool surveyClosed = false;
@@ -30,19 +33,19 @@ namespace My_Place_Backend.Controllers
                     if (DateTime.UtcNow > post.SurveyClosureDateTime)
                         surveyClosed = true;
 
-                    options = await _context.Options
+                    options = _context.Options
                         .Where(option => option.PostId == post.Id)
                         .Select(option => new OptionDTO
                         {
-                            Id = option.Id,
+                           Id = option.Id,
                             Text = option.Text,
                             NumVotes = surveyClosed ? _context.Votes.Count(vote => vote.OptionId == option.Id) : null
                         })
-                        .ToListAsync();
+                        .ToList();
                 }
                 return new PostDTO
                 {
-                    Id = post.Id,
+                    Id = post.Id.ToString(),
                     Title = post.Title,
                     Content = post.Content,
                     CreationDateTime = post.CreationDateTime,
@@ -51,22 +54,42 @@ namespace My_Place_Backend.Controllers
                     SurveyClosed = surveyClosed,
                     OptionsWithNumVotes = options
                 };
-            }));
+            });
+            
 
-            return postsDTO
-                    .OrderByDescending(post => post.CreationDateTime)
-                    .ToList();
+
+            PagedList<PostDTO> pagedPost =  PagedList<PostDTO>.CreateFromListAsync(postsDTO.OrderByDescending(p => p.CreationDateTime).ToList(), page, pagesize);;
+             
+
+          
+
+
+            return pagedPost;
         }
 
-        [HttpPost("newtext")]
-        public async Task<IActionResult> CeateTextPost(PostDTO postDTO)
+      
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CeateSurveyPost([FromBody] PostCreateDTO postDTO)
         {
+
+            Guid postId = Guid.NewGuid();
             var post = new Post
             {
+                
                 Title = postDTO.Title,
                 Content = postDTO.Content,
                 CreationDateTime = DateTime.UtcNow,
-                IsSurvey = false
+                IsSurvey =  postDTO.IsSurvey,
+                SurveyClosureDateTime = postDTO.SurveyClosureDateTime, // check for null
+                Options = postDTO.IsSurvey ? postDTO.OptionsWithNumVotes!.Select(optionDTO => new Option  // check for null
+                {
+                    Id=Guid.NewGuid(),
+                   
+                    Text = optionDTO.Text,
+                    PostId =postId,
+                })
+                    .ToList() : null
             };
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
@@ -74,25 +97,25 @@ namespace My_Place_Backend.Controllers
             return Ok();
         }
 
-        [HttpPost("newsurvey")]
-        public async Task<IActionResult> CeateSurveyPost(PostDTO postDTO)
-        {
-            var post = new Post
-            {
-                Title = postDTO.Title,
-                Content = postDTO.Content,
-                CreationDateTime = DateTime.UtcNow,
-                IsSurvey = true,
-                SurveyClosureDateTime = postDTO.SurveyClosureDateTime, // check for null
-                Options = postDTO.OptionsWithNumVotes.Select(optionDTO => new Option  // check for null
-                {
-                    Text = optionDTO.Text,
-                    PostId = postDTO.Id,
-                })
-                    .ToList()
-            };
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+
+
+        [HttpPatch("Update")]
+        public async Task<IActionResult> UpdatePost([FromBody] PostUpdateDTO postDTO)
+        {       
+
+            var post = await _context.Posts.FindAsync(Guid.Parse(postDTO.Id));
+
+            if (post == null)
+                return BadRequest();
+
+
+            post.Title = postDTO.Title ?? post.Title;
+            post.Content = postDTO.Content ?? post.Content;
+
+           _context.Posts.Update(post);
+            _context.SaveChanges();
+
+
 
             return Ok();
         }
@@ -105,6 +128,37 @@ namespace My_Place_Backend.Controllers
 
         // if(post.SurveyClosureDateTime < DateTime.UtcNow) { var vote = new Vote { OptionId =
         // optionId }; _context.Votes.Add(vote); await _context.SaveChangesAsync(); } return Ok(); }
+
+
+        [HttpPost]
+        [Route("vote")]
+        public async Task<IActionResult> CeateOrUpdateVote(Vote vote)
+        {
+            var post = await _context.Posts.FindAsync(vote.PostId);
+            if (post == null) return NotFound();
+
+            if (DateTime.UtcNow < post.SurveyClosureDateTime)
+            {
+                var prevVote = await _context.Votes.FirstOrDefaultAsync(v => v.PostId == vote.PostId && v.UserId == vote.UserId);
+
+                if (prevVote != null)
+                {
+                    _context.Votes.Remove(prevVote);
+
+                    if (prevVote.OptionId != vote.OptionId)
+                        _context.Votes.Add(vote);
+                }
+                else
+                {
+                    _context.Votes.Add(vote);
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+
+            return BadRequest();
+        }
 
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(Guid postId)

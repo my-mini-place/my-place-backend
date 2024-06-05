@@ -28,5 +28,13 @@ namespace Domain
 
             return new(items, TotalCount, pagaIndex, pageSize);
         }
+
+        public static  PagedList<T> CreateFromListAsync(List<T> query, int pagaIndex, int pageSize)
+        {
+            int TotalCount = query.Count();
+            var items = query.Skip((pagaIndex - 1) * pageSize).Take(pageSize).ToList();
+
+            return new(items, TotalCount, pagaIndex, pageSize);
+        }
     }
 }
