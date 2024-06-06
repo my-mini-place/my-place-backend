@@ -315,12 +315,12 @@ namespace Infrastructure.Migrations
                         {
                             EventId = 1,
                             Description = "To jest opis przykładowego wydarzenia",
-                            EndTime = new DateTime(2024, 6, 6, 0, 44, 41, 349, DateTimeKind.Local).AddTicks(2111),
-                            EventPublicId = "28ce910d-c475-4084-b221-e948e10a2f83",
+                            EndTime = new DateTime(2024, 6, 6, 15, 13, 30, 995, DateTimeKind.Local).AddTicks(25),
+                            EventPublicId = "a707da63-039a-4d68-a64f-7d6da4ac6506",
                             Invited = "8e445865-a24d-4543-a6c6-9443d048cdb9,id2",
                             Month = "May",
                             Name = "Przykładowe wydarzenie",
-                            StartTime = new DateTime(2024, 6, 5, 22, 44, 41, 349, DateTimeKind.Local).AddTicks(2051),
+                            StartTime = new DateTime(2024, 6, 6, 13, 13, 30, 994, DateTimeKind.Local).AddTicks(9916),
                             State = "Created",
                             Type = "Custom",
                             owner = "John Doe"
@@ -442,7 +442,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -1,
-                            CreatedAt = new DateTime(2024, 6, 5, 22, 44, 41, 332, DateTimeKind.Local).AddTicks(7322),
+                            CreatedAt = new DateTime(2024, 12, 25, 10, 30, 50, 0, DateTimeKind.Unspecified),
                             Email = "Admin123@gmail.com",
                             IsActive = true,
                             Name = "Admin",
@@ -456,7 +456,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -3,
-                            CreatedAt = new DateTime(2024, 6, 5, 22, 44, 41, 332, DateTimeKind.Local).AddTicks(7541),
+                            CreatedAt = new DateTime(2024, 4, 25, 10, 30, 50, 0, DateTimeKind.Unspecified),
                             Email = "RepairMan123@gmail.com",
                             IsActive = true,
                             Name = "RepairMan",
@@ -470,7 +470,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -2,
-                            CreatedAt = new DateTime(2024, 6, 5, 22, 44, 41, 339, DateTimeKind.Local).AddTicks(1397),
+                            CreatedAt = new DateTime(2024, 1, 25, 10, 30, 50, 0, DateTimeKind.Unspecified),
                             Email = "Manager123@gmail.com",
                             IsActive = true,
                             Name = "Menager",
@@ -484,7 +484,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = -4,
-                            CreatedAt = new DateTime(2024, 6, 5, 22, 44, 41, 339, DateTimeKind.Local).AddTicks(1522),
+                            CreatedAt = new DateTime(2024, 6, 25, 10, 30, 50, 0, DateTimeKind.Unspecified),
                             Email = "Resident123@gmail.com",
                             IsActive = true,
                             Name = "Resident",
@@ -640,15 +640,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "199798ab-f3fc-49bd-9747-2163fab8f323",
+                            ConcurrencyStamp = "287c9ca9-c6fc-470e-82d3-849e189b5e16",
                             Email = "Admin123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN123@GMAIL.COM",
                             NormalizedUserName = "ADMIN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG4WQxTOT51KwoqRMUBux3iRvoiFNjGdJwS6MQm1/lLmgXKBzoDMbLDsio2T72jDHg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFU9cNGcKhhOZVQHfwO3s/olxJU7iZ3jgLx5/WKWkwj5DK4HGOrI48zgGSRMMdiPpQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "57e63e4d-62e3-4cba-80b5-3f68542195f5",
+                            SecurityStamp = "ef9d0e2c-3646-4c70-b829-93357329c534",
                             TwoFactorEnabled = false,
                             UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
                             UserName = "Admin123@gmail.com"
@@ -657,15 +657,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "921f97ca-b7e2-4b88-8917-d4f2ff820a70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d87b3eb-b822-41b8-b780-1dbf9426b5b6",
+                            ConcurrencyStamp = "4a1652b6-785d-402a-baf9-6930ec1d012f",
                             Email = "Manager123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "MANAGER123@GMAIL.COM",
                             NormalizedUserName = "MANAGER123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKiZfV+FPs9EB8KQk8f8sItTC4NJwkyhO9l+TQU9J7QEzVGNuuTq13zT32P7poIdXg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAP2REQ815onfycvSW3n9eURvmKrYfFkj5lLO9APK72fEyoed/tU2L27NLQcSlwlIg==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "e63a3a72-9645-414e-93cd-3316d011a4b4",
+                            SecurityStamp = "d0c2ec96-942e-4220-bd55-1df372b4a144",
                             TwoFactorEnabled = false,
                             UserId = "36df4b07-2984-4182-a57c-de26516670cc",
                             UserName = "Manager123@gmail.com"
@@ -674,15 +674,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "60f8840c-4d51-45df-9abe-1ba4d20fbcdf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0c9bdd4d-9791-4ede-9ab5-d1153e34313b",
+                            ConcurrencyStamp = "1a352331-b770-46ee-b891-39918be5ad99",
                             Email = "Resident123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "RESIDENT123@GMAIL.COM",
                             NormalizedUserName = "RESIDENT123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM0RuQlPeSIkq6oDvZJO9kezEEgd1YrqoF4oF09IaytC/ek7zniax/b+QDadGYoAZg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFt+Wr0VrsyeV4Dvhasp09ZK+Gh5dde2QIPcMAPdcRcKWSbvuhrknGBvL1z2HXwWCA==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "f1984cf7-9bec-46fb-a4f4-2a65ef713eec",
+                            SecurityStamp = "544fb1f8-a5e1-43eb-b176-b7234b003e7d",
                             TwoFactorEnabled = false,
                             UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
                             UserName = "Resident123@gmail.com"
@@ -691,15 +691,15 @@ namespace Infrastructure.Migrations
                         {
                             Id = "84d26d49-da84-46cc-84af-e03f60eddbc1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "50401964-f923-44a4-a78c-3c410b9bc93a",
+                            ConcurrencyStamp = "80daff34-f162-41d5-bde4-143740539c99",
                             Email = "RepairMan123@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             NormalizedEmail = "REPAIRMAN123@GMAIL.COM",
                             NormalizedUserName = "REPAIRMAN123@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBV8qOOHOOE+lrhhbLVtTFh6UVV5bI2ETOblDwBsZlxvvyZsjnO1BQSARFcUCmw6HQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECx3qyO+HzE4k2wzTNeIbERQtboQr3OhFc7p+CD4S/GIUa6c5dS22ovow47ZUZHxHA==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0c669fb0-7710-4886-8095-73eefe40fc9b",
+                            SecurityStamp = "3c7ff4dc-5bfd-4059-a6ae-d1316810f03d",
                             TwoFactorEnabled = false,
                             UserId = "f805f338-2c36-4e94-a574-6021cc0a2431",
                             UserName = "RepairMan123@gmail.com"

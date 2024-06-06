@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace My_Place_Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PostsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -37,14 +37,15 @@ namespace My_Place_Backend.Controllers
                         .Where(option => option.PostId == post.Id)
                         .Select(option => new OptionDTO
                         {
-                           Id = option.Id,
+                            Id = option.Id,
                             Text = option.Text,
-                            NumVotes = surveyClosed ? _context.Votes.Count(vote => vote.OptionId == option.Id) : null
+                            NumVotes = _context.Votes.Count(vote => vote.OptionId == option.Id),
                         })
                         .ToList();
                 }
                 return new PostDTO
                 {
+
                     Id = post.Id.ToString(),
                     Title = post.Title,
                     Content = post.Content,
@@ -132,7 +133,7 @@ namespace My_Place_Backend.Controllers
 
         [HttpPost]
         [Route("vote")]
-        public async Task<IActionResult> CeateOrUpdateVote(Vote vote)
+        public async Task<IActionResult> CeateOrUpdateVote(VoteDTO vote)
         {
             var post = await _context.Posts.FindAsync(vote.PostId);
             if (post == null) return NotFound();
@@ -145,12 +146,14 @@ namespace My_Place_Backend.Controllers
                 {
                     _context.Votes.Remove(prevVote);
 
+
+
                     if (prevVote.OptionId != vote.OptionId)
-                        _context.Votes.Add(vote);
+                        _context.Votes.Add(new Vote(){UserId=vote.UserId,OptionId=vote.OptionId,PostId=vote.PostId });
                 }
                 else
                 {
-                    _context.Votes.Add(vote);
+                    _context.Votes.Add(new Vote() { UserId = vote.UserId, OptionId = vote.OptionId, PostId = vote.PostId });
                 }
 
                 await _context.SaveChangesAsync();

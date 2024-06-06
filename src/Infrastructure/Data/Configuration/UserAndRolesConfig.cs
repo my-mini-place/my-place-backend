@@ -171,7 +171,7 @@ namespace Infrastructure.Data.Configuration
                                    Role = Roles.Administrator,
                                    Id = -1,
                                    UserId = "6ae40b13-20a8-462c-9364-a455ef2d3908",
-                                   CreatedAt = System.DateTime.Now,
+                                   CreatedAt = new DateTime(2024, 12, 25, 10, 30, 50),
                                    Email = "Admin123@gmail.com",
                                    IsActive = true,
                                    PhoneNumber = "123456789",
@@ -179,7 +179,7 @@ namespace Infrastructure.Data.Configuration
                                    Surname = "amin",
                                    Status = AccountStatus.Active,
                                }
-                                  ); ;
+                                  ); ; ;
 
             modelBuilder.Entity<Administrator>().HasData(new Administrator()
             {
@@ -193,7 +193,7 @@ namespace Infrastructure.Data.Configuration
                                    Role = Roles.Repairman,
                                    Id = -3,
                                    UserId = "f805f338-2c36-4e94-a574-6021cc0a2431",
-                                   CreatedAt = System.DateTime.Now,
+                                   CreatedAt = new DateTime(2024, 4, 25, 10, 30, 50),
                                    Email = "RepairMan123@gmail.com",
                                    IsActive = true,
                                    PhoneNumber = "123456789",
@@ -216,7 +216,7 @@ namespace Infrastructure.Data.Configuration
                                   Role = Roles.Manager,
                                   Id = -2,
                                   UserId = "36df4b07-2984-4182-a57c-de26516670cc",
-                                  CreatedAt = System.DateTime.Now,
+                                  CreatedAt = new DateTime(2024, 1, 25, 10, 30, 50),
                                   Email = "Manager123@gmail.com",
                                   IsActive = true,
                                   PhoneNumber = "123456789",
@@ -242,7 +242,7 @@ namespace Infrastructure.Data.Configuration
                                   Role = Roles.Resident,
                                   Id = -4,
                                   UserId = "de40243b-e960-425b-a980-5c6e8e1895dc",
-                                  CreatedAt = System.DateTime.Now,
+                                  CreatedAt = new DateTime(2024, 6, 25, 10, 30, 50),
                                   Email = "Resident123@gmail.com",
                                   IsActive = true,
                                   PhoneNumber = "123456789",
