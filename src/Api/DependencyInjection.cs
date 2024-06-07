@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IResidenceAndBlockService, ResidenceAndBlockService>();
+            services.AddScoped<IPostsService, PostsService>();
 
 
             return services;

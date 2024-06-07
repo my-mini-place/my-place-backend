@@ -1,9 +1,13 @@
 using Api.DTO.Posts;
+using Api.Interfaces;
 using Domain;
-using Domain.Models;
-using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using My_Place_Backend.Authorization;
+using Serilog;
+using System;
+using System.Threading.Tasks;
+using Web.Extensions;
 
 namespace My_Place_Backend.Controllers
 {
@@ -11,171 +15,81 @@ namespace My_Place_Backend.Controllers
     [Route("api/[controller]")]
     public class PostsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPostsService _postsService;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(IPostsService postsService)
         {
-            _context = context;
+            _postsService = postsService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<PostDTO>>> GetPosts(int page, int pagesize)
+        [Authorize("IsAny")]
+        public async Task<ActionResult<PagedList<PostDTO>>> GetPosts(int page, int pageSize)
         {
-            var posts = await _context.Posts.ToListAsync();
-
-
-            var postsDTO = posts.Select(post =>
-            {
-                List<OptionDTO> options = null;
-                bool surveyClosed = false;
-                if (post.IsSurvey)
-                {
-                    if (DateTime.UtcNow > post.SurveyClosureDateTime)
-                        surveyClosed = true;
-
-                    options = _context.Options
-                        .Where(option => option.PostId == post.Id)
-                        .Select(option => new OptionDTO
-                        {
-                            Id = option.Id,
-                            Text = option.Text,
-                            NumVotes = _context.Votes.Count(vote => vote.OptionId == option.Id),
-                        })
-                        .ToList();
-                }
-                return new PostDTO
-                {
-
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Content = post.Content,
-                    CreationDateTime = post.CreationDateTime,
-                    IsSurvey = post.IsSurvey,
-                    SurveyClosureDateTime = post.SurveyClosureDateTime,
-                    SurveyClosed = surveyClosed,
-                    OptionsWithNumVotes = options
-                };
-            });
+            string userRole = User.GetUserRole(); 
+            string userId = User.GetUserId();
+            var result = await _postsService.GetPostsAsync(page, pageSize, userRole, userId);
             
-
-
-            PagedList<PostDTO> pagedPost =  PagedList<PostDTO>.CreateFromListAsync(postsDTO.OrderByDescending(p => p.CreationDateTime).ToList(), page, pagesize);;
-             
-
-          
-
-
-            return pagedPost;
+            return Ok(result);
         }
 
-      
-
-        [HttpPost("create")]
-        public async Task<IActionResult> CeateSurveyPost([FromBody] PostCreateDTO postDTO)
+        [HttpPost("Create")]
+        [Authorize("IsAdmin")]
+        public async Task<IActionResult> CreatePost([FromBody] PostCreateDTO postDTO)
         {
-
-            Guid postId = Guid.NewGuid();
-            var post = new Post
+            var result = await _postsService.CreatePostAsync(postDTO);
+            if (result.IsSuccess)
             {
-                
-                Title = postDTO.Title,
-                Content = postDTO.Content,
-                CreationDateTime = DateTime.UtcNow,
-                IsSurvey =  postDTO.IsSurvey,
-                SurveyClosureDateTime = postDTO.SurveyClosureDateTime, // check for null
-                Options = postDTO.IsSurvey ? postDTO.OptionsWithNumVotes!.Select(optionDTO => new Option  // check for null
-                {
-                    Id=Guid.NewGuid(),
-                   
-                    Text = optionDTO.Text,
-                    PostId =postId,
-                })
-                    .ToList() : null
-            };
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+                return Ok(result.Value);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
-
-
 
         [HttpPatch("Update")]
+        [Authorize("IsAdmin")]
         public async Task<IActionResult> UpdatePost([FromBody] PostUpdateDTO postDTO)
-        {       
-
-            var post = await _context.Posts.FindAsync(Guid.Parse(postDTO.Id));
-
-            if (post == null)
-                return BadRequest();
-
-
-            post.Title = postDTO.Title ?? post.Title;
-            post.Content = postDTO.Content ?? post.Content;
-
-           _context.Posts.Update(post);
-            _context.SaveChanges();
-
-
-
-            return Ok();
-        }
-
-        // [HttpPost("{optionId}")] public async Task<IActionResult> CeateOrUpdateVote(Guid
-        // optionId) { var option = await _context.Options.FindAsync(optionId); if(option == null)
-        // return NotFound();
-
-        // var post = await _context.Posts.FindAsync(option.PostId); if(post == null) return NotFound();
-
-        // if(post.SurveyClosureDateTime < DateTime.UtcNow) { var vote = new Vote { OptionId =
-        // optionId }; _context.Votes.Add(vote); await _context.SaveChangesAsync(); } return Ok(); }
-
-
-        [HttpPost]
-        [Route("vote")]
-        public async Task<IActionResult> CeateOrUpdateVote(VoteDTO vote)
         {
-            var post = await _context.Posts.FindAsync(vote.PostId);
-            if (post == null) return NotFound();
-
-            if (DateTime.UtcNow < post.SurveyClosureDateTime)
+            var result = await _postsService.UpdatePostAsync(postDTO);
+            if (result.IsSuccess)
             {
-                var prevVote = await _context.Votes.FirstOrDefaultAsync(v => v.PostId == vote.PostId && v.UserId == vote.UserId);
-
-                if (prevVote != null)
-                {
-                    _context.Votes.Remove(prevVote);
-
-
-
-                    if (prevVote.OptionId != vote.OptionId)
-                        _context.Votes.Add(new Vote(){UserId=vote.UserId,OptionId=vote.OptionId,PostId=vote.PostId });
-                }
-                else
-                {
-                    _context.Votes.Add(new Vote() { UserId = vote.UserId, OptionId = vote.OptionId, PostId = vote.PostId });
-                }
-
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-
-            return BadRequest();
-        }
-
-        [HttpDelete("{postId}")]
-        public async Task<IActionResult> DeletePost(Guid postId)
-        {
-            var post = await _context.Posts.FindAsync(postId);
-            if (post != null)
-            {
-                _context.Remove(post);
-                await _context.SaveChangesAsync();
                 return Ok();
             }
             else
             {
-                return NotFound();
+                return BadRequest(result.ToProblemDetails());
+            }
+        }
+
+        [HttpPost("Vote")]
+        [Authorize("IsResident")]
+        public async Task<IActionResult> Vote([FromBody] VoteDTO voteDTO)
+        {
+            var result = await _postsService.VoteAsync(voteDTO);
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
+        }
+
+        [HttpDelete("{postId}")]
+        [Authorize("IsAdmin")]
+        public async Task<IActionResult> DeletePost(Guid postId)
+        {
+            var result = await _postsService.DeletePostAsync(postId);
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound(result.Error);
             }
         }
     }
