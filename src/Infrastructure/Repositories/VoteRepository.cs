@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
 
         public async Task<int> CountVotes(string optionId)
         {
-          int result=  await   dbSet.CountAsync(vote => vote.Id.ToString() == optionId);
+          int result=  await   dbSet.CountAsync(vote => vote.OptionId.ToString() == optionId);
             return result;
         }
     }

@@ -7,6 +7,7 @@ using My_Place_Backend.Authorization;
 using Serilog;
 using System;
 using System.Threading.Tasks;
+using Web.Extensions;
 
 namespace My_Place_Backend.Controllers
 {
@@ -32,7 +33,7 @@ namespace My_Place_Backend.Controllers
             return Ok(result);
         }
 
-        [HttpPost("create")]
+        [HttpPost("Create")]
         [Authorize("IsAdmin")]
         public async Task<IActionResult> CreatePost([FromBody] PostCreateDTO postDTO)
         {
@@ -47,7 +48,7 @@ namespace My_Place_Backend.Controllers
             }
         }
 
-        [HttpPatch("update")]
+        [HttpPatch("Update")]
         [Authorize("IsAdmin")]
         public async Task<IActionResult> UpdatePost([FromBody] PostUpdateDTO postDTO)
         {
@@ -58,11 +59,11 @@ namespace My_Place_Backend.Controllers
             }
             else
             {
-                return BadRequest(result.Error);
+                return BadRequest(result.ToProblemDetails());
             }
         }
 
-        [HttpPost("vote")]
+        [HttpPost("Vote")]
         [Authorize("IsResident")]
         public async Task<IActionResult> Vote([FromBody] VoteDTO voteDTO)
         {

@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories
         }
 
         // tracked zwiększa performence dla danych tylko do odczytu
-        public async Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
+        public async Task<T?> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
             IQueryable<T> query;
             if (tracked)
@@ -50,7 +50,7 @@ namespace Infrastructure.Repositories
                     query = query.Include(includeProp);
                 }
             }
-            return await query.FirstAsync();
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<List<T>> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)

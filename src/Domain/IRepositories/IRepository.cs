@@ -6,7 +6,7 @@ namespace Domain.Repositories
     {
         Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
 
-        Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
+        Task<T?> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
 
         Task Add(T entity);
 

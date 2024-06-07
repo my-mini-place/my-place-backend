@@ -33,25 +33,21 @@ public class PostsService : IPostsService
         _optionRepository = optionRepository;
     }
 
-   
 
-    public async Task<PagedList<PostDTO>> GetPostsAsync(int page, int pageSize,string userRole,string userId)
+
+    public async Task<PagedList<PostDTO>> GetPostsAsync(int page, int pageSize, string userRole, string userId)
     {
-       
-
         var posts = await _postsRepository.GetAllPostsAsync();
-        var postsDTO = posts.Select( async post =>
-        {
+        var postsDTO = new List<PostDTO>(); 
 
-            List<OptionDTO> options = [];
+        foreach (var post in posts)
+        {
+            List<OptionDTO> options = new List<OptionDTO>();
             bool surveyClosed = post.IsSurvey && DateTime.UtcNow > post.SurveyClosureDateTime;
             if (post.IsSurvey)
             {
-                var optionsfirst = await _optionRepository.GetAll(option => option.PostId == post.Id);
-
-
-
-                foreach (var option in optionsfirst)
+                var optionsFirst = await _optionRepository.GetAll(option => option.PostId == post.Id);
+                foreach (var option in optionsFirst)
                 {
                     var numVotes = await _voteRepository.CountVotes(option.Id.ToString());
                     options.Add(new OptionDTO
@@ -61,20 +57,17 @@ public class PostsService : IPostsService
                         NumVotes = numVotes
                     });
                 }
-
-             
-
             }
 
             Vote? userVote = null;
-            string userVoteMessage = "cant vote";
+            string userVoteMessage = "can't vote";
             if (userRole == Roles.Resident)
             {
                 userVote = await _voteRepository.Get(vote => vote.PostId == post.Id && vote.UserId.ToString() == userId);
-                userVoteMessage = userVote?.OptionId.ToString() ?? "dont vote";
+                userVoteMessage = userVote?.OptionId.ToString() ?? "don't vote";
             }
 
-            return new PostDTO
+            postsDTO.Add(new PostDTO
             {
                 Id = post.Id.ToString(),
                 Title = post.Title,
@@ -85,14 +78,15 @@ public class PostsService : IPostsService
                 SurveyClosed = surveyClosed,
                 OptionsWithNumVotes = options,
                 UserVote = userVoteMessage
-            };
-        }).ToList();
+            });
+        }
 
+       
+        var sortedPosts = postsDTO.OrderByDescending(post => post.CreationDateTime).ToList();
 
-        var postsDTOwaited= await Task.WhenAll(postsDTO);
-
-        return PagedList<PostDTO>.CreateFromListAsync(postsDTOwaited.ToList(), page, pageSize);
+        return  PagedList<PostDTO>.CreateFromListAsync(sortedPosts, page, pageSize);
     }
+
 
     public async Task<Result<Guid>> CreatePostAsync(PostCreateDTO postDTO)
     {
