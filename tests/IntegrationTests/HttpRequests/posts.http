@@ -1,0 +1,58 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@hostname=localhost
+@port=7281
+
+### Create a new survey post
+POST https://{{hostname}}:{{port}}/api/posts/create
+Content-Type: application/json
+
+{
+  "Title": "New Survey",
+  "Content": "Co jest najbardziej obiektowe?",
+  "IsSurvey": true,
+  "SurveyClosureDateTime": "2043-12-31T23:59:59",
+  "OptionsWithNumVotes": [
+    {
+      "Text": "C#"
+    },
+    {
+      "Text": "Kobieta"
+    },
+    {
+      "Text": "Ukrainiec"
+    }
+  ]
+}
+
+###
+
+### Get all posts
+GET https://{{hostname}}:{{port}}/api/posts?page=1&pagesize=10
+
+###
+
+### Update a post
+PATCH https://{{hostname}}:{{port}}/api/posts/update
+Content-Type: application/json
+
+{
+  "Id": "cdf9c568-ead2-4cbb-11fa-08dc8620f4d0",
+  "Title": "New Survey2"
+}
+
+###
+
+### Create or update a vote
+POST https://{{hostname}}:{{port}}/api/posts/vote
+Content-Type: application/json
+
+{
+  "PostId": "cdf9c568-ead2-4cbb-11fa-08dc8620f4d0",
+  "OptionId": "3976cefc-b586-4e20-b8fe-fd0782acb0bd",
+  "UserId": "3976cefc-b586-4e20-b8fe-fd0782acb01d"
+}
+
+###
+
+### Delete a post
+DELETE https://{{hostname}}:{{port}}/api/posts/{cdf9c568-ead2-4cbb-11fa-08dc8620f4d0}

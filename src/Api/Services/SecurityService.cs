@@ -1,22 +1,14 @@
 ﻿using Api.Interfaces;
+using AutoMapper;
 using Domain;
+using Domain.Entities;
 using Domain.Errors;
-using Domain.Models.Auth;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-
-using My_Place_Backend.DTO.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using static Domain.Models.Auth.ServiceResponses;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
-using AutoMapper;
 using Domain.Models.Identity;
+using Domain.ValueObjects;
+using Infrastructure.Data;
+using My_Place_Backend.DTO.Auth;
 
 namespace Api.Services
 {
@@ -37,47 +29,49 @@ namespace Api.Services
 
         public async Task<Result<Guid>> CreateAccount(RegisterDTO userDTO)
         {
-            if (userDTO is null) return Result.Failure<Guid>(Error.Failure("userDTO", "User DTO is null"));
+            if (userDTO is null) return Result.Failure<Guid>(Error.Validation("userDTO", "User DTO is null"));
 
             // czy istnieje
             var userExists = await _identityRepository.FindUserByEmailAsync(userDTO.Email);
-            if (userExists != null) return Result.Failure<Guid>(Error.Failure("UserExists", "User already registered"));
-            // przerzuc to do mappera
+            if (userExists != null) return Result.Failure<Guid>(Error.Conflict("UserExists", "User already registered"));
 
             Guid newUserId = Guid.NewGuid();
 
             var newUser = new ApplicationUser
             {
-                UserId = newUserId,
-                Name = userDTO.Name,
+                UserId = newUserId.ToString(),
+
                 Email = userDTO.Email,
                 UserName = userDTO.Email
             };
 
             var UserInfo = _mapper.Map<User>(userDTO);
 
-            UserInfo.UserId = newUserId;
+            UserInfo.UserId = newUserId.ToString();
 
             var createUserResult = await _identityRepository.CreateUserAsync(newUser, userDTO.Password);
             if (!createUserResult.Succeeded)
             {
-                return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()?.Description));
+                return Result.Failure<Guid>(Error.Failure(createUserResult.ToString(), createUserResult.Errors.FirstOrDefault()!.Description));
             }
 
-            // dodanie informacji o userze do innej tabeli (pontejcalnie mozna to polaczyc)
-            _userRepository.Add(UserInfo);
-            // zmien to pozniej
-            var roleResult = await _identityRepository.EnsureRoleAsync("User");
+            UserInfo.Role = Roles.User;
+            // dodanie informacji o userze do tabeli user
+            await _userRepository.Add(UserInfo);
+
+            var roleResult = await _identityRepository.EnsureRoleAsync(Roles.User);
             if (!roleResult.Succeeded)
             {
-                // return Result.Failure<Guid>(roleResult.Errors.FirstOrDefault()?.Description);
+                return Result.Failure<Guid>(Error.Failure("Role", "Error to ensure that role exist"));
             }
 
-            var addToRoleResult = await _identityRepository.AddUserToRoleAsync(newUser, "User");
+            var addToRoleResult = await _identityRepository.AddUserToRoleAsync(newUser, Roles.User);
             if (!addToRoleResult.Succeeded)
             {
-                // return Result.Failure<Guid>(addToRoleResult.Errors.FirstOrDefault()?.Description);
+                return Result.Failure<Guid>(Error.Failure("Role", "Error to add user Role "));
             }
+
+            await _userRepository.Save();
 
             return Result.Success(newUserId);
         }
@@ -102,7 +96,7 @@ namespace Api.Services
 
             var subject = "Resetowanie hasła";
             var message = $"Twój kod do resetowania hasła to: {result}";
-            var sendEmailResult = await _emailService.SendEmailAsync(user.Email, subject, message);
+            var sendEmailResult = await _emailService.SendEmailAsync(forgotPasswordDTO.Email, subject, message);
 
             //if (sendEmailResult.IsSuccess)
             //{
@@ -132,6 +126,18 @@ namespace Api.Services
             return Result.Success();
         }
 
+        //public async Task<Result<List<string>>> GetUserRoles(string UserId)
+        //{
+        //    //var identity = HttpContext.User.Identity as ClaimsIdentity;
+        //    //if (identity != null)
+        //    //{
+        //    //    IEnumerable<Claim> claims = identity.Claims;
+        //    //    // or
+        //    //    identity.FindFirst("ClaimName").Value;
+
+        //    //}
+        //}
+
         public async Task<Result<LoginResponseDTO>> LoginAccount(LoginDTO loginDTO)
         {
             if (loginDTO == null)
@@ -146,13 +152,13 @@ namespace Api.Services
                 return Result.Failure<LoginResponseDTO>(Error.Failure("InvalidCredentials", "Invalid email/password"));
 
             var roles = await _identityRepository.GetUserRolesAsync(user);
-            var token = _identityRepository.GenerateToken(new UserSession(user.Id, user.UserName, user.Email, roles.FirstOrDefault()));
+            var token = _identityRepository.GenerateToken(new UserSession(user.UserId, user.UserName, user.Email, roles.FirstOrDefault()));
 
             return Result.Success(new LoginResponseDTO()
             {
-                TokenType = "JTW",
+                // TokenType = "JTW",
                 AccessToken = token,
-                ExpiresIn = 3600,
+                // ExpiresIn = 3600,
             }); ;
         }
     }

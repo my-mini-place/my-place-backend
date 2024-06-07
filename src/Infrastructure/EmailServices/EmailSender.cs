@@ -1,16 +1,9 @@
 ﻿using Domain;
-using Microsoft.AspNetCore.Identity;
-using Domain.ExternalInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Mail;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
-using System.Net;
-using Microsoft.Extensions.Configuration;
 using Domain.Errors;
+using Domain.ExternalInterfaces;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace Infrastructure.EmailServices
 {

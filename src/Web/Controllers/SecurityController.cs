@@ -1,9 +1,7 @@
 ﻿using Api.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using My_Place_Backend.DTO.AccountManagment;
 using My_Place_Backend.DTO.Auth;
 using Serilog;
 using Web.Extensions;
@@ -33,6 +31,7 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             Result<LoginResponseDTO> response = await _SecurityService.LoginAccount(loginDTO);

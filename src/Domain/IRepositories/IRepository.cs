@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace Domain.Repositories
 {
@@ -11,7 +6,7 @@ namespace Domain.Repositories
     {
         Task<List<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
 
-        Task<T> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
+        Task<T?> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false);
 
         Task Add(T entity);
 
@@ -20,5 +15,7 @@ namespace Domain.Repositories
         void RemoveRange(IEnumerable<T> entity);
 
         void Update(T entity);
+
+        Task Save();
     }
 }
