@@ -11,15 +11,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Domain;
 using static Domain.Calendar;
 using Api.Interfaces;
-using Web.Extensions;
-using Domain.IRepositories;
-using Infrastructure.Repositories;
-using Azure;
-using Api.Services;
-using Microsoft.EntityFrameworkCore;
-﻿using Api.Interfaces;
-using Domain;
-using Microsoft.AspNetCore.Mvc;
+
 
 
 namespace My_Place_Backend.Controllers

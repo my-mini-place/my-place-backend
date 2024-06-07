@@ -44,6 +44,8 @@ namespace Api.DTO.Posts
         public DateTime CreationDateTime { get; set; }
         public bool SurveyClosed { get; set; }
         public List<OptionDTO>? OptionsWithNumVotes { get; set; }
+
+        public string UserVote { get; set; }
     }
 }
 

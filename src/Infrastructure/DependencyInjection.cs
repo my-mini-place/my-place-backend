@@ -1,4 +1,5 @@
 ﻿using Api.Interfaces;
+using Api.Interfaces.IRepositories;
 using Domain.ExternalInterfaces;
 using Domain.IRepositories;
 using Domain.ValueObjects;
@@ -32,7 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // scopy 
 
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IIdentityRepository, IdentityRepository>();
+            services.AddScoped<Api.Interfaces.IIdentityRepository, IdentityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICalendarRepository, CalendarRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();  
@@ -45,6 +46,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAdministratorRepository,AdministratorRepository>();
             services.AddScoped<IRepairmanRepository, RepairmanRepository>();
             services.AddScoped<IManagerRepository, ManagerRepository>();
+
+            services.AddScoped<IPostsRepository, PostsRepository>();
+            services.AddScoped<IVoteRepository, VoteRepository>();
+            services.AddScoped<IOptionRepository, OptionRepository>();
 
 
             services
