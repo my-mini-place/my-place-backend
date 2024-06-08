@@ -9,15 +9,20 @@ namespace Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Resident> builder)
         {
-            builder.HasKey(x => x.Id);
+            // komentarze od chata principal -> do 'zmiany' klucza targetu 
+            builder.HasOne(x => x.User)          // Resident ma jeden User
+          .WithOne()                    // User ma jeden Resident
+          .HasForeignKey<Resident>(x => x.UserId)  // ForeignKey w Resident
+          .HasPrincipalKey<User>(x => x.UserId);   // Klucz główny w User
 
-            builder.HasOne(x => x.User)
-                  .WithOne()
-                  .HasForeignKey<Resident>(x => x.UserId).HasPrincipalKey<User>(x => x.UserId);
+            //// Konfiguracja dla Residence - Resident
+            //builder.HasOne(x => x.Residence)     // Resident ma jedno Residence
+            //       .WithOne().HasForeignKey<Resident>(x => x.ResidenceId).HasPrincipalKey<Residence>(x => x.ResidenceId);
+
 
             builder.HasOne(x => x.Residence)
-                  .WithOne()
-                  .HasForeignKey<Resident>(x => x.ResidenceId).HasPrincipalKey<Residence>(x => x.ResidenceId);
+       .WithMany() 
+       .HasForeignKey(x => x.ResidenceId).HasPrincipalKey(x => x.ResidenceId); 
         }
     }
 }

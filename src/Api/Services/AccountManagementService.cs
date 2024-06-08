@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Domain;
+    using Domain.Entities;
     using Domain.Errors;
     using Domain.IRepositories;
     using Domain.Models.Identity;
@@ -50,23 +51,130 @@
 
             public async Task<Result> ChangeAccountStatus(string userId, AccountStatusUpdateDTO statusUpdateDTO)
             {
+                if(statusUpdateDTO.AccountStatus == null && statusUpdateDTO.NewRole == null)
+                {
+                    return Result.Failure(Error.Validation("AccountStatus", "AccountStatus or NewRole must be provided"));
+                }
+
+               
+
                 var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
 
-                if (statusUpdateDTO.AccountStatus == AccountStatus.Rejected && statusUpdateDTO.NewRole != null)
-                    return Result.Failure(Error.Conflict("AccountStatusUpdate", "Account cant be rejected and have new role"));
-
-                if (user.Status == statusUpdateDTO.AccountStatus)
+                if (user.Role == statusUpdateDTO.NewRole||statusUpdateDTO.NewRole==null)
                 {
-                    return Result.Failure(Error.Conflict("AccountStatus", "New status cant be the same as old one"));
+                    return Result.Failure(Error.Conflict("AccountStatus", "New status cant be the same as old and new Role cant be null"));
                 }
+                // usuwanie starej roli 
 
-                user.Status = statusUpdateDTO.AccountStatus;
+                switch (user.Role)
+                {
+                    case (Roles.User):
+                        {
+                            break;
+                        }
+                    case (Roles.Resident):
+                        {
+                            var resident = await _residentRepository.Get(u => u.UserId == userId);
+                            _residentRepository.Remove(resident!);
+
+                            break;
+                        }
+                    case (Roles.Administrator):
+                        {
+                            var administrator = await _administratorRepository.Get(u => u.UserId == userId);
+                            _administratorRepository.Remove(administrator!);
+
+                            break;
+                        }
+                    case (Roles.Repairman):
+                    {
+                            var repairman = await _repairmanRepository.Get(u => u.UserId == userId);
+                            _repairmanRepository.Remove(repairman!);
+                            break;
+                        }
+                    case (Roles.Manager):
+                        {
+                            var manager = await _managerRepository.Get(u => u.UserId == userId);
+                            _managerRepository.Remove(manager!);
+                            break;
+
+                        }
+                }
+                // dodawanie 
+                switch(statusUpdateDTO.NewRole)
+                {
+                    case (Roles.User):
+                        {
+
+                            return Result.Failure(Error.Validation("New Role","New role cant be user"));
+                            
+                        }
+
+                    case (Roles.Administrator):
+                     {
+
+
+                         break;
+                     }
+                    case (Roles.Manager):
+                        {
+                            if (statusUpdateDTO.StartWorkTime == null || statusUpdateDTO.EndWorkTime == null)
+                            {
+                                return Result.Failure(Error.Validation("StartWorkTime and EndWorkTime", "StartWorkTime and EndWorkTime must be provided"));
+                            }
+                            break;
+                        }
+                    case (Roles.Repairman):
+                        {
+                            if(statusUpdateDTO.StartWorkTime == null || statusUpdateDTO.EndWorkTime == null)
+                            {
+                                return Result.Failure(Error.Validation("StartWorkTime and EndWorkTime", "StartWorkTime and EndWorkTime must be provided"));
+                            }
+                            break;
+                        }
+
+                    case (Roles.Resident):
+                        {
+
+                            
+                            if (statusUpdateDTO.ResidenceId == null)
+                            {
+                                return Result.Failure(Error.Validation("ResidenceId", "ResidenceId must be provided"));
+                            }
+
+                           var residence = await _residenceRepository.Get(u => u.ResidenceId == statusUpdateDTO.ResidenceId);
+                            if (residence == null)
+                            {
+                                return Result.Failure(Error.NotFound("Residence", "Residence not found"));
+                            }
+                            Resident resident = new Resident()
+                            {
+                                
+                                Guid= new Guid().ToString(),
+                                ResidenceId = statusUpdateDTO.ResidenceId,
+                                UserId = userId
+                                
+
+                            };
+                           await  _residentRepository.Add(resident);
+                           await _residenceRepository.Save();
+
+                            break;
+                        }
+                }
+                     
+
+
+
+                user.Role = statusUpdateDTO.NewRole?? user.Role;
+                user.Status = statusUpdateDTO.AccountStatus ?? user.Status;
 
                 _userRepository.Update(user);
+             await    _userRepository.Save();
 
                 return Result.Success();
             }
@@ -233,26 +341,10 @@
                 return Result.Success();
             }
 
-            public Task<Result> SetUserAvailability()
-            {
-                throw new NotImplementedException();
-            }
+          
 
             // tutaj dodac usuwanie starej roli
-            public async Task<Result> UpdateUserRole(string UserId, string Role)
-            {
-                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
-                if (user == null) { return Result.Failure<UserDTO>(Error.NotFound("User", "User not found")); }
-
-                var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
-
-                var result = await _identityRepository.AddUserToRoleAsync(appuser!, Role);
-                if (!result.Succeeded)
-                {
-                }
-
-                return Result.Success();
-            }
+          
 
             public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId)
             {
