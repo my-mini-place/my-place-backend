@@ -8,8 +8,17 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddAppServices();
 
 builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var app = builder.Build();
+app.UseCors("AllowAll");
 
 await app.EnsureMigrationOfContext();
 

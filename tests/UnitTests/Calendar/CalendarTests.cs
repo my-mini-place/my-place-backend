@@ -14,9 +14,13 @@ using Infrastructure.Data;
 using static Domain.Calendar;
 using static Domain.Models.Calendar.CalendarModels;
 using Api.Interfaces;
+using System.Linq.Expressions;
+using System.Xml;
+using NSubstitute;
 
 namespace UnitTests.Calendar
 {
+   
     public class CalendarTests
     {
         private readonly Mock<ICalendarRepository> _mockCalendarRepository;
@@ -40,51 +44,36 @@ namespace UnitTests.Calendar
 
         [Fact]
         public async Task GetEventsByMonth_WrongMonth_ReturnsFailure()
-        {
-            // Arrange
-            var service = new CalendarService(null, null, null);
-
-            // Act
-            var result = await service.GetEventsByMonth("janray", "0");
-
-            // Assert
+        { 
+            var result = await _calendarService.GetEventsByMonth("janray", "0");
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("NoMonth");
         }
 
-        //[Fact]
-        //public async Task GetEventsByMonth_ValidMonth_ReturnsEvents()
-        //{
-        //    // Arrange
-        //    string month = "January";
-        //    string userId = "testUser";
-        //    var events = new List<Event>
-        //    {
-        //        new Event { Month = "January", Owner = userId, EventPublicId = "event1" }
-        //    };
-        //    _mockCalendarRepository
-        //        .Setup(repo => repo.GetAll(It.IsAny<Func<Event, bool>>()))
-        //        .ReturnsAsync(events);
+        [Fact(Skip = "Cant test until CalendarMapper has interface")]
+        public async Task GetEventsByMonth_ValidMonth_ReturnsEvents()
+        {
+            string month = "January";
+            string userId = "testUser";
+            var events = new List<Event>
+            {
+                new Event { Month = "January", owner = userId, EventPublicId = "event1" }
+            };
+            _mockCalendarRepository
+                .Setup(repo => repo.GetAll(It.IsAny<Expression<Func<Event, bool>>>(), It.IsAny<string>()))
+                .ReturnsAsync(events);
+            var result = await _calendarService.GetEventsByMonth(month, userId);
 
-        //    // Act
-        //    var result = await _calendarService.GetEventsByMonth(month, userId);
-
-        //    // Assert
-        //    result.IsSuccess.Should().BeTrue();
-        //    result.Value.Should().NotBeNull();
-        //}
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+        }
 
         [Fact]
         public async Task GetEventsByMonth_InvalidMonth_ReturnsFailure()
         {
-            // Arrange
             string month = "InvalidMonth";
             string userId = "testUser";
-
-            // Act
             var result = await _calendarService.GetEventsByMonth(month, userId);
-
-            // Assert
             result.IsSuccess.Should().BeFalse();
             result.Error.Code.Should().Be("NoMonth");
         }
@@ -92,7 +81,6 @@ namespace UnitTests.Calendar
         [Fact]
         public async Task GetUsers_ValidName_ReturnsUsers()
         {
-            // Arrange
             string name = "test";
             string role = "";
             var users = new List<ApplicationUser>
@@ -100,20 +88,30 @@ namespace UnitTests.Calendar
                 new ApplicationUser { Email = "testuser@example.com", Id = "1" }
             };
             _mockUserManager.Setup(um => um.Users).Returns(users.AsQueryable());
-
-            // Act
             var result = await _calendarService.GetUsers(name, role);
-
-            // Assert
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().HaveCount(1);
             result.Value[0].email.Should().Be("testuser@example.com");
         }
 
         [Fact]
+        public async Task GetUsers_InValidRole_ReturnsFailure()
+        {
+            string name = "test";
+            string role = "invalidrole!!!!!";
+            var users = new List<ApplicationUser>
+            {
+                new ApplicationUser { Email = "testuser@example.com", Id = "1" }
+            };
+            _mockUserManager.Setup(um => um.Users).Returns(users.AsQueryable());
+            var result = await _calendarService.GetUsers(name, role);
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Code.Should().Be("NoSuchRole");
+
+        }
+        [Fact]
         public async Task AddUserEvent_ValidEvent_ReturnsSuccess()
         {
-            // Arrange
             var eventDto = new CalendarEventDto
             {
                 Type = "Meeting",
@@ -129,102 +127,33 @@ namespace UnitTests.Calendar
                 .Setup(repo => repo.Add(It.IsAny<Event>()))
                 .Returns(Task.CompletedTask);
 
-            // Act
             var result = await _calendarService.AddUserEvent(eventDto, ownerId);
-
-            // Assert
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeNull();
         }
 
-        //[Fact]
-        //public async Task AcceptOrRejectEvent_ValidEvent_ReturnsSuccess()
-        //{
-        //    // Arrange
-        //    string eventId = "event1";
-        //    string actionDto = "Accept";
-        //    string ownerId = "owner1";
-        //    var eventObj = new Event { EventPublicId = eventId, Invited =""+ ownerId};
 
-        //    _mockCalendarRepository
-        //        .Setup(repo => repo.Get(It.IsAny<Func<Event, bool>>()))
-        //        .ReturnsAsync(eventObj);
 
-        //    _mockCalendarRepository
-        //        .Setup(repo => repo.Update(It.IsAny<Event>()))
-        //        .Returns(Task.CompletedTask);
 
-        //    // Act
-        //    var result = await _calendarService.AcceptOrRejectEvent(eventId, actionDto, ownerId);
+        [Fact]
+        public async Task AcceptOrRejectEvent_ValidEvent_ReturnsSuccess()
+        {
+            string eventId = "event1";
+            string actionDto = "Accept";
+            string ownerId = "owner1";
+            var eventObj = new Event { EventPublicId = eventId, Invited = "" + ownerId };
 
-        //    // Assert
-        //    result.IsSuccess.Should().BeTrue();
-        //    result.Value.Should().Be("Event Accepted!!");
-        //}
+            _mockCalendarRepository
+                .Setup(repo => repo.Get(It.IsAny<Expression<Func<Event, bool>>>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(eventObj);
 
-        //    [Fact]
-        //    public async Task AcceptOrRejectEvent_InvalidAction_ReturnsFailure()
-        //    {
-        //        // Arrange
-        //        string eventId = "event1";
-        //        string actionDto = "InvalidAction";
-        //        string ownerId = "owner1";
-        //        var eventObj = new Event { EventPublicId = eventId, Invited = new List<string> { ownerId } };
+            _mockCalendarRepository
+                .Setup(repo => repo.Update(It.IsAny<Event>()));
 
-        //        _mockCalendarRepository
-        //            .Setup(repo => repo.Get(It.IsAny<Func<Event, bool>>()))
-        //            .ReturnsAsync(eventObj);
-
-        //        // Act
-        //        var result = await _calendarService.AcceptOrRejectEvent(eventId, actionDto, ownerId);
-
-        //        // Assert
-        //        result.IsSuccess.Should().BeFalse();
-        //        result.Error.Code.Should().Be("NoSuchAction");
-        //    }
-        //}
-
-        //public class FreeTimeManagerTests
-        //{
-        //    [Fact]
-        //    public void GetFreeTimeSlots_NoEvents_ReturnsFullDaySlot()
-        //    {
-        //        // Arrange
-        //        var events = new List<Event>();
-        //        DateTime day = new DateTime(2023, 5, 27);
-
-        //        // Act
-        //        var result = FreeTimeManager.GetFreeTimeSlots(events, day);
-
-        //        // Assert
-        //        result.Should().HaveCount(1);
-        //        result[0].Start.Should().Be(day);
-        //        result[0].End.Should().Be(day.AddDays(1).AddSeconds(-1));
-        //    }
-
-        //    [Fact]
-        //    public void GetFreeTimeSlots_WithEvents_ReturnsCorrectSlots()
-        //    {
-        //        // Arrange
-        //        DateTime day = new DateTime(2023, 5, 27);
-        //        var events = new List<Event>
-        //        {
-        //            new Event { StartTime = day.AddHours(9), EndTime = day.AddHours(10) },
-        //            new Event { StartTime = day.AddHours(12), EndTime = day.AddHours(13) }
-        //        };
-
-        //        // Act
-        //        var result = FreeTimeManager.GetFreeTimeSlots(events, day);
-
-        //        // Assert
-        //        result.Should().HaveCount(3);
-        //        result[0].Start.Should().Be(day);
-        //        result[0].End.Should().Be(day.AddHours(9));
-        //        result[1].Start.Should().Be(day.AddHours(10));
-        //        result[1].End.Should().Be(day.AddHours(12));
-        //        result[2].Start.Should().Be(day.AddHours(13));
-        //        result[2].End.Should().Be(day.AddDays(1).AddSeconds(-1));
-        //    }
+            var result = await _calendarService.AcceptOrRejectEvent(eventId, actionDto, ownerId);
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be("Event Accepted!!");
+        }
     }
     
 }

@@ -16,6 +16,8 @@ using Api.Interfaces.IRepositories;
 using IIdentityRepository = Api.Interfaces.IIdentityRepository;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Domain.ValueObjects;
+using System.Collections.Generic;
 
 namespace Api.Services
 {
@@ -37,10 +39,6 @@ namespace Api.Services
             foreach (var ev in eventsOnDay)
             {
 
-                    Console.WriteLine("dodaje");
-                    Console.WriteLine(ev.StartTime);
-                    Console.WriteLine(ev.EndTime);
-                Console.WriteLine(ev.Name);
 
                 if (ev.StartTime > currentStart)
                 {
@@ -48,25 +46,16 @@ namespace Api.Services
                     S.Start = currentStart;
                     S.End = ev.StartTime;
                     freeTimeSlots.Add(S);
-
-                    Console.WriteLine("dodaje");
-                    Console.WriteLine(currentStart);
-                    Console.WriteLine(ev.StartTime);
                 }
                 currentStart = ev.EndTime > currentStart ? ev.EndTime : currentStart;
             }
 
             if (currentStart < endOfDay)
             {
-
-                Console.WriteLine("dodaje");
-                Console.WriteLine(currentStart);
-                Console.WriteLine(endOfDay);
                 Slot S = new Slot();
                 S.Start = currentStart;
                 S.End = endOfDay;
                 freeTimeSlots.Add(S);
-                //freeTimeSlots.Add((currentStart.ToString(), endOfDay.ToString()));
             }
 
             return freeTimeSlots;
@@ -79,13 +68,10 @@ namespace Api.Services
         private readonly UserManager<ApplicationUser> _userManager ;
         private readonly IIdentityRepository _identityRepository;
 
-
         private readonly List<string> months = new List<string> {
             "january", "february", "march", "april", "may", "june",
             "july", "august", "september", "october", "november", "december"
              };
-
-
         public enum actions
         { Accept, TReject };
 
@@ -97,12 +83,15 @@ namespace Api.Services
 
         }
 
+        public List<string> getMonths()
+        {
+            return months;
+        }
         public async Task<Result<CalendarMonthEventsDto>> GetEventsByMonth(string month,string userid)
         {
             if (months.Contains(month.ToLower()))
             {
                 int index = months.IndexOf(month.ToLower()) + 1;
-                //var events = _CalendarRepository.CalendarEvents.Where(e => e.Month == month).ToList();
                 var events =  await _calendarRepository.GetAll(x => (x.Month.ToLower() == month.ToLower()) &&(x.Invited.Contains(userid)||x.owner==userid));
                 foreach(var e in events)
                 {
@@ -119,58 +108,41 @@ namespace Api.Services
 
         public async Task<Result<List<usersDTO>>> GetUsers(string name,string role)
         {
-            foreach (var user in _userManager.Users)
-            {
-                Console.WriteLine("----");
-               // Console.WriteLine(user);
-                Console.WriteLine(user.UserName);
-               // sb.Append(user.Id + ",");
-            }
+
             StringBuilder sb = new StringBuilder();
             List<usersDTO> output = new List<usersDTO>();
             List<ApplicationUser> users = _userManager.Users.Where(u => u.Email.ToLower().StartsWith(name.ToLower())).ToList();
-            if (role != "")
+            if (role == Roles.Administrator || role == Roles.Resident || role == Roles.Manager || role == Roles.User || role == Roles.Repairman)
             {
                 foreach (ApplicationUser user in users)
                 {
                     var roleResult = await _identityRepository.GetUserRolesAsync(user);
-                   // Console.WriteLine("==========Role===========");
-                   // Console.WriteLine(roleResult);
-
-                    foreach (string s in roleResult)
-                    {
-                       // C/onsole.WriteLine("==========Rola===========");
-                        //Console.WriteLine(s);
-                    }
                     if (roleResult.Contains(role))
                     {
                         usersDTO us = new usersDTO();
                         us.email = user.Email;
                         us.id = user.Id;
-                        //us.roles = roleResult.ToString();
                         output.Add(us);
-                        //sb.Append(user.Id + ",");
+
 
                     }
                 }
 
-                //  users = users.Where(u => u.)
             }
-            else
-            {
-
-
+            else if(role=="")
+            { 
                 foreach (var user in users)
                 {
-                    //Console.WriteLine("----");
-                    //Console.WriteLine(user);
-                   // sb.Append(user.Id + ",");
                     usersDTO us = new usersDTO();
                     us.email = user.Email;
                     us.id = user.Id;
-                    //us.roles = roleResult.ToString();
                     output.Add(us);
                 }
+            }
+            else
+            {
+                return Result.Failure<List<usersDTO>> (Error.NotFound("NoSuchRole", "there is no such role"));
+
             }
             return Result.Success(output);
         }
@@ -178,13 +150,10 @@ namespace Api.Services
         {
             string id = Guid.NewGuid().ToString();
             eventDto.EventId = id;
-            Console.WriteLine("DODAJE NOWE WYDARZENIE");
-            Console.WriteLine(eventDto.Type);
+
             await _calendarRepository.Add(CalednarMapper.castEventDtoToServer(eventDto,ownerId));
             await _calendarRepository.Save();
-
             return Result.Success(id);
-            // throw new NotImplementedException();
         }
 
         public async Task<Result<string>> AcceptOrRejectEvent(string eventId, string actionDto,string ownerid)
@@ -218,13 +187,12 @@ namespace Api.Services
 
         public async Task<Result<CalendarMonthFreeTime>> GetAvailabilityByMonth(string month)
         {
-            int year = DateTime.Now.Year; // Rok
+            int year = DateTime.Now.Year;
             int index = months.IndexOf(month) + 1;
             
-            int daysInMonth = DateTime.DaysInMonth(year, index); // Pobranie liczby dni w miesiącu
+            int daysInMonth = DateTime.DaysInMonth(year, index);
             var events = await _calendarRepository.GetAll(x => (x.Month == month));
 
-            // Generowanie listy dni w miesiącu
             var daysOfMonth = Enumerable.Range(1, daysInMonth).Select(day => new DateTime(year, index, day)).ToList();
             CalendarMonthFreeTime monthObject = new CalendarMonthFreeTime();
             monthObject.Days = new List<CalendarDayFreeTime>();
@@ -239,14 +207,7 @@ namespace Api.Services
                 monthObject.Days.Add(dayObject);
             }
 
-            //foreach (Event e in events)
-            //{
-            //    CalendarEventDto evenCasted = castEventToClient(e);
-            //    int index = evenCasted.From.Day - 1;
-            //    monthObject.Days[index].Events.Add(evenCasted);
-            //}
             return monthObject;
-           // throw new NotImplementedException();
         }
     }
 }

@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Domain.IRepositories;
 using System.Security.Cryptography.Xml;
 using Domain.Errors;
+using Domain.ValueObjects;
+using System.Net;
 
 
 namespace My_Place_Backend.Controllers
@@ -24,8 +26,6 @@ namespace My_Place_Backend.Controllers
     public class CalendarController : ControllerBase
     {
         private readonly ICalendarService _calendarService;
-
-
         public CalendarController( ICalendarService calendarService)
         {
             _calendarService = calendarService;
@@ -88,13 +88,19 @@ namespace My_Place_Backend.Controllers
             return Ok(response.Value);
 
         }
-
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpGet("users")]
         public async Task<object> GetUsers([FromQuery] string name="", [FromQuery] string role="")
         {
-            Result<List<usersDTO>> response = await _calendarService.GetUsers(name, role);
-            Console.WriteLine(response.Value);
-            return Ok(response.Value);
+
+         Result<List<usersDTO>> response = await _calendarService.GetUsers(name, role);
+         if (response.IsFailure)
+         {
+                    return response.ToProblemDetails();
+         }
+         return Ok(response.Value);
+
         }
         [Authorize()]
         [HttpPost("calendar/events/{eventId}")]
@@ -112,15 +118,8 @@ namespace My_Place_Backend.Controllers
 
         [HttpGet("calendar/events")]
         [Authorize()]
-
         public async Task<object> GetEventsByMonth([FromQuery] string month)
         {
-
-
-            //string userRole = User.GetUserRole();
-            //Console.WriteLine("------------------------------------");
-            //Console.WriteLine(userId.ToString());
-
             Result<CalendarMonthEventsDto> response = await _calendarService.GetEventsByMonth(month, User.GetUserId());
             if (response.IsFailure)
             {
@@ -129,17 +128,12 @@ namespace My_Place_Backend.Controllers
             return Ok(response.Value);
         }
 
-
         [HttpGet("availability")]
         [ProducesResponseType(typeof(List<AvailabilityResponseDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public IActionResult GetAvailabilityByMonth([FromQuery] string month)
         {
-            // Przykładowe pobieranie dostępności konserwatorów dla danego miesiąca
-            var availability = new List<AvailabilityResponseDto>(); // Zastąp tę linię kodem, który pobiera dostępność konserwatorów
-
-            // Tworzenie przykładowych danych
             var response = new List<AvailabilityResponseDto>
             {
                 new AvailabilityResponseDto
@@ -165,19 +159,18 @@ namespace My_Place_Backend.Controllers
 
             return Ok(response);
         }
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [HttpGet("MonthTimeAvailability")]
-        public async Task<object>  GetMonthFreeTime([FromQuery] string month)
+        public async Task<object> GetMonthFreeTime([FromQuery] string month)
         {
-            Result<CalendarMonthFreeTime> resp = await _calendarService.GetAvailabilityByMonth(month);
-            //Console.WriteLine("-----------------");
-            //foreach (var t in resp.Value.Days)
-            //{
-            //    Console.WriteLine("kolejna");
-            //    foreach (var d in resp.Value.Days)
-            //    foreach (var da in d.FreeTimeList)
-            //            Console.WriteLine(da.Start.ToString() + "||" + da.End.ToString());
-            //}
-            return Ok(resp.Value);
+            if (_calendarService.getMonths().Contains(month.ToLower()))
+            {
+                Result<CalendarMonthFreeTime> resp = await _calendarService.GetAvailabilityByMonth(month);
+                return Ok(resp.Value);
+            }
+            else
+                return BadRequest("There is no such month!");
         }
     }
 }

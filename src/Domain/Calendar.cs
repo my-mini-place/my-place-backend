@@ -115,11 +115,9 @@ namespace Domain
 
             public static CalendarMonthEventsDto castEventsToClient(List<Event> events, int m, string month)
             {
-                int year = DateTime.Now.Year; // Rok
+                int year = DateTime.Now.Year;
 
-                int daysInMonth = DateTime.DaysInMonth(year, m); // Pobranie liczby dni w miesiącu
-
-                // Generowanie listy dni w miesiącu
+                int daysInMonth = DateTime.DaysInMonth(year, m); 
                 var daysOfMonth = Enumerable.Range(1, daysInMonth).Select(day => new DateTime(year, m, day)).ToList();
                 CalendarMonthEventsDto monthObject = new CalendarMonthEventsDto();
                 monthObject.Days = new List<CalendarDayEventsDto>();
