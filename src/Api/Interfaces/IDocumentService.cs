@@ -18,10 +18,12 @@ namespace Api.Interfaces
     public interface IDocumentService
     {
         
-        public Task<Result<IEnumerable<Document>>> GetDocuments();
-
+        Task<Result<IEnumerable<Document>>> GetDocuments();
+        Task<Result<IEnumerable<Document>>> GetDocumentsByUserId(int userId);
         Task<Result<Document>> GetDocumentById(int id);
-
         Task<Result<string>> AddDocument(DocumentDto documentDto);
+
+        void Update(Document document);
+
     }
 }

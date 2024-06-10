@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Models;
 using Domain.Models.Identity;
 using Infrastructure.Data.Configuration;

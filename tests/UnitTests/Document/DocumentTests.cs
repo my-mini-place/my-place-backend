@@ -74,8 +74,8 @@ namespace UnitTests.DocumentTests
             var id = 1;
             var documents = new List<Document>
         {
-            new Document { DocumentId = id , content = "" , creation_date = new DateTime(), description = "", name = "id1", signed=false},
-            new Document { DocumentId = 2 , content = "" , creation_date = new DateTime(), description = "", name = "id1", signed=false}
+            new Document { DocumentId = id , content = null , creation_date = new DateTime(), description = "", name = "id1", signed=false},
+            new Document { DocumentId = 2 , content = null, creation_date = new DateTime(), description = "", name = "id1", signed=false}
         };
 
             Expression<Func<Document, bool>> expression = x => x.DocumentId == id;

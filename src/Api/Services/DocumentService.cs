@@ -13,6 +13,8 @@ using Domain.Repositories;
 using static Domain.Models.Document.DocumentModels;
 
 using static Domain.Calendar;
+using Microsoft.EntityFrameworkCore;
+using Domain.Models.Identity;
 
 
 
@@ -37,6 +39,16 @@ namespace Api.Services
             return Result.Success(documentsEnumerable);
         }
 
+        public async Task<Result<IEnumerable<Document>>> GetDocumentsByUserId(int userId)
+        {
+            var documents = await _documentRepository.GetAll();
+
+            documents = documents.Where(doc => doc.UserId == userId).ToList();
+
+            var documentsEnumerable = documents.Cast<Document>();
+
+            return Result.Success(documentsEnumerable);
+        }
 
         public async Task<Result<Document>> GetDocumentById(int id)
         {
@@ -66,6 +78,7 @@ namespace Api.Services
             
         }
 
+
         public async Task<Result<string>> AddDocument(DocumentDto documentDto)
         {
             string id = Guid.NewGuid().ToString();
@@ -74,8 +87,16 @@ namespace Api.Services
             documentDto.DocumentId = Id;
             await _documentRepository.Add(DocumentMapper.castDtoDocumentToDocument(documentDto));
 
+            await _documentRepository.Save();
             return Result.Success(id);
         }
+
+        public void Update(Document document)
+        {
+            _documentRepository.Update(document);
+        }
+
+
 
     }
 }

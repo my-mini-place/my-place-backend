@@ -1,4 +1,5 @@
 ﻿using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Domain.IRepositories
 {
     public interface IDocumentRepository : IRepository<Document>
     {
-       // public List<Document> GetAll();
+        // public List<Document> GetAll();
+        public void Update(Document obj);
     }
 }
