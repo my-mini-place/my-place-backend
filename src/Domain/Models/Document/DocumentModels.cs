@@ -30,10 +30,10 @@ namespace Domain.Models.Document
 
             XGraphics graph = XGraphics.FromPdfPage(pdfPage);
 
-            XFont font = new XFont("Verdana", 20, XFontStyle.Bold);
+           // XFont font = new XFont("Verdana", 20, XFontStyle.Bold);
 
             // Draw the text
-            graph.DrawString(text, font, XBrushes.Black, new XRect(0, 0, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
+          //  graph.DrawString(text, font, XBrushes.Black, new XRect(0, 0, pdfPage.Width, pdfPage.Height), XStringFormats.TopLeft);
 
             // Save the document to a MemoryStream
             using (MemoryStream stream = new MemoryStream())

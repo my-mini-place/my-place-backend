@@ -25,7 +25,7 @@ services:
   web:
     depends_on:
      - sql-myplace-db
-    image: ${DOCKER_REGISTRY-}web:latest
+   # image: ${DOCKER_REGISTRY-}web:latest
     container_name: my-place-backend
     build:
       context: .
