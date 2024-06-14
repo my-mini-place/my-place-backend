@@ -400,7 +400,7 @@
 
                 }
 
-                PagedList<User> users = await _userRepository.GetAll(page, pageSize);
+                PagedList<User> users = await _userRepository.GetAllUser(page, pageSize,null,null,sortColumn,sortOrder);
 
                 List<UserDTO> userDTOs = users.Items.Select(u => _mapper.Map<UserDTO>(u)).ToList();
 

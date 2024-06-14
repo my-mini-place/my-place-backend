@@ -25,11 +25,11 @@ services:
   web:
     depends_on:
      - sql-myplace-db
-    image: kicper231/my-place:latest
+   # image: kicper231/my-place:latest
     container_name: my-place-backend
-    # build:
-    #   context: .
-    #   dockerfile: src/Web/Dockerfile
+    build:
+       context: .
+       dockerfile: src/Web/Dockerfile
 
     ports:
       - "5000:5000"

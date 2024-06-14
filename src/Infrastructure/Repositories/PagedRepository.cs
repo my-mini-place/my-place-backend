@@ -64,6 +64,15 @@ namespace Infrastructure.Repositories
                     query = query.Include(includeProp);
                 }
             }
+            if(sortColumn != null && sortOrder != null)
+            {
+
+                if (sortOrder == "desc")
+                    query = query.OrderByDescending(x => x.GetType().GetProperty(sortColumn)!.GetValue(x));
+                else
+                    query = query.OrderBy(x => x.GetType().GetProperty(sortColumn)!.GetValue(x));
+            }
+          
 
             // var Items= await query.Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
 

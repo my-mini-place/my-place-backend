@@ -20,8 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-          //  var connectionString = configuration.GetConnectionString("DockerConnection");
-          var connectionString= "Data Source=sql-myplace-db;Initial Catalog=my-place-db;User=sa;password=Password123#@;TrustServerCertificate=True ";
+           var connectionString = configuration.GetConnectionString("DefaultConnection");
+        //  var connectionString= "Data Source=sql-myplace-db;Initial Catalog=my-place-db;User=sa;password=Password123#@;TrustServerCertificate=True ";
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
