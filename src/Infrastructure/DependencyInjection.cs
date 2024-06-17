@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             //var connectionString = configuration.GetConnectionString("DockerConnection");
-           var connectionString = configuration.GetConnectionString("DefaultConnection");
+           var connectionString = configuration.GetConnectionString("DockerConnection");
             //var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationDbContext>((sp, options) =>
