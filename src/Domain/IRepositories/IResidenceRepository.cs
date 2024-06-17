@@ -3,7 +3,7 @@ using Domain.Repositories;
 
 namespace Domain.IRepositories
 {
-    public interface IResidenceRepository : IRepository<Residence>
+    public interface IResidenceRepository : IPagedRepository<Residence>
     {
     }
 }

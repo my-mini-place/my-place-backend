@@ -3,7 +3,7 @@ using Domain.Repositories;
 
 namespace Domain.IRepositories
 {
-    public interface IBlockRepository : IRepository<Block>
+    public interface IBlockRepository : IPagedRepository<Block>
     {
     }
 }

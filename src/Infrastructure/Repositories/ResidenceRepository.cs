@@ -4,7 +4,7 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories
 {
-    public class ResidenceRepository : Repository<Residence>, IResidenceRepository
+    public class ResidenceRepository : PagedRepository<Residence>, IResidenceRepository
     {
         public ResidenceRepository(ApplicationDbContext db) : base(db)
         {

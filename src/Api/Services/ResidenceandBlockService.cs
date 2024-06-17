@@ -1,10 +1,12 @@
 ﻿using Api.DTO.Blocks;
 using Api.DTO.Residence;
+using Api.IRepositories;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Domain.Errors;
 using Domain.IRepositories;
+using Domain.Models.Identity;
 
 namespace Api.Services
 {
@@ -21,18 +23,26 @@ namespace Api.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<List<BlockDTO>>> GetAllBlocks()
+        public async Task<Result<PagedList<BlockDTO>>> GetAllBlocks(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder)
         {
             try
             {
-                var blocks = await _blockRepository.GetAll();
+                var blocks = await _blockRepository.GetAll(page,pageSize);
 
-                var blocklist = blocks.Select(element => _mapper.Map<BlockDTO>(element)).ToList();
-                return Result.Success(blocklist);
+                var blocklist = blocks.Items.Select(element => _mapper.Map<BlockDTO>(element)).ToList();
+
+                PagedList<BlockDTO> blocksDTOPaged = new PagedList<BlockDTO>(blocklist, blocks.TotalCount, blocks.PageIndex, blocks.PageSize);
+
+
+
+
+
+
+                return Result.Success(blocksDTOPaged);
             }
             catch (System.Exception)
             {
-                return Result.Failure<List<BlockDTO>>(Error.Failure("GetAllBlocksFailure", "Unable to retrieve blocks"));
+                return Result.Failure<PagedList<BlockDTO>>(Error.Failure("GetAllBlocksFailure", "Unable to retrieve blocks"));
             }
         }
 
@@ -56,6 +66,9 @@ namespace Api.Services
                 BlockId = Guid.NewGuid().ToString(),
                 PostalCode = block.PostalCode,
                 Floors = block.floors,
+                Number=block.number,
+                Street = block.street,
+                
             };
 
             try
@@ -82,6 +95,8 @@ namespace Api.Services
                 updateblock.Name = block.Name ?? updateblock.Name;
                 updateblock.PostalCode = block.PostalCode ?? updateblock.PostalCode;
                 updateblock.Floors = block.Floors ?? updateblock.Floors;
+                updateblock.Street= block.Street ?? updateblock.Street;
+                updateblock.Number= block.Number ?? updateblock.Number;
 
                 _blockRepository.Update(updateblock);
 
@@ -102,9 +117,9 @@ namespace Api.Services
                 if (block == null)
                     return Result.Failure(Error.NotFound("NotFound", $"Block with ID {id} not found"));
 
-                var residences = await _residenceRepository.GetAll(r => r.BlockId == id);
+                var residences = await _residenceRepository.Get(r => r.BlockId == id);
 
-                if (residences.Count > 0)
+                if (residences==null)
                 {
                     return Result.Failure(Error.Failure("DeleteBlockFailure", "Block has residences, cannot delete"));
                 }
@@ -121,18 +136,23 @@ namespace Api.Services
             }
         }
 
-        public async Task<Result<List<ResidenceDTO>>> GetAllResidences()
+        public async Task<Result<PagedList<ResidenceDTO>>> GetAllResidences(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder)
         {
             try
             {
-                var residences = await _residenceRepository.GetAll();
+                var residences = await _residenceRepository.GetAll(page, pageSize);
 
-                var residenceList = residences.Select(element => _mapper.Map<ResidenceDTO>(element)).ToList();
-                return Result.Success(residenceList);
+                var residenceList = residences.Items.Select(element => _mapper.Map<ResidenceDTO>(element)).ToList();
+
+
+                var PagedResidenceDTO = new PagedList<ResidenceDTO>(residenceList, residences.TotalCount, residences.PageSize, residences.PageSize);
+
+
+                return Result.Success(PagedResidenceDTO);
             }
             catch (Exception)
             {
-                return Result.Failure<List<ResidenceDTO>>(Error.Failure("GetAllResidencesFailure", "Unable to retrieve residences"));
+                return Result.Failure<PagedList<ResidenceDTO>>(Error.Failure("GetAllResidencesFailure", "Unable to retrieve residences"));
             }
         }
 

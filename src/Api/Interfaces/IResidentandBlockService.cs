@@ -6,7 +6,7 @@ namespace Api.Services
 {
     public interface IResidenceAndBlockService
     {
-        Task<Result<List<BlockDTO>>> GetAllBlocks();
+        Task<Result<PagedList<BlockDTO>>> GetAllBlocks(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder);
 
         Task<Result<BlockDTO>> GetBlockById(string id);
 
@@ -16,7 +16,7 @@ namespace Api.Services
 
         Task<Result> DeleteBlock(string id);
 
-        Task<Result<List<ResidenceDTO>>> GetAllResidences();
+        Task<Result<PagedList<ResidenceDTO>>> GetAllResidences(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder);
 
         Task<Result<ResidenceDTO>> GetResidenceById(string id);
 

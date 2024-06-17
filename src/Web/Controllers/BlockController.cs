@@ -16,9 +16,9 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBlocks()
+        public async Task<IActionResult> GetAllBlocks(int page, int pageSize, string? searchTerm, string ?sortColumn, string? sortOrder)
         {
-            var result = await _service.GetAllBlocks();
+            var result = await _service.GetAllBlocks(page,pageSize,searchTerm,sortColumn,sortOrder);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

@@ -17,9 +17,9 @@ namespace My_Place_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllResidences()
+        public async Task<IActionResult> GetAllResidences(int page, int pageSize, string? searchTerm, string? sortColumn, string? sortOrder)
         {
-            var result = await _service.GetAllResidences();
+            var result = await _service.GetAllResidences(page,  pageSize, searchTerm, sortColumn,  sortOrder);
             if (result.IsFailure)
             {
                 return BadRequest(result.ToProblemDetails());

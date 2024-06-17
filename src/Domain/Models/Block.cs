@@ -8,5 +8,8 @@
         public string Name { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
         public int Floors { get; set; }
+
+        public string Street { get; set; } = null!;
+        public string Number { get; set; } = null!;
     }
 }

@@ -259,6 +259,8 @@ namespace Infrastructure.Data.Configuration
                 Name = "BRUDNY",
                 Id = -1,
                 PostalCode = "12-345",
+                Number="20",
+                Street="Konrada wallenroda 18"
             });
 
             modelBuilder.Entity<Residence>().HasData(new Residence()

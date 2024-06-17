@@ -228,7 +228,7 @@
                 }
                 
 
-                _userRepository.Save();
+                await _userRepository.Save();
 
                 return Result.Success();
             }
