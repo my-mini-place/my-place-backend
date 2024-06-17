@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Domain;
+    using Domain.Entities;
     using Domain.Errors;
     using Domain.IRepositories;
     using Domain.Models.Identity;
@@ -65,8 +66,9 @@
                     return Result.Failure(Error.Conflict("AccountStatus", "New status cant be the same as old one"));
                 }
 
-                            break;
-                        }
+                switch (user.Role) { 
+
+                        
                     case (Roles.Administrator):
                         {
                             var administrator = await _administratorRepository.Get(u => u.UserId == userId);
@@ -88,11 +90,7 @@
 
                         }
 
-                    default:
-                        {
-                            return Result.Failure(Error.NotFound("Roles", "That Role not exist"));
-
-                        }
+                   
                 }
                 // dodawanie 
                 switch(statusUpdateDTO.NewRole)
@@ -141,6 +139,7 @@
                             {
                                 return Result.Failure(Error.NotFound("Residence", "Residence not found"));
                             }
+
                             Resident resident = new Resident()
                             {
                                 
@@ -152,6 +151,7 @@
                             };
                            await  _residentRepository.Add(resident);
                            await _residenceRepository.Save();
+                            user.Role = Roles.Resident;
 
                             break;
                         }
@@ -359,10 +359,7 @@
             }
 
             // tutaj dodac usuwanie starej roli
-            public async Task<Result> UpdateUserRole(string UserId, string Role)
-            {
-                var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
-                if (user == null) { return Result.Failure<UserDTO>(Error.NotFound("User", "User not found")); }
+
 
             // tutaj dodac usuwanie starej roli
           

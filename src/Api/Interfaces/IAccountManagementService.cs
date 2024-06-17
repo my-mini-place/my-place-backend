@@ -16,7 +16,7 @@ namespace Api.Interfaces
 
         Task<Result> SetUserAvailability();
 
-        Task<Result> UpdateUserRole(string userId, string newRole);
+       
 
         Task<Result<UserFullInfoDTO>> GetUserInfo(string userId);
     }
