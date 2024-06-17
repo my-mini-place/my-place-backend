@@ -33,15 +33,13 @@
             }
 
             [HttpPatch("updateAccount")]
+            [Authorize()]
             public async Task<IActionResult> UpdateAccount( [FromBody] UserUpdateDTO updateAccountDTO)
             {
-                //string UserRole = "Administrator";
-                //if (User.GetUserRole()!= null)
-                //{
-                //UserRole=User.GetUserRole();
-                //}
+                string UserRole = User.GetUserRole();
+                string UserId = User.GetUserId();
 
-                var result = await _accountManagementService.UpdateAccount(updateAccountDTO.Id, updateAccountDTO,"Administrator");
+                var result = await _accountManagementService.UpdateAccount(UserId, updateAccountDTO,UserRole);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);

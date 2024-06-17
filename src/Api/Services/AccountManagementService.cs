@@ -44,6 +44,7 @@
                 {Roles.Administrator, GetAdminInfo },
                  {Roles.Resident, GetResidentInfo },
                 {Roles.Repairman, GetRepairManInfo },
+                    {Roles.User, GetUser }
             };
                 _residentRepository = residentRepository;
             }
@@ -64,20 +65,136 @@
                     return Result.Failure(Error.Conflict("AccountStatus", "New status cant be the same as old one"));
                 }
 
-                user.Status = statusUpdateDTO.AccountStatus;
+                            break;
+                        }
+                    case (Roles.Administrator):
+                        {
+                            var administrator = await _administratorRepository.Get(u => u.UserId == userId);
+                            _administratorRepository.Remove(administrator!);
+
+                            break;
+                        }
+                    case (Roles.Repairman):
+                    {
+                            var repairman = await _repairmanRepository.Get(u => u.UserId == userId);
+                            _repairmanRepository.Remove(repairman!);
+                            break;
+                        }
+                    case (Roles.Manager):
+                        {
+                            var manager = await _managerRepository.Get(u => u.UserId == userId);
+                            _managerRepository.Remove(manager!);
+                            break;
+
+                        }
+
+                    default:
+                        {
+                            return Result.Failure(Error.NotFound("Roles", "That Role not exist"));
+
+                        }
+                }
+                // dodawanie 
+                switch(statusUpdateDTO.NewRole)
+                {
+                    case (Roles.User):
+                        {
+
+                            return Result.Failure(Error.Validation("New Role","New role cant be user"));
+                            
+                        }
+
+                    case (Roles.Administrator):
+                     {
+
+
+                         break;
+                     }
+                    case (Roles.Manager):
+                        {
+                            if (statusUpdateDTO.StartWorkTime == null || statusUpdateDTO.EndWorkTime == null)
+                            {
+                                return Result.Failure(Error.Validation("StartWorkTime and EndWorkTime", "StartWorkTime and EndWorkTime must be provided"));
+                            }
+                            break;
+                        }
+                    case (Roles.Repairman):
+                        {
+                            if(statusUpdateDTO.StartWorkTime == null || statusUpdateDTO.EndWorkTime == null)
+                            {
+                                return Result.Failure(Error.Validation("StartWorkTime and EndWorkTime", "StartWorkTime and EndWorkTime must be provided"));
+                            }
+                            break;
+                        }
+
+                    case (Roles.Resident):
+                        {
+
+                            
+                            if (statusUpdateDTO.ResidenceId == null)
+                            {
+                                return Result.Failure(Error.Validation("ResidenceId", "ResidenceId must be provided"));
+                            }
+
+                           var residence = await _residenceRepository.Get(u => u.ResidenceId == statusUpdateDTO.ResidenceId);
+                            if (residence == null)
+                            {
+                                return Result.Failure(Error.NotFound("Residence", "Residence not found"));
+                            }
+                            Resident resident = new Resident()
+                            {
+                                
+                                Guid= new Guid().ToString(),
+                                ResidenceId = statusUpdateDTO.ResidenceId,
+                                UserId = userId
+                                
+
+                            };
+                           await  _residentRepository.Add(resident);
+                           await _residenceRepository.Save();
+
+                            break;
+                        }
+                }
+                     
+
+
 
                 _userRepository.Update(user);
 
                 return Result.Success();
             }
 
-            public async Task<Result> UpdateAccount(string userId, UserUpdateDTO updateAccountDTO,string senderRole)
+            private bool IsValidRoleChange(string senderRole, string targetUserRole,string senderId, string targetId)
             {
-                var user = await _userRepository.Get(u => u.UserId.ToString() == userId);
+                if (senderRole == Roles.Administrator)
+                {
+                    return true;
+                }
+                if (senderRole==Roles.Manager && targetUserRole!=Roles.Administrator)
+                {
+                    return true;
+                }
+                return senderRole == targetUserRole && senderId == targetId;
+            }
+
+            public async Task<Result> UpdateAccount(string senderId, UserUpdateDTO updateAccountDTO,string senderRole)
+            {
+
+                 
+                var user = await _userRepository.Get(u => u.UserId.ToString() == updateAccountDTO.Id);
                 if (user == null)
                 {
                     return Result.Failure(Error.NotFound("User", "User not found"));
                 }
+
+                var userId = user.UserId;
+
+                if(!IsValidRoleChange(senderRole,user.Role,senderId,updateAccountDTO.Id))
+                {
+                    return Result.Failure(Error.Conflict("Roles", "That role cant do that."));
+                }
+                
 
                 user.Surname = updateAccountDTO.Surname ?? user.Surname;
                 user.Name = updateAccountDTO.Name ?? user.Name;
@@ -91,10 +208,7 @@
                 {
                     case (Roles.User):
                        
-                       if(updateAccountDTO.ResidenceId!=null)
-                        {
-                            return Result.Failure(Error.Conflict("UpdateAccount", "User cant have residence id"));
-                        }
+                      
 
                       
 
@@ -164,6 +278,12 @@
                             break;
                         }
 
+                    default:
+                        {
+                              return Result.Failure(Error.NotFound("Roles", "That Role not exist"));
+
+                        }
+
                 }
 
                 
@@ -200,23 +320,23 @@
                         case (Roles.Resident):
                             {
 
-                                _residentRepository.Remove(await _residentRepository.Get(u => u.UserId == userId));
+                                _residentRepository.Remove((await _residentRepository.Get(u => u.UserId == userId))!);
                                 break;
                             }
 
                         case (Roles.Administrator):
                             {
-                                _administratorRepository.Remove(await _administratorRepository.Get(u => u.UserId == userId));
+                                _administratorRepository.Remove((await _administratorRepository.Get(u => u.UserId == userId))!);
                                 break;
                             }
                         case (Roles.Manager):
                             {
-                                _managerRepository.Remove(await _managerRepository.Get(u => u.UserId == userId));
+                                _managerRepository.Remove((await _managerRepository.Get(u => u.UserId == userId))!);
                                 break;
                             }
                         case (Roles.Repairman):
                             {
-                                _repairmanRepository.Remove(await _repairmanRepository.Get(u => u.UserId == userId));
+                                _repairmanRepository.Remove((await _repairmanRepository.Get(u => u.UserId == userId))!);
                                 break;
                             }
 
@@ -244,15 +364,8 @@
                 var user = await _userRepository.Get(u => u.UserId.ToString() == UserId);
                 if (user == null) { return Result.Failure<UserDTO>(Error.NotFound("User", "User not found")); }
 
-                var appuser = await _identityRepository.FindUserByEmailAsync(user.Email);
-
-                var result = await _identityRepository.AddUserToRoleAsync(appuser!, Role);
-                if (!result.Succeeded)
-                {
-                }
-
-                return Result.Success();
-            }
+            // tutaj dodac usuwanie starej roli
+          
 
             public async Task<Result<UserFullInfoDTO>> GetUserInfo(string userId)
             {
@@ -312,6 +425,26 @@
                     Name = GetResidentInfoResult.User.Name,
                     Surname = GetResidentInfoResult.User.Surname,
                     PhoneNumber = GetResidentInfoResult.User.PhoneNumber,
+                };
+
+                return result;
+            }
+
+            public async Task<UserFullInfoDTO> GetUser(string UserId)
+            {
+                var User = await _userRepository.Get(item => item.UserId == UserId);
+
+                // automaper
+                UserFullInfoDTO result = new()
+                {
+                    Id = UserId,
+                    //  Residence = _mapper.Map<ResidenceDTO>(GetResidentInfoResult.Residence),
+
+                    Email = User.Email,
+                    Status = User.Status,
+                    Name = User.Name,
+                    Surname = User.Surname,
+                    PhoneNumber = User.PhoneNumber,
                 };
 
                 return result;

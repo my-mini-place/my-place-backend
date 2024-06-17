@@ -33,9 +33,11 @@ app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 
 app.UseCors(builder =>
-       builder.WithOrigins("http://localhost:1234")
+       builder.WithOrigins("http://localhost:1234","")
               .AllowAnyHeader()
               .AllowAnyMethod());
+
+
 app.UseAuthentication();
 
 app.UseAuthorization();
